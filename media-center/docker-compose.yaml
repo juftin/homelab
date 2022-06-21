@@ -260,7 +260,7 @@ services:
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/jacket:/config
+            - ${MEDIA_CENTER_DIRECTORY}/jackett:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
