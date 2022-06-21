@@ -1,2 +1,14 @@
 .idea/
 .env
+
+media-center/heimdall/
+media-center/jackett/
+media-center/ombi/
+media-center/plex/
+media-center/radarr/
+media-center/sonarr/
+media-center/tautulli/
+media-center/transmission/
+
+traefik/traefik/acme/
+traefik/traefik/logs/
