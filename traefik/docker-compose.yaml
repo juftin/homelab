@@ -107,8 +107,6 @@ services:
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
-            # TESTING SETTINGS (COMMENTED OUT BY DEFAULT)
-            - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
         labels:
             traefik.enable:                                                   true
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
