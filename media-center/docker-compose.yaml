@@ -23,9 +23,9 @@ networks:
 ################################################################################
 
 x-environment: &default-tz-puid-pgid
-    PUID=${PUID}
-    PGID=${PGID}
-    TZ=${TZ}
+    PUID: ${PUID}
+    PGID: ${PGID}
+    TZ:   ${TZ}
 
 x-common-keys-core: &common-keys-core
     security_opt:
