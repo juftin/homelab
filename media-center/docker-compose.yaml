@@ -2,7 +2,7 @@
 # DOCKER COMPOSE - MEDIA-CENTER-V2 BY JUFTIN
 ################################################################################
 
-version: "3.7"
+version: "3.9"
 
 ################################################################################
 # NETWORKING CONFIGURATION
@@ -21,6 +21,11 @@ networks:
 ################################################################################
 # COMMON CONFIGURATION DECLARATION
 ################################################################################
+
+x-environment: &default-tz-puid-pgid
+    PUID=${PUID}
+    PGID=${PGID}
+    TZ=${TZ}
 
 x-common-keys-core: &common-keys-core
     security_opt:
@@ -56,7 +61,7 @@ services:
             internal:     null
             docker: null
         environment:
-            TZ:                            $TZ
+            TZ:                            ${TZ}
             WATCHTOWER_CLEANUP:            "true"
             WATCHTOWER_REMOVE_VOLUMES:     "true"
             WATCHTOWER_INCLUDE_STOPPED:    "true"
@@ -79,12 +84,10 @@ services:
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/heimdall:/config
         environment:
-            - PUID=$PUID
-            - PGID=$PGID
-            - TZ=$TZ
+            <<: *default-tz-puid-pgid
         labels:
             traefik.enable:                                              true
-            traefik.http.routers.heimdall-rtr.rule:                      Host(`DOMAIN_NAME`,`www.DOMAIN_NAME`)
+            traefik.http.routers.heimdall-rtr.rule:                      Host(`${DOMAIN_NAME}`,`www.${DOMAIN_NAME}`)
             traefik.http.routers.heimdall-rtr.entrypoints:               https
             traefik.http.routers.heimdall-rtr.service:                   heimdall-svc
             traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
@@ -100,9 +103,7 @@ services:
         image:          linuxserver/ombi:latest
         hostname:       ${OMBI_SUBDOMAIN}
         environment:
-            PUID: ${PUID}
-            PGID: ${PGID}
-            TZ:   ${TZ}
+            <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/ombi:/config
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
@@ -132,9 +133,7 @@ services:
             - /dev/dri:/dev/dri
             - /dev/dvb:/dev/dvb
         environment:
-            TZ:      ${TZ}
-            PUID:    ${PUID}
-            PGID:    ${PGID}
+            <<: *default-tz-puid-pgid
             VERSION: docker
         restart:        ${UNIVERSAL_RESTART_POLICY}
 
@@ -152,9 +151,7 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         environment:
-            PUID: ${PUID}
-            PGID: ${PGID}
-            TZ:   ${TZ}
+            <<: *default-tz-puid-pgid
         labels:
             traefik.enable:                                              true
             traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
@@ -173,9 +170,7 @@ services:
         hostname:       ${SONARR_SUBDOMAIN}
         container_name: sonarr
         environment:
-            PUID: ${PUID}
-            PGID: ${PGID}
-            TZ:   ${TZ}
+            <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/sonarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
@@ -199,9 +194,7 @@ services:
         hostname:       ${RADARR_SUBDOMAIN}
         container_name: radarr
         environment:
-            PUID: ${PUID}
-            PGID: ${PGID}
-            TZ:   ${TZ}
+            <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
@@ -225,8 +218,7 @@ services:
         hostname:       ${TRANSMISSION_SUBDOMAIN}
         image:          haugene/transmission-openvpn:latest
         environment:
-            PUID:                                    ${PUID}
-            PGID:                                    ${PGID}
+            <<: *default-tz-puid-pgid
             OPENVPN_PROVIDER:                        ${OPENVPN_PROVIDER}
             OPENVPN_USERNAME:                        ${OPENVPN_USERNAME}
             OPENVPN_PASSWORD:                        ${OPENVPN_PASSWORD}
@@ -235,7 +227,6 @@ services:
             TRANSMISSION_WEB_UI:                     combustion
             TRANSMISSION_DOWNLOAD_DIR:               /downloads
             LOCAL_NETWORK:                           ${PHYSICAL_SERVER_NETWORK}
-            TZ:                                      ${TZ}
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ${MEDIA_CENTER_DIRECTORY}/transmission:/data/transmission-home
@@ -267,9 +258,7 @@ services:
         image:          linuxserver/jackett:latest
         hostname:       ${JACKETT_SUBDOMAIN}
         environment:
-            PUID: ${PUID}
-            PGID: ${PGID}
-            TZ:   ${TZ}
+            <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/jacket:/config
             - ${COMPLETED_DOWNLOADS}:/downloads

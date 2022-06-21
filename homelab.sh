@@ -22,6 +22,7 @@ PROJECT_ROOT_DIRECTORY="$(
 
 TRAEFIK_FILE="${PROJECT_ROOT_DIRECTORY}/traefik/docker-compose.yaml"
 MEDIA_CENTER_FILE="${PROJECT_ROOT_DIRECTORY}/media-center/docker-compose.yaml"
+MISCELLANEOUS_FILE="${PROJECT_ROOT_DIRECTORY}/miscellaneous/docker-compose.yaml"
 
 ARGUMENT_1="${1}"
 ARGUMENT_2="${2}"
@@ -30,7 +31,14 @@ function docker-pull-stack {
   docker-compose \
     --file "${1}" \
     --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
-    pull
+    pull ${2}
+}
+
+function docker-build-stack {
+  docker-compose \
+    --file "${1}" \
+    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
+    build ${2}
 }
 
 function docker-deploy-stack {
@@ -68,5 +76,16 @@ elif [[ "${ARGUMENT_1}" == "media-center" ]]; then
   elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
     log_event info "Destroying Media Center Services"
     docker-destroy-stack "${MEDIA_CENTER_FILE}"
+  fi
+elif [[ "${ARGUMENT_1}" == "miscellaneous" ]]; then
+  if [[ "${ARGUMENT_2}" == "build" ]]; then
+    log_event info "Preparing Miscellaneous Services"
+    docker-pull-stack "${MISCELLANEOUS_FILE}"
+  elif [[ "${ARGUMENT_2}" == "deploy" ]]; then
+    log_event info "Deploying Miscellaneous Services"
+    docker-deploy-stack "${MISCELLANEOUS_FILE}"
+  elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
+    log_event info "Destroying Miscellaneous Services"
+    docker-destroy-stack "${MISCELLANEOUS_FILE}"
   fi
 fi
