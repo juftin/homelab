@@ -58,8 +58,8 @@ services:
         container_name: watchtower
         image:          containrrr/watchtower:latest
         networks:
-            internal:     null
-            docker: null
+            internal: null
+            docker:   null
         environment:
             TZ:                            ${TZ}
             WATCHTOWER_CLEANUP:            "true"
@@ -253,6 +253,28 @@ services:
             traefik.http.routers.readarr-rtr.middlewares:               chain-oauth-google@file
 
     #######################################
+    # CALIBRE (BOOKS MANAGEMENT)
+    #######################################
+
+    calibre:
+        <<: *common-keys-apps
+        image:          lscr.io/linuxserver/calibre:latest
+        hostname:       ${CALIBRE_SUBDOMAIN:-calibre}
+        container_name: calibre
+        environment:
+            <<: *default-tz-puid-pgid
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/calibre:/config
+            - ${BOOKS_DIR}:/books
+        labels:
+            traefik.enable:                                             true
+            traefik.http.routers.calibre-rtr.rule:                      Host(`${CALIBRE_SUBDOMAIN:-calibre}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-rtr.entrypoints:               https
+            traefik.http.routers.calibre-rtr.service:                   calibre-svc
+            traefik.http.services.calibre-svc.loadbalancer.server.port: 8081
+            traefik.http.routers.calibre-rtr.middlewares:               chain-oauth-google@file
+
+    #######################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
     #######################################
 
@@ -307,8 +329,8 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         command:        "-H tcp://socket-proxy:2375 --admin-password='${ADMIN_HTPASSWD}'"
         networks:
-            traefik:      null
-            docker: null
+            traefik: null
+            docker:  null
         restart:        ${UNIVERSAL_RESTART_POLICY}
         labels:
             traefik.enable:                                               true
