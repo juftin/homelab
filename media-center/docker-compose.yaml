@@ -242,6 +242,8 @@ services:
             <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/readarr:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${BOOKS_DIR}:/books
         labels:
             traefik.enable:                                             true
             traefik.http.routers.readarr-rtr.rule:                      Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
