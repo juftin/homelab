@@ -49,9 +49,9 @@ services:
     # BACK-END APPLICATIONS
     ########################################################
 
-    ####################################
+    #######################################
     # WATCHTOWER (CONTAINER IMAGE UPDATING)
-    ####################################
+    #######################################
 
     watchtower:
         <<: *common-keys-core
@@ -73,14 +73,14 @@ services:
     # FRONT-END APPLICATIONS
     ########################################################
 
-    ####################################
+    #######################################
     # HEIMDALL (LANDING PAGE)
-    ####################################
+    #######################################
 
     heimdall:
         <<: *common-keys-apps
         container_name: heimdall
-        image:          linuxserver/heimdall:latest
+        image:          lscr.io/linuxserver/heimdall:latest
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/heimdall:/config
         environment:
@@ -93,14 +93,14 @@ services:
             traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
             traefik.http.routers.heimdall-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # OMBI (DOWNLOAD REQUESTS)
-    ####################################
+    #######################################
 
     ombi:
         <<: *common-keys-apps
         container_name: ombi
-        image:          linuxserver/ombi:latest
+        image:          lscr.io/linuxserver/ombi:latest
         hostname:       ${OMBI_SUBDOMAIN}
         environment:
             <<: *default-tz-puid-pgid
@@ -115,13 +115,13 @@ services:
             traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
             traefik.http.routers.ombi-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # PLEX (MOVIES AND TV SERVER)
-    ####################################
+    #######################################
 
     plex:
         container_name: plex
-        image:          linuxserver/plex:latest
+        image:          lscr.io/linuxserver/plex:latest
         network_mode:   host
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/plex:/config
@@ -137,14 +137,14 @@ services:
             VERSION: docker
         restart:        ${UNIVERSAL_RESTART_POLICY}
 
-    ####################################
+    #######################################
     # TAUTULLI (PLEX SERVER MONITORING)
-    ####################################
+    #######################################
 
     tautulli:
         <<: *common-keys-apps
         container_name: tautulli
-        image:          linuxserver/tautulli:latest
+        image:          lscr.io/linuxserver/tautulli:latest
         hostname:       ${TAUTULLI_SUBDOMAIN}
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/tautulli:/config
@@ -160,13 +160,13 @@ services:
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
             traefik.http.routers.tautulli-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # SONARR (TV SHOW DOWNLOADS)
-    ####################################
+    #######################################
 
     sonarr:
         <<: *common-keys-apps
-        image:          linuxserver/sonarr:latest
+        image:          lscr.io/linuxserver/sonarr:latest
         hostname:       ${SONARR_SUBDOMAIN}
         container_name: sonarr
         environment:
@@ -184,13 +184,13 @@ services:
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
             traefik.http.routers.sonarr-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # RADARR (MOVIE DOWNLOADS)
-    ####################################
+    #######################################
 
     radarr:
         <<: *common-keys-apps
-        image:          linuxserver/radarr:latest
+        image:          lscr.io/linuxserver/radarr:latest
         hostname:       ${RADARR_SUBDOMAIN}
         container_name: radarr
         environment:
@@ -208,9 +208,9 @@ services:
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
             traefik.http.routers.radarr-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # PROWLARR (DOWNLOAD INDEXING)
-    ####################################
+    #######################################
 
     prowlarr:
         <<: *common-keys-apps
@@ -229,9 +229,9 @@ services:
             traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696
             traefik.http.routers.prowlarr-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
-    ####################################
+    #######################################
 
     transmission:
         <<: *common-keys-apps
@@ -269,9 +269,9 @@ services:
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
             traefik.http.routers.transmission-rtr.middlewares:               chain-oauth-google@file
 
-    ####################################
+    #######################################
     # PORTAINER (GUI CONTAINER MANAGEMENT)
-    ####################################
+    #######################################
 
     portainer:
         container_name: portainer
