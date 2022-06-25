@@ -329,7 +329,7 @@ services:
             <<: *default-tz-puid-pgid
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/nzbget:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${COMPLETED_DOWNLOADS}/nzb:/downloads
         labels:
             traefik.enable:                                            true
             traefik.http.routers.nzbget-rtr.rule:                      Host(`${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}`)
