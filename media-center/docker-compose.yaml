@@ -214,7 +214,7 @@ services:
 
     prowlarr:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/prowlarr:latest
+        image:          lscr.io/linuxserver/prowlarr:develop
         hostname:       ${PROWLARR_SUBDOMAIN:-prowlarr}
         container_name: prowlarr
         environment:
