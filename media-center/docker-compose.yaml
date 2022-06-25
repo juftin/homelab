@@ -270,29 +270,6 @@ services:
             traefik.http.routers.transmission-rtr.middlewares:               chain-oauth-google@file
 
     ####################################
-    # JACKETT (TORRENTING INDEX SCRAPER)
-    ####################################
-
-    jackett:
-        <<: *common-keys-apps
-        container_name: jackett
-        image:          linuxserver/jackett:latest
-        hostname:       ${JACKETT_SUBDOMAIN}
-        environment:
-            <<: *default-tz-puid-pgid
-        volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/jackett:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
-        labels:
-            traefik.enable:                                             true
-            traefik.http.routers.jackett-rtr.rule:                      Host(`${JACKETT_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.jackett-rtr.entrypoints:               https
-            traefik.http.routers.jackett-rtr.service:                   jackett-svc
-            traefik.http.services.jackett-svc.loadbalancer.server.port: 9117
-            traefik.http.routers.jackett-rtr.middlewares:               chain-oauth-google@file
-
-    ####################################
     # PORTAINER (GUI CONTAINER MANAGEMENT)
     ####################################
 
