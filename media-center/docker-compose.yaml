@@ -209,6 +209,27 @@ services:
             traefik.http.routers.radarr-rtr.middlewares:               chain-oauth-google@file
 
     ####################################
+    # PROWLARR (DOWNLOAD INDEXING)
+    ####################################
+
+    prowlarr:
+        <<: *common-keys-apps
+        image:          linuxserver/prowlarr:latest
+        hostname:       ${PROWLARR_SUBDOMAIN:-prowlarr}
+        container_name: prowlarr
+        environment:
+            <<: *default-tz-puid-pgid
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/prowlarr:/config
+        labels:
+            traefik.enable:                                              true
+            traefik.http.routers.prowlarr-rtr.rule:                      Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.prowlarr-rtr.entrypoints:               https
+            traefik.http.routers.prowlarr-rtr.service:                   prowlarr-svc
+            traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696
+            traefik.http.routers.prowlarr-rtr.middlewares:               chain-oauth-google@file
+
+    ####################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
     ####################################
 
