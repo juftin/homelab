@@ -244,6 +244,7 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/readarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${BOOKS_DIR}:/books
+            - ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre
         labels:
             traefik.enable:                                             true
             traefik.http.routers.readarr-rtr.rule:                      Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
