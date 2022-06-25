@@ -267,12 +267,18 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/calibre:/config
             - ${BOOKS_DIR}:/books
         labels:
-            traefik.enable:                                             true
-            traefik.http.routers.calibre-rtr.rule:                      Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
-            traefik.http.routers.calibre-rtr.entrypoints:               https
-            traefik.http.routers.calibre-rtr.service:                   calibre-svc
-            traefik.http.services.calibre-svc.loadbalancer.server.port: 8080
-            traefik.http.routers.calibre-rtr.middlewares:               chain-oauth-google@file
+            traefik.enable:                                                    true
+            traefik.http.routers.calibre-rtr.rule:                             Host(`${CALIBRE_SUBDOMAIN:-calibre}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-rtr.entrypoints:                      https
+            traefik.http.routers.calibre-rtr.service:                          calibre-svc
+            traefik.http.services.calibre-svc.loadbalancer.server.port:        8081
+            traefik.http.routers.calibredesktop-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.calibredesktop-rtr.rule:                      Host(`${CALIBRE_DESKTOP_SUBDOMAIN:-calibre-desktop}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibredesktop-rtr.entrypoints:               https
+            traefik.http.routers.calibredesktop-rtr.service:                   calibredesktop-svc
+            traefik.http.services.calibredesktop-svc.loadbalancer.server.port: 8080
+            traefik.http.routers.calibre-rtr.middlewares:                      chain-oauth-google@file
+
 
     calibre-web:
         <<: *common-keys-apps
