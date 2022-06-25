@@ -230,6 +230,27 @@ services:
             traefik.http.routers.prowlarr-rtr.middlewares:               chain-oauth-google@file
 
     #######################################
+    # READARR (BOOKS AND AUDIOBOOKS)
+    #######################################
+
+    readarr:
+        <<: *common-keys-apps
+        image:          lscr.io/linuxserver/readarr:develop
+        hostname:       ${READARR_SUBDOMAIN:-readarr}
+        container_name: readarr
+        environment:
+            <<: *default-tz-puid-pgid
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/readarr:/config
+        labels:
+            traefik.enable:                                             true
+            traefik.http.routers.readarr-rtr.rule:                      Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.readarr-rtr.entrypoints:               https
+            traefik.http.routers.readarr-rtr.service:                   readarr-svc
+            traefik.http.services.readarr-svc.loadbalancer.server.port: 8787
+            traefik.http.routers.readarr-rtr.middlewares:               chain-oauth-google@file
+
+    #######################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
     #######################################
 
