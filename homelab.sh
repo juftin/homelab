@@ -20,72 +20,73 @@ PROJECT_ROOT_DIRECTORY="$(
   pwd -P
 )"
 
-TRAEFIK_FILE="${PROJECT_ROOT_DIRECTORY}/traefik/docker-compose.yaml"
-MEDIA_CENTER_FILE="${PROJECT_ROOT_DIRECTORY}/media-center/docker-compose.yaml"
-MISCELLANEOUS_FILE="${PROJECT_ROOT_DIRECTORY}/miscellaneous/docker-compose.yaml"
+TRAEFIK_PROJECT="traefik"
+MEDIA_CENTER_PROJECT="media-center"
+MISCELLANEOUS_PROJECT="miscellaneous"
+
+DOCKER_COMPOSE_FILE="docker-compose.yaml"
+TRAEFIK_FILE="${PROJECT_ROOT_DIRECTORY}/${TRAEFIK_PROJECT}/${DOCKER_COMPOSE_FILE}"
+MEDIA_CENTER_FILE="${PROJECT_ROOT_DIRECTORY}/${MEDIA_CENTER_PROJECT}/${DOCKER_COMPOSE_FILE}"
+MISCELLANEOUS_FILE="${PROJECT_ROOT_DIRECTORY}/${MISCELLANEOUS_PROJECT}/${DOCKER_COMPOSE_FILE}"
+
+function docker-compose-command() {
+  PROJECT_NAME="${1}"
+  FILE="${2}"
+  shift 2
+  docker-compose \
+    --project-name "${PROJECT_NAME}" \
+    --file "${FILE}" \
+    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
+    ${@}
+}
+
+function docker-pull-stack() {
+  PROJECT_NAME="${1}"
+  FILE="${2}"
+  shift 2
+  docker-compose-command "${PROJECT_NAME}" "${FILE}" pull ${@}
+}
+
+function docker-build-stack() {
+  PROJECT_NAME="${1}"
+  FILE="${2}"
+  shift 2
+  docker-compose-command "${PROJECT_NAME}" "${FILE}" build ${@}
+}
+
+function docker-deploy-stack() {
+  docker-compose-command "${1}" "${2}" up -d
+}
+
+function docker-destroy-stack() {
+  docker-compose-command "${1}" "${2}" down
+}
 
 ARGUMENT_1="${1}"
 ARGUMENT_2="${2}"
+shift 2
 
-function docker-pull-stack {
-  docker-compose \
-    --file "${1}" \
-    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
-    pull ${2}
-}
+if [[ "${ARGUMENT_1}" == "${TRAEFIK_PROJECT}" ]]; then
+  PROJECT="${TRAEFIK_PROJECT}"
+  FILE="${TRAEFIK_FILE}"
+elif [[ "${ARGUMENT_1}" == "${MEDIA_CENTER_PROJECT}" ]]; then
+  PROJECT="${MEDIA_CENTER_PROJECT}"
+  FILE="${MEDIA_CENTER_FILE}"
+elif [[ "${ARGUMENT_1}" == "${MISCELLANEOUS_PROJECT}" ]]; then
+  PROJECT="${MISCELLANEOUS_PROJECT}"
+  FILE="${MISCELLANEOUS_FILE}"
+fi
 
-function docker-build-stack {
-  docker-compose \
-    --file "${1}" \
-    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
-    build ${2}
-}
-
-function docker-deploy-stack {
-  docker-compose \
-    --file "${1}" \
-    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
-    up -d
-}
-
-function docker-destroy-stack {
-  docker-compose \
-    --file "${1}" \
-    --env-file "${PROJECT_ROOT_DIRECTORY}/.env" \
-    down
-}
-
-if [[ "${ARGUMENT_1}" == "traefik" ]]; then
-  if [[ "${ARGUMENT_2}" == "build" ]]; then
-    log_event info "Preparing Traefik and Proxy Services"
-    docker-pull-stack "${TRAEFIK_FILE}"
-  elif [[ "${ARGUMENT_2}" == "deploy" ]]; then
-    log_event info "Deploying Traefik and Proxy Services"
-    docker-deploy-stack "${TRAEFIK_FILE}"
-  elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
-    log_event info "Destroying Traefik and Proxy Services"
-    docker-destroy-stack "${TRAEFIK_FILE}"
-  fi
-elif [[ "${ARGUMENT_1}" == "media-center" ]]; then
-  if [[ "${ARGUMENT_2}" == "build" ]]; then
-    log_event info "Preparing Media Center Services"
-    docker-pull-stack "${MEDIA_CENTER_FILE}"
-  elif [[ "${ARGUMENT_2}" == "deploy" ]]; then
-    log_event info "Deploying Media Center Services"
-    docker-deploy-stack "${MEDIA_CENTER_FILE}"
-  elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
-    log_event info "Destroying Media Center Services"
-    docker-destroy-stack "${MEDIA_CENTER_FILE}"
-  fi
-elif [[ "${ARGUMENT_1}" == "miscellaneous" ]]; then
-  if [[ "${ARGUMENT_2}" == "build" ]]; then
-    log_event info "Preparing Miscellaneous Services"
-    docker-pull-stack "${MISCELLANEOUS_FILE}"
-  elif [[ "${ARGUMENT_2}" == "deploy" ]]; then
-    log_event info "Deploying Miscellaneous Services"
-    docker-deploy-stack "${MISCELLANEOUS_FILE}"
-  elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
-    log_event info "Destroying Miscellaneous Services"
-    docker-destroy-stack "${MISCELLANEOUS_FILE}"
-  fi
+if [[ "${ARGUMENT_2}" == "build" ]]; then
+  log_event info "Preparing ${PROJECT} Services"
+  docker-pull-stack "${PROJECT}" "${FILE}"
+elif [[ "${ARGUMENT_2}" == "deploy" ]]; then
+  log_event info "Deploying ${PROJECT} Services"
+  docker-deploy-stack "${PROJECT}" "${FILE}"
+elif [[ "${ARGUMENT_2}" == "destroy" ]]; then
+  log_event info "Destroying ${PROJECT} Services"
+  docker-destroy-stack "${PROJECT}" "${FILE}"
+elif [[ "${ARGUMENT_2}" == "docker" ]]; then
+  log_event info "Executing Docker Command"
+  docker-compose-command "${PROJECT_NAME}" "${FILE}" ${@}
 fi
