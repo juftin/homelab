@@ -88,7 +88,7 @@ services:
             - --providers.docker=true
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
-            - --providers.docker.network=${COMPOSE_PROJECT_NAME}_traefik
+            - --providers.docker.network=traefik_traefik
             - --providers.docker.swarmMode=false
             - --providers.file.directory=/rules
             - --providers.file.watch=true
