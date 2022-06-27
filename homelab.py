@@ -11,30 +11,9 @@ from typing import Optional, Union, Dict, List
 
 import click
 
+_project_dir = pathlib.Path(__file__).resolve().parent
 __version__ = "0.1.0"
 __prog__ = "homelab"
-
-traefik_project = "traefik"
-media_center_project = "media-center"
-miscellaneous_project = "miscellaneous"
-
-_project_dir = pathlib.Path(__file__).resolve().parent
-
-
-@dataclass
-class StackConfig:
-    """
-    Stack Configuration
-    """
-
-    project_name: str
-
-    @property
-    def compose_file(self) -> pathlib.Path:
-        """
-        Stack Docker Compose File
-        """
-        return _project_dir.joinpath(self.project_name).joinpath("docker-compose.yaml")
 
 
 def run_command(command: str,
@@ -73,6 +52,22 @@ def run_command(command: str,
         raise RuntimeError(stderr)
 
 
+@dataclass
+class StackConfig:
+    """
+    Stack Configuration
+    """
+
+    project_name: str
+
+    @property
+    def compose_file(self) -> pathlib.Path:
+        """
+        Stack Docker Compose File
+        """
+        return _project_dir.joinpath(self.project_name).joinpath("docker-compose.yaml")
+
+
 def generate_docker_compose(command: str, config: StackConfig) -> str:
     compose_command = f"""
     docker-compose \\
@@ -84,9 +79,13 @@ def generate_docker_compose(command: str, config: StackConfig) -> str:
     return compose_command
 
 
+traefik_project = "traefik"
+media_center_project = "media-center"
+miscellaneous_project = "miscellaneous"
+
 traefik_config = StackConfig(project_name=traefik_project)
 media_center_config = StackConfig(project_name=media_center_project)
-miscellaneous_config = StackConfig(project_name=media_center_project)
+miscellaneous_config = StackConfig(project_name=miscellaneous_project)
 
 config_dict: Dict[str, List[StackConfig]] = {
     "media-center": [media_center_config],
