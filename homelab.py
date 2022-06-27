@@ -6,6 +6,7 @@ Homelab Command Line Interface
 
 import pathlib
 import subprocess
+from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Optional, Union, Dict, List
 
@@ -87,16 +88,15 @@ traefik_config = StackConfig(project_name=traefik_project)
 media_center_config = StackConfig(project_name=media_center_project)
 miscellaneous_config = StackConfig(project_name=miscellaneous_project)
 
-config_dict: Dict[str, List[StackConfig]] = {
-    "media-center": [media_center_config],
-    "traefik": [traefik_config],
-    "miscellaneous": [miscellaneous_config],
-    "all": [
-        media_center_config,
-        traefik_config,
-        miscellaneous_config,
-    ]
-}
+config_dict = OrderedDict()
+config_dict["traefik"] = [traefik_config]
+config_dict["media-center"] = [media_center_config]
+config_dict["miscellaneous"] = [miscellaneous_config]
+config_dict["all"] = [
+    traefik_config,
+    media_center_config,
+    miscellaneous_config,
+]
 
 
 @click.group()
