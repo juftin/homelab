@@ -29,7 +29,7 @@ services:
             WEBPASSWORD:  ${ADMIN_PASSWORD}
             DNS1:         8.8.8.8
             DNS2:         8.8.4.4
-            VIRTUAL_HOST: ${PIHOLE_SUBDOMAIN}.${DOMAIN_NAME}
+            VIRTUAL_HOST: ${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}
         volumes:
             - ${MISCELLANEOUS_DIRECTORY}/pihole/etc-pihole/:/etc/pihole/
             - ${MISCELLANEOUS_DIRECTORY}/config/etc-dnsmasq.d/:/etc/dnsmasq.d/
@@ -43,7 +43,7 @@ services:
             - NET_ADMIN
         labels:
             traefik.enable:                                            true
-            traefik.http.routers.pihole-rtr.rule:                      Host(`${PIHOLE_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.pihole-rtr.rule:                      Host(`${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}`)
             traefik.http.routers.pihole-rtr.service:                   pihole-svc
             traefik.http.services.pihole-svc.loadbalancer.server.port: 80
             traefik.http.routers.pihole-rtr.entrypoints:               https
@@ -70,7 +70,7 @@ services:
             - ${SHARED_DIRECTORY}:/home/${ADMIN_USER}/${SHARED_DIRECTORY_NAME}:rw
         labels:
             traefik.enable:                                             true
-            traefik.http.routers.jupyter-rtr.rule:                      Host(`${JUPYTER_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.jupyter-rtr.rule:                      Host(`${JUPYTER_SUBDOMAIN:-jupyter}.${DOMAIN_NAME}`)
             traefik.http.routers.jupyter-rtr.service:                   jupyter-svc
             traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
             traefik.http.routers.jupyter-rtr.entrypoints:               https

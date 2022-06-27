@@ -101,7 +101,7 @@ services:
         <<: *common-keys-apps
         container_name: ombi
         image:          lscr.io/linuxserver/ombi:latest
-        hostname:       ${OMBI_SUBDOMAIN}
+        hostname:       ${OMBI_SUBDOMAIN:-ombi}
         environment:
             <<: *default-tz-puid-pgid
         volumes:
@@ -109,7 +109,7 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
             traefik.enable:                                          true
-            traefik.http.routers.ombi-rtr.rule:                      Host(`${OMBI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.ombi-rtr.rule:                      Host(`${OMBI_SUBDOMAIN:-ombi}.${DOMAIN_NAME}`)
             traefik.http.routers.ombi-rtr.entrypoints:               https
             traefik.http.routers.ombi-rtr.service:                   ombi-svc
             traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
@@ -145,7 +145,7 @@ services:
         <<: *common-keys-apps
         container_name: tautulli
         image:          lscr.io/linuxserver/tautulli:latest
-        hostname:       ${TAUTULLI_SUBDOMAIN}
+        hostname:       ${TAUTULLI_SUBDOMAIN:-tautulli}
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/tautulli:/config
             - ${MEDIA_CENTER_DIRECTORY}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
@@ -154,7 +154,7 @@ services:
             <<: *default-tz-puid-pgid
         labels:
             traefik.enable:                                              true
-            traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN:-tautulli}.${DOMAIN_NAME}`)
             traefik.http.routers.tautulli-rtr.entrypoints:               https
             traefik.http.routers.tautulli-rtr.service:                   tautulli-svc
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
@@ -167,7 +167,7 @@ services:
     sonarr:
         <<: *common-keys-apps
         image:          lscr.io/linuxserver/sonarr:latest
-        hostname:       ${SONARR_SUBDOMAIN}
+        hostname:       ${SONARR_SUBDOMAIN:-sonarr}
         container_name: sonarr
         environment:
             <<: *default-tz-puid-pgid
@@ -178,7 +178,7 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
             traefik.enable:                                            true
-            traefik.http.routers.sonarr-rtr.rule:                      Host(`${SONARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.sonarr-rtr.rule:                      Host(`${SONARR_SUBDOMAIN:-sonarr}.${DOMAIN_NAME}`)
             traefik.http.routers.sonarr-rtr.entrypoints:               https
             traefik.http.routers.sonarr-rtr.service:                   sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
@@ -191,7 +191,7 @@ services:
     radarr:
         <<: *common-keys-apps
         image:          lscr.io/linuxserver/radarr:latest
-        hostname:       ${RADARR_SUBDOMAIN}
+        hostname:       ${RADARR_SUBDOMAIN:-radarr}
         container_name: radarr
         environment:
             <<: *default-tz-puid-pgid
@@ -202,7 +202,7 @@ services:
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
             traefik.enable:                                            true
-            traefik.http.routers.radarr-rtr.rule:                      Host(`${RADARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.rule:                      Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
             traefik.http.routers.radarr-rtr.entrypoints:               https
             traefik.http.routers.radarr-rtr.service:                   radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
@@ -283,7 +283,7 @@ services:
     transmission:
         <<: *common-keys-apps
         container_name: transmission
-        hostname:       ${TRANSMISSION_SUBDOMAIN}
+        hostname:       ${TRANSMISSION_SUBDOMAIN:-transmission}
         image:          haugene/transmission-openvpn:latest
         environment:
             <<: *default-tz-puid-pgid
@@ -310,7 +310,7 @@ services:
             - /dev/net/tun
         labels:
             traefik.enable:                                                  true
-            traefik.http.routers.transmission-rtr.rule:                      Host(`${TRANSMISSION_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.transmission-rtr.rule:                      Host(`${TRANSMISSION_SUBDOMAIN:-transmission}.${DOMAIN_NAME}`)
             traefik.http.routers.transmission-rtr.entrypoints:               https
             traefik.http.routers.transmission-rtr.service:                   transmission-svc
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
@@ -345,7 +345,7 @@ services:
     portainer:
         container_name: portainer
         image:          portainer/portainer-ce:latest
-        hostname:       ${PORTAINER_SUBDOMAIN}
+        hostname:       ${PORTAINER_SUBDOMAIN:-portainer}
         environment:
             TZ: ${TZ}
         volumes:
@@ -358,7 +358,7 @@ services:
         restart:        ${UNIVERSAL_RESTART_POLICY}
         labels:
             traefik.enable:                                               true
-            traefik.http.routers.portainer-rtr.rule:                      Host(`${PORTAINER_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.portainer-rtr.rule:                      Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
             traefik.http.routers.portainer-rtr.entrypoints:               https
             traefik.http.routers.portainer-rtr.service:                   portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000

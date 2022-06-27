@@ -39,7 +39,7 @@ services:
         <<: *common-keys-core
         container_name: traefik
         image:          library/traefik:v2.6
-        hostname:       ${TRAEFIK_SUBDOMAIN}
+        hostname:       ${TRAEFIK_SUBDOMAIN:-traefik}
         ports:
             -   published: 80
                 target:    80
@@ -109,7 +109,7 @@ services:
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
         labels:
             traefik.enable:                                                   true
-            traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN:-traefik}.${DOMAIN_NAME}`)
             traefik.http.routers.traefik-rtr.entrypoints:                     https
             traefik.http.routers.traefik-rtr.service:                         api@internal
             traefik.http.routers.http-catchall.entrypoints:                   http

@@ -3,12 +3,11 @@
 """
 Homelab Command Line Interface
 """
-
+import collections
 import pathlib
 import subprocess
-from collections import OrderedDict
 from dataclasses import dataclass
-from typing import Optional, Union, Dict, List
+from typing import Optional, Union, List, OrderedDict
 
 import click
 
@@ -88,7 +87,7 @@ traefik_config = StackConfig(project_name=traefik_project)
 media_center_config = StackConfig(project_name=media_center_project)
 miscellaneous_config = StackConfig(project_name=miscellaneous_project)
 
-config_dict = OrderedDict()
+config_dict: OrderedDict[str, List[StackConfig]] = collections.OrderedDict()
 config_dict["traefik"] = [traefik_config]
 config_dict["media-center"] = [media_center_config]
 config_dict["miscellaneous"] = [miscellaneous_config]
