@@ -3,9 +3,12 @@
 """
 Homelab Command Line Interface
 """
+
 import collections
+import datetime
 import pathlib
 import subprocess
+import tarfile
 from dataclasses import dataclass
 from typing import Optional, Union, List, OrderedDict
 
@@ -16,10 +19,12 @@ __version__ = "0.1.0"
 __prog__ = "homelab"
 
 
-def run_command(command: str,
-                stream_output: bool = True,
-                cwd: Optional[Union[str, pathlib.Path]] = None,
-                raise_error: bool = True) -> None:
+def run_command(
+    command: str,
+    stream_output: bool = True,
+    cwd: Optional[Union[str, pathlib.Path]] = None,
+    raise_error: bool = True,
+) -> None:
     """
     Run a Shell Command
     Parameters
@@ -36,15 +41,16 @@ def run_command(command: str,
     -------
     None
     """
-    kwargs = dict(shell=True,
-                  universal_newlines=True,
-                  cwd=cwd,
-                  stdin=subprocess.PIPE,
-                  stdout=None,
-                  stderr=None)
+    kwargs = dict(
+        shell=True,
+        universal_newlines=True,
+        cwd=cwd,
+        stdin=subprocess.PIPE,
+        stdout=None,
+        stderr=None,
+    )
     if stream_output is False:
-        kwargs.update(dict(stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE))
+        kwargs.update(dict(stdout=subprocess.PIPE, stderr=subprocess.PIPE))
     child = subprocess.Popen(command, **kwargs)  # type: ignore
     _, stderr = child.communicate()
     exit_code = child.wait()
@@ -168,6 +174,29 @@ def update(stack: str) -> None:
         run_command(command=command)
         command_2 = generate_docker_compose(command="up -d", config=config)
         run_command(command=command_2)
+
+
+@cli.command()
+@click.argument("stack")
+@click.argument("destination")
+def backup(stack: str, destination: str) -> None:
+    """
+    Backup the Docker Stack
+    """
+    stack_formatted = stack.replace("-", "_")
+    file_name = f"{stack_formatted}_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.tar.gz"
+    source_directory = _project_dir.joinpath(stack)
+    destination_directory = pathlib.Path(destination).resolve()
+    assert all((source_directory.exists(), destination_directory.exists()))
+    backup_file = source_directory.parent.joinpath(file_name)
+    backup_file.parent.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(backup_file, "w:gz") as tar:
+        tar.add(source_directory, arcname=source_directory.name)
+    backup_file.rename(destination_directory.joinpath(backup_file.name))
+    gzipped_files = destination_directory.glob(f"{stack_formatted}_backup_*.tar.gz")
+    sorted_files = sorted(gzipped_files, reverse=True)
+    for file in sorted_files[2:]:
+        file.unlink()
 
 
 if __name__ == "__main__":
