@@ -10,6 +10,12 @@ media-center/radarr/
 media-center/sonarr/
 media-center/tautulli/
 media-center/transmission/
+media-center/calibre/
+media-center/nzbget/
+media-center/prowlarr/
+media-center/readarr/
+miscellaneous/config/
+miscellaneous/pihole/
 
 traefik/traefik/acme/
 traefik/traefik/logs/
