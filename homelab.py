@@ -269,10 +269,12 @@ def backup(
     backup_file = source_directory.parent.joinpath(file_name)
     backup_file.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Backing up %s", source_directory)
+    start_time = datetime.datetime.now()
     with tarfile.open(backup_file, "w:gz") as tar:
         tar.add(source_directory, arcname=source_directory.name)
+    duration = datetime.datetime.now() - start_time
     file_size = convert_size(backup_file.stat().st_size)
-    logger.info(f"Backup file created, %s (%s)", backup_file, file_size)
+    logger.info(f"Backup file created, %s (%s) (%s)", backup_file, file_size, duration)
     for additional_str in additional:
         additional_path = pathlib.Path(additional_str).resolve()
         assert additional_path.exists() and additional_path.is_dir()
