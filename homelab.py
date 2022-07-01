@@ -6,14 +6,19 @@ Homelab Command Line Interface
 
 import collections
 import datetime
+import logging
+import math
 import pathlib
 import shutil
 import subprocess
 import tarfile
 from dataclasses import dataclass
+from os import getenv
 from typing import Optional, Union, List, OrderedDict
 
 import click
+from rich import traceback
+from rich.logging import RichHandler
 
 _project_dir = pathlib.Path(__file__).resolve().parent
 __version__ = "0.1.0"
@@ -21,10 +26,10 @@ __prog__ = "homelab"
 
 
 def run_command(
-    command: str,
-    stream_output: bool = True,
-    cwd: Optional[Union[str, pathlib.Path]] = None,
-    raise_error: bool = True,
+        command: str,
+        stream_output: bool = True,
+        cwd: Optional[Union[str, pathlib.Path]] = None,
+        raise_error: bool = True,
 ) -> None:
     """
     Run a Shell Command
@@ -57,6 +62,19 @@ def run_command(
     exit_code = child.wait()
     if exit_code != 0 and raise_error is True:
         raise RuntimeError(stderr)
+
+
+def convert_size(size_bytes) -> str:
+    """
+    Convert Bytes to File Size
+    """
+    if size_bytes == 0:
+        return "0B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return "%s %s" % (s, size_name[i])
 
 
 @dataclass
@@ -191,14 +209,33 @@ def backup(stack: str, destination: str) -> None:
     assert all((source_directory.exists(), destination_directory.exists()))
     backup_file = source_directory.parent.joinpath(file_name)
     backup_file.parent.mkdir(parents=True, exist_ok=True)
+    logging.info("Backing up %s", source_directory)
     with tarfile.open(backup_file, "w:gz") as tar:
         tar.add(source_directory, arcname=source_directory.name)
+    file_size = convert_size(backup_file.stat().st_size)
+    logging.info(f"Backup file created, %s (%s)", backup_file, file_size)
     shutil.move(backup_file, destination_directory.joinpath(backup_file.name))
     gzipped_files = destination_directory.glob(f"{stack_formatted}_backup_*.tar.gz")
     sorted_files = sorted(gzipped_files, reverse=True)
     for file in sorted_files[2:]:
+        logging.info("Deleting older file, %s", file)
         file.unlink()
 
 
 if __name__ == "__main__":
+    logging_handler = RichHandler(
+        level=logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper()),
+        rich_tracebacks=True,
+        omit_repeated_times=False,
+        show_path=False,
+    )
+    logging.basicConfig(
+        format="%(message)s",
+        level=logging.NOTSET,
+        datefmt="[%Y-%m-%d %H:%M:%S]",
+        handlers=[
+            logging_handler,
+        ],
+    )
+    traceback.install(show_locals=True)
     cli()
