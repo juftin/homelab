@@ -24,6 +24,8 @@ _project_dir = pathlib.Path(__file__).resolve().parent
 __version__ = "0.1.0"
 __prog__ = "homelab"
 
+logger = logging.getLogger(__name__)
+
 
 def run_command(
         command: str,
@@ -209,11 +211,11 @@ def backup(stack: str, destination: str) -> None:
     assert all((source_directory.exists(), destination_directory.exists()))
     backup_file = source_directory.parent.joinpath(file_name)
     backup_file.parent.mkdir(parents=True, exist_ok=True)
-    logging.info("Backing up %s", source_directory)
+    logger.info("Backing up %s", source_directory)
     with tarfile.open(backup_file, "w:gz") as tar:
         tar.add(source_directory, arcname=source_directory.name)
     file_size = convert_size(backup_file.stat().st_size)
-    logging.info(f"Backup file created, %s (%s)", backup_file, file_size)
+    logger.info(f"Backup file created, %s (%s)", backup_file, file_size)
     shutil.move(backup_file, destination_directory.joinpath(backup_file.name))
     gzipped_files = destination_directory.glob(f"{stack_formatted}_backup_*.tar.gz")
     sorted_files = sorted(gzipped_files, reverse=True)
