@@ -7,6 +7,7 @@ Homelab Command Line Interface
 import collections
 import datetime
 import pathlib
+import shutil
 import subprocess
 import tarfile
 from dataclasses import dataclass
@@ -192,7 +193,7 @@ def backup(stack: str, destination: str) -> None:
     backup_file.parent.mkdir(parents=True, exist_ok=True)
     with tarfile.open(backup_file, "w:gz") as tar:
         tar.add(source_directory, arcname=source_directory.name)
-    backup_file.rename(destination_directory.joinpath(backup_file.name))
+    shutil.move(backup_file, destination_directory.joinpath(backup_file.name))
     gzipped_files = destination_directory.glob(f"{stack_formatted}_backup_*.tar.gz")
     sorted_files = sorted(gzipped_files, reverse=True)
     for file in sorted_files[2:]:
