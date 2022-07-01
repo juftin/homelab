@@ -14,7 +14,7 @@ import subprocess
 import tarfile
 from dataclasses import dataclass
 from os import getenv
-from typing import Optional, Union, List, OrderedDict
+from typing import Optional, Union, List, OrderedDict, Tuple
 
 import click
 from rich import traceback
@@ -197,15 +197,74 @@ def update(stack: str) -> None:
         run_command(command=command_2)
 
 
+def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
+    """
+    Delete Files in Old Directories
+    """
+    file_list = directory.glob(pattern)
+    sorted_files = sorted(file_list, reverse=True)
+    for file in sorted_files[num_backups:]:
+        logging.info("Deleting older file, %s", file)
+        file.unlink()
+
+
 @cli.command()
 @click.argument("stack")
 @click.argument("destination")
-def backup(stack: str, destination: str) -> None:
+@click.option(
+    "--additional",
+    "-a",
+    "additional",
+    multiple=True,
+    default=None,
+    type=str,
+    help="Additional directories to place a backup at",
+)
+@click.option(
+    "--cleanup/--no-cleanup",
+    default=False,
+    type=bool,
+    help="Whether to delete older backup files after creating a new one",
+)
+@click.option(
+    "--num-backups",
+    "-n",
+    "num_backups",
+    type=int,
+    default=2,
+    help="Number of total backup files to retain",
+)
+@click.option(
+    "--additional-cleanup/--additional-no-cleanup",
+    "-d",
+    "additional_cleanup",
+    default=False,
+    type=bool,
+    help="Whether to delete older backup files after creating a new one",
+)
+@click.option(
+    "--additional-num-backups",
+    "-h",
+    "additional_num_backups",
+    type=int,
+    default=2,
+    help="Number of total backup files to retain in the additional directories",
+)
+def backup(
+    stack: str,
+    destination: str,
+    cleanup: bool,
+    additional: Tuple[str],
+    num_backups: int,
+    additional_cleanup: bool,
+    additional_num_backups: int,
+) -> None:
     """
     Backup the Docker Stack
     """
     stack_formatted = stack.replace("-", "_")
-    file_name = f"{stack_formatted}_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.tar.gz"
+    time_format = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    file_name = f"{stack_formatted}_backup_{time_format}.tar.gz"
     source_directory = _project_dir.joinpath(stack)
     destination_directory = pathlib.Path(destination).resolve()
     assert all((source_directory.exists(), destination_directory.exists()))
@@ -216,12 +275,25 @@ def backup(stack: str, destination: str) -> None:
         tar.add(source_directory, arcname=source_directory.name)
     file_size = convert_size(backup_file.stat().st_size)
     logger.info(f"Backup file created, %s (%s)", backup_file, file_size)
+    for additional_str in additional:
+        additional_path = pathlib.Path(additional_str).resolve()
+        assert additional_path.exists() and additional_path.is_dir()
+        additional_file = additional_path.joinpath(backup_file.name)
+        logger.info("Copying file to additional path: %s", additional_file)
+        shutil.copy(backup_file, additional_file)
+        if additional_cleanup is True:
+            file_cleanup(
+                directory=additional_path,
+                pattern=f"{stack_formatted}_backup_*.tar.gz",
+                num_backups=additional_num_backups,
+            )
     shutil.move(backup_file, destination_directory.joinpath(backup_file.name))
-    gzipped_files = destination_directory.glob(f"{stack_formatted}_backup_*.tar.gz")
-    sorted_files = sorted(gzipped_files, reverse=True)
-    for file in sorted_files[2:]:
-        logging.info("Deleting older file, %s", file)
-        file.unlink()
+    if cleanup is True:
+        file_cleanup(
+            directory=destination_directory,
+            pattern=f"{stack_formatted}_backup_*.tar.gz",
+            num_backups=num_backups,
+        )
 
 
 if __name__ == "__main__":
