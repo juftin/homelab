@@ -285,7 +285,9 @@ def backup(
                 pattern=f"{stack_formatted}_backup_*.tar.gz",
                 num_backups=additional_num_backups,
             )
-    shutil.move(backup_file, destination_directory.joinpath(backup_file.name))
+    destination_file = destination_directory.joinpath(backup_file.name)
+    logger.info("Moving backup to storage directory: %s", destination_file)
+    shutil.move(backup_file, destination_file)
     if cleanup is True:
         file_cleanup(
             directory=destination_directory,
