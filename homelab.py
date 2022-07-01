@@ -223,7 +223,6 @@ def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
 @click.option(
     "--cleanup/--no-cleanup",
     default=False,
-    type=bool,
     help="Whether to delete older backup files after creating a new one",
 )
 @click.option(
@@ -239,7 +238,6 @@ def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
     "-d",
     "additional_cleanup",
     default=False,
-    type=bool,
     help="Whether to delete older backup files after creating a new one",
 )
 @click.option(
