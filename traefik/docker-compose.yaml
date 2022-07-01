@@ -203,7 +203,7 @@ services:
     duckdns:
         <<: *common-keys-core
         container_name: duckdns
-        image:          linuxserver/duckdns:latest
+        image:          lscr.io/linuxserver/duckdns:latest
         environment:
             PUID:       ${PUID}
             PGID:       ${PGID}
