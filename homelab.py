@@ -28,10 +28,10 @@ logger = logging.getLogger(__name__)
 
 
 def run_command(
-        command: str,
-        stream_output: bool = True,
-        cwd: Optional[Union[str, pathlib.Path]] = None,
-        raise_error: bool = True,
+    command: str,
+    stream_output: bool = True,
+    cwd: Optional[Union[str, pathlib.Path]] = None,
+    raise_error: bool = True,
 ) -> None:
     """
     Run a Shell Command
