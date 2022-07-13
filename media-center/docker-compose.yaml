@@ -292,6 +292,7 @@ services:
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/calibre-web:/config
             - ${BOOKS_DIR}:/books
+            - ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre-config
         labels:
             traefik.enable:                                                 true
             traefik.http.routers.calibre-web-rtr.rule:                      Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
