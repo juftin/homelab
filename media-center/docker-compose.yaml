@@ -274,7 +274,31 @@ services:
             traefik.http.routers.calibre-rtr.entrypoints:               https
             traefik.http.routers.calibre-rtr.service:                   calibre-svc
             traefik.http.services.calibre-svc.loadbalancer.server.port: 8080
-            traefik.http.routers.calibredesktop-rtr.middlewares:        chain-oauth-google@file
+            traefik.http.routers.calibre-rtr.middlewares:               chain-oauth-google@file
+
+    #######################################
+    # CALIBRE-WEB (CALIBRE WEB-UI)
+    #######################################
+
+    calibre-web:
+        <<: *common-keys-apps
+        image: lscr.io/linuxserver/calibre-web:latest
+        hostname:       ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
+        container_name: calibre-web
+        environment:
+          <<: *default-tz-puid-pgid
+          DOCKER_MODS:                linuxserver/calibre-web:calibre
+          OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/calibre-web:/config
+            - ${BOOKS_DIR}:/books
+        labels:
+            traefik.enable:                                                 true
+            traefik.http.routers.calibre-web-rtr.rule:                      Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-web-rtr.entrypoints:               https
+            traefik.http.routers.calibre-web-rtr.service:                   calibre-web-svc
+            traefik.http.services.calibre-web-svc.loadbalancer.server.port: 8083
+            traefik.http.routers.calibre-web-rtr.middlewares:               chain-oauth-google@file
 
     #######################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
