@@ -14,6 +14,7 @@ import subprocess
 import tarfile
 from dataclasses import dataclass
 from os import getenv
+from typing import Optional, Union, List, OrderedDict, Tuple, Iterable
 from typing import Optional, Union, List, OrderedDict, Tuple
 
 import click
@@ -60,9 +61,10 @@ def run_command(
     if stream_output is False:
         kwargs.update(dict(stdout=subprocess.PIPE, stderr=subprocess.PIPE))
     child = subprocess.Popen(command, **kwargs)  # type: ignore
-    _, stderr = child.communicate()
+    stdout, stderr = child.communicate()
     exit_code = child.wait()
     if exit_code != 0 and raise_error is True:
+        logger.error(command)
         raise RuntimeError(stderr)
 
 
@@ -96,6 +98,8 @@ class StackConfig:
 
 
 def generate_docker_compose(command: str, config: StackConfig) -> str:
+    if isinstance(command, tuple):
+        command = " ".join(command)
     compose_command = f"""
     docker-compose \\
       --project-name "{config.project_name}" \\
@@ -172,7 +176,7 @@ def deploy(stack: str) -> None:
 
 @cli.command()
 @click.argument("stack")
-@click.argument("command")
+@click.argument("command", nargs=-1)
 def docker(stack: str, command: str) -> None:
     """
     Run a Docker Compose Command
