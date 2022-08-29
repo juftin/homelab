@@ -135,6 +135,7 @@ services:
         environment:
             <<: *default-tz-puid-pgid
             VERSION: docker
+            PLEX_CLAIM: ${PLEX_CLAIM}
         restart:        ${UNIVERSAL_RESTART_POLICY}
 
     #######################################
