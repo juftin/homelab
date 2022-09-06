@@ -2,7 +2,7 @@
 # DOCKER COMPOSE - MEDIA-CENTER-V2 BY JUFTIN
 ################################################################################
 
-version: "3.9"
+version: '3.9'
 
 ################################################################################
 # NETWORKING CONFIGURATION
@@ -25,19 +25,19 @@ networks:
 x-environment: &default-tz-puid-pgid
     PUID: ${PUID}
     PGID: ${PGID}
-    TZ:   ${TZ}
+    TZ: ${TZ}
 
 x-common-keys-core: &common-keys-core
     security_opt:
-        - no-new-privileges:true
+    -   no-new-privileges:true
     restart: always
 
 x-common-keys-apps: &common-keys-apps
     security_opt:
-        - no-new-privileges:true
+    -   no-new-privileges:true
     restart: unless-stopped
     networks:
-        traefik: null
+        traefik:
 
 ################################################################################
 # SERVICES CONFIGURATION
@@ -56,18 +56,18 @@ services:
     watchtower:
         <<: *common-keys-core
         container_name: watchtower
-        image:          containrrr/watchtower:latest
+        image: containrrr/watchtower:latest
         networks:
-            internal: null
-            docker:   null
+            internal:
+            docker:
         environment:
-            TZ:                            ${TZ}
-            WATCHTOWER_CLEANUP:            "true"
-            WATCHTOWER_REMOVE_VOLUMES:     "true"
-            WATCHTOWER_INCLUDE_STOPPED:    "true"
-            WATCHTOWER_NO_STARTUP_MESSAGE: "false"
-            WATCHTOWER_SCHEDULE:           "0 30 12 * * *"
-            DOCKER_HOST:                   tcp://socket-proxy:2375
+            TZ: ${TZ}
+            WATCHTOWER_CLEANUP: 'true'
+            WATCHTOWER_REMOVE_VOLUMES: 'true'
+            WATCHTOWER_INCLUDE_STOPPED: 'true'
+            WATCHTOWER_NO_STARTUP_MESSAGE: 'false'
+            WATCHTOWER_SCHEDULE: 0 30 12 * * *
+            DOCKER_HOST: tcp://socket-proxy:2375
 
     ########################################################
     # FRONT-END APPLICATIONS
@@ -80,18 +80,18 @@ services:
     heimdall:
         <<: *common-keys-apps
         container_name: heimdall
-        image:          lscr.io/linuxserver/heimdall:latest
+        image: lscr.io/linuxserver/heimdall:latest
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/heimdall:/config
+        -   ${MEDIA_CENTER_DIRECTORY}/heimdall:/config
         environment:
             <<: *default-tz-puid-pgid
         labels:
-            traefik.enable:                                              true
-            traefik.http.routers.heimdall-rtr.rule:                      Host(`${DOMAIN_NAME}`,`www.${DOMAIN_NAME}`)
-            traefik.http.routers.heimdall-rtr.entrypoints:               https
-            traefik.http.routers.heimdall-rtr.service:                   heimdall-svc
+            traefik.enable: true
+            traefik.http.routers.heimdall-rtr.rule: Host(`${DOMAIN_NAME}`,`www.${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.entrypoints: https
+            traefik.http.routers.heimdall-rtr.service: heimdall-svc
             traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
-            traefik.http.routers.heimdall-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.heimdall-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # OMBI (DOWNLOAD REQUESTS)
@@ -100,20 +100,20 @@ services:
     ombi:
         <<: *common-keys-apps
         container_name: ombi
-        image:          lscr.io/linuxserver/ombi:latest
-        hostname:       ${OMBI_SUBDOMAIN:-ombi}
+        image: lscr.io/linuxserver/ombi:latest
+        hostname: ${OMBI_SUBDOMAIN:-ombi}
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/ombi:/config
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   ${MEDIA_CENTER_DIRECTORY}/ombi:/config
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
-            traefik.enable:                                          true
-            traefik.http.routers.ombi-rtr.rule:                      Host(`${OMBI_SUBDOMAIN:-ombi}.${DOMAIN_NAME}`)
-            traefik.http.routers.ombi-rtr.entrypoints:               https
-            traefik.http.routers.ombi-rtr.service:                   ombi-svc
+            traefik.enable: true
+            traefik.http.routers.ombi-rtr.rule: Host(`${OMBI_SUBDOMAIN:-ombi}.${DOMAIN_NAME}`)
+            traefik.http.routers.ombi-rtr.entrypoints: https
+            traefik.http.routers.ombi-rtr.service: ombi-svc
             traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
-            traefik.http.routers.ombi-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.ombi-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # PLEX (MOVIES AND TV SERVER)
@@ -121,22 +121,22 @@ services:
 
     plex:
         container_name: plex
-        image:          lscr.io/linuxserver/plex:latest
-        network_mode:   host
+        image: lscr.io/linuxserver/plex:latest
+        network_mode: host
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/plex:/config
-            - ${TV_DIR}:/tv
-            - ${MOVIE_DIR}:/movies
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
-            - /tmp:/transcode
+        -   ${MEDIA_CENTER_DIRECTORY}/plex:/config
+        -   ${TV_DIR}:/tv
+        -   ${MOVIE_DIR}:/movies
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   /tmp:/transcode
         devices:
-            - /dev/dri:/dev/dri
-            - /dev/dvb:/dev/dvb
+        -   /dev/dri:/dev/dri
+        -   /dev/dvb:/dev/dvb
         environment:
             <<: *default-tz-puid-pgid
             VERSION: docker
             PLEX_CLAIM: ${PLEX_CLAIM}
-        restart:        ${UNIVERSAL_RESTART_POLICY}
+        restart: ${UNIVERSAL_RESTART_POLICY}
 
     #######################################
     # TAUTULLI (PLEX SERVER MONITORING)
@@ -145,21 +145,21 @@ services:
     tautulli:
         <<: *common-keys-apps
         container_name: tautulli
-        image:          lscr.io/linuxserver/tautulli:latest
-        hostname:       ${TAUTULLI_SUBDOMAIN:-tautulli}
+        image: lscr.io/linuxserver/tautulli:latest
+        hostname: ${TAUTULLI_SUBDOMAIN:-tautulli}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/tautulli:/config
-            - ${MEDIA_CENTER_DIRECTORY}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   ${MEDIA_CENTER_DIRECTORY}/tautulli:/config
+        -   ${MEDIA_CENTER_DIRECTORY}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         environment:
             <<: *default-tz-puid-pgid
         labels:
-            traefik.enable:                                              true
-            traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN:-tautulli}.${DOMAIN_NAME}`)
-            traefik.http.routers.tautulli-rtr.entrypoints:               https
-            traefik.http.routers.tautulli-rtr.service:                   tautulli-svc
+            traefik.enable: true
+            traefik.http.routers.tautulli-rtr.rule: Host(`${TAUTULLI_SUBDOMAIN:-tautulli}.${DOMAIN_NAME}`)
+            traefik.http.routers.tautulli-rtr.entrypoints: https
+            traefik.http.routers.tautulli-rtr.service: tautulli-svc
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
-            traefik.http.routers.tautulli-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.tautulli-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # SONARR (TV SHOW DOWNLOADS)
@@ -167,23 +167,23 @@ services:
 
     sonarr:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/sonarr:latest
-        hostname:       ${SONARR_SUBDOMAIN:-sonarr}
+        image: lscr.io/linuxserver/sonarr:latest
+        hostname: ${SONARR_SUBDOMAIN:-sonarr}
         container_name: sonarr
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/sonarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${TV_DIR}:/tv
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   ${MEDIA_CENTER_DIRECTORY}/sonarr:/config
+        -   ${COMPLETED_DOWNLOADS}:/downloads
+        -   ${TV_DIR}:/tv
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
-            traefik.enable:                                            true
-            traefik.http.routers.sonarr-rtr.rule:                      Host(`${SONARR_SUBDOMAIN:-sonarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.sonarr-rtr.entrypoints:               https
-            traefik.http.routers.sonarr-rtr.service:                   sonarr-svc
+            traefik.enable: true
+            traefik.http.routers.sonarr-rtr.rule: Host(`${SONARR_SUBDOMAIN:-sonarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.sonarr-rtr.entrypoints: https
+            traefik.http.routers.sonarr-rtr.service: sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
-            traefik.http.routers.sonarr-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.sonarr-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # RADARR (MOVIE DOWNLOADS)
@@ -191,23 +191,23 @@ services:
 
     radarr:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/radarr:latest
-        hostname:       ${RADARR_SUBDOMAIN:-radarr}
+        image: lscr.io/linuxserver/radarr:latest
+        hostname: ${RADARR_SUBDOMAIN:-radarr}
         container_name: radarr
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/radarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${MOVIE_DIR}:/movies
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   ${MEDIA_CENTER_DIRECTORY}/radarr:/config
+        -   ${COMPLETED_DOWNLOADS}:/downloads
+        -   ${MOVIE_DIR}:/movies
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         labels:
-            traefik.enable:                                            true
-            traefik.http.routers.radarr-rtr.rule:                      Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.radarr-rtr.entrypoints:               https
-            traefik.http.routers.radarr-rtr.service:                   radarr-svc
+            traefik.enable: true
+            traefik.http.routers.radarr-rtr.rule: Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.entrypoints: https
+            traefik.http.routers.radarr-rtr.service: radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
-            traefik.http.routers.radarr-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.radarr-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # PROWLARR (DOWNLOAD INDEXING)
@@ -215,20 +215,20 @@ services:
 
     prowlarr:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/prowlarr:develop
-        hostname:       ${PROWLARR_SUBDOMAIN:-prowlarr}
+        image: lscr.io/linuxserver/prowlarr:develop
+        hostname: ${PROWLARR_SUBDOMAIN:-prowlarr}
         container_name: prowlarr
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/prowlarr:/config
+        -   ${MEDIA_CENTER_DIRECTORY}/prowlarr:/config
         labels:
-            traefik.enable:                                              true
-            traefik.http.routers.prowlarr-rtr.rule:                      Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.prowlarr-rtr.entrypoints:               https
-            traefik.http.routers.prowlarr-rtr.service:                   prowlarr-svc
+            traefik.enable: true
+            traefik.http.routers.prowlarr-rtr.rule: Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.prowlarr-rtr.entrypoints: https
+            traefik.http.routers.prowlarr-rtr.service: prowlarr-svc
             traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696
-            traefik.http.routers.prowlarr-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.prowlarr-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # READARR (BOOKS AND AUDIOBOOKS)
@@ -236,23 +236,23 @@ services:
 
     readarr:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/readarr:develop
-        hostname:       ${READARR_SUBDOMAIN:-readarr}
+        image: lscr.io/linuxserver/readarr:develop
+        hostname: ${READARR_SUBDOMAIN:-readarr}
         container_name: readarr
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/readarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${BOOKS_DIR}:/books
-            - ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre
+        -   ${MEDIA_CENTER_DIRECTORY}/readarr:/config
+        -   ${COMPLETED_DOWNLOADS}:/downloads
+        -   ${BOOKS_DIR}:/books
+        -   ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre
         labels:
-            traefik.enable:                                             true
-            traefik.http.routers.readarr-rtr.rule:                      Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.readarr-rtr.entrypoints:               https
-            traefik.http.routers.readarr-rtr.service:                   readarr-svc
+            traefik.enable: true
+            traefik.http.routers.readarr-rtr.rule: Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.readarr-rtr.entrypoints: https
+            traefik.http.routers.readarr-rtr.service: readarr-svc
             traefik.http.services.readarr-svc.loadbalancer.server.port: 8787
-            traefik.http.routers.readarr-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.readarr-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # CALIBRE (BOOKS MANAGEMENT)
@@ -260,22 +260,22 @@ services:
 
     calibre:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/calibre:latest
-        hostname:       ${CALIBRE_SUBDOMAIN:-calibre}
+        image: lscr.io/linuxserver/calibre:latest
+        hostname: ${CALIBRE_SUBDOMAIN:-calibre}
         container_name: calibre
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/calibre:/config
-            - ${BOOKS_DIR}:/books
-            - ${COMPLETED_DOWNLOADS}:/downloads
+        -   ${MEDIA_CENTER_DIRECTORY}/calibre:/config
+        -   ${BOOKS_DIR}:/books
+        -   ${COMPLETED_DOWNLOADS}:/downloads
         labels:
-            traefik.enable:                                             true
-            traefik.http.routers.calibre-rtr.rule:                      Host(`${CALIBRE_SUBDOMAIN:-calibre}.${DOMAIN_NAME}`)
-            traefik.http.routers.calibre-rtr.entrypoints:               https
-            traefik.http.routers.calibre-rtr.service:                   calibre-svc
+            traefik.enable: true
+            traefik.http.routers.calibre-rtr.rule: Host(`${CALIBRE_SUBDOMAIN:-calibre}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-rtr.entrypoints: https
+            traefik.http.routers.calibre-rtr.service: calibre-svc
             traefik.http.services.calibre-svc.loadbalancer.server.port: 8080
-            traefik.http.routers.calibre-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.calibre-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # CALIBRE-WEB (CALIBRE WEB-UI)
@@ -284,23 +284,23 @@ services:
     calibre-web:
         <<: *common-keys-apps
         image: lscr.io/linuxserver/calibre-web:latest
-        hostname:       ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
+        hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         container_name: calibre-web
         environment:
-          <<: *default-tz-puid-pgid
-          DOCKER_MODS:                linuxserver/calibre-web:calibre
-          OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+            <<: *default-tz-puid-pgid
+            DOCKER_MODS: linuxserver/calibre-web:calibre
+            OAUTHLIB_RELAX_TOKEN_SCOPE: 1
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/calibre-web:/config
-            - ${BOOKS_DIR}:/books
-            - ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre-config
+        -   ${MEDIA_CENTER_DIRECTORY}/calibre-web:/config
+        -   ${BOOKS_DIR}:/books
+        -   ${MEDIA_CENTER_DIRECTORY}/calibre:/calibre-config
         labels:
-            traefik.enable:                                                 true
-            traefik.http.routers.calibre-web-rtr.rule:                      Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
-            traefik.http.routers.calibre-web-rtr.entrypoints:               https
-            traefik.http.routers.calibre-web-rtr.service:                   calibre-web-svc
+            traefik.enable: true
+            traefik.http.routers.calibre-web-rtr.rule: Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-web-rtr.entrypoints: https
+            traefik.http.routers.calibre-web-rtr.service: calibre-web-svc
             traefik.http.services.calibre-web-svc.loadbalancer.server.port: 8083
-            traefik.http.routers.calibre-web-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.calibre-web-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
@@ -309,38 +309,38 @@ services:
     transmission:
         <<: *common-keys-apps
         container_name: transmission
-        hostname:       ${TRANSMISSION_SUBDOMAIN:-transmission}
-        image:          haugene/transmission-openvpn:latest
+        hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
+        image: haugene/transmission-openvpn:latest
         environment:
             <<: *default-tz-puid-pgid
-            OPENVPN_PROVIDER:                        ${OPENVPN_PROVIDER}
-            OPENVPN_USERNAME:                        ${OPENVPN_USERNAME}
-            OPENVPN_PASSWORD:                        ${OPENVPN_PASSWORD}
-            TRANSMISSION_IDLE_SEEDING_LIMIT:         0
-            TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED: "true"
-            TRANSMISSION_WEB_UI:                     combustion
-            TRANSMISSION_DOWNLOAD_DIR:               /downloads
-            LOCAL_NETWORK:                           ${PHYSICAL_SERVER_NETWORK}
+            OPENVPN_PROVIDER: ${OPENVPN_PROVIDER}
+            OPENVPN_USERNAME: ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+            TRANSMISSION_IDLE_SEEDING_LIMIT: 0
+            TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED: 'true'
+            TRANSMISSION_WEB_UI: combustion
+            TRANSMISSION_DOWNLOAD_DIR: /downloads
+            LOCAL_NETWORK: ${PHYSICAL_SERVER_NETWORK}
         volumes:
-            - /etc/localtime:/etc/localtime:ro
-            - ${MEDIA_CENTER_DIRECTORY}/transmission:/data/transmission-home
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        -   /etc/localtime:/etc/localtime:ro
+        -   ${MEDIA_CENTER_DIRECTORY}/transmission:/data/transmission-home
+        -   ${COMPLETED_DOWNLOADS}:/downloads
+        -   ${INCOMPLETE_DOWNLOADS}:/data/incomplete
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         dns:
-            - 8.8.8.8
-            - 8.8.4.4
+        -   8.8.8.8
+        -   8.8.4.4
         cap_add:
-            - NET_ADMIN
+        -   NET_ADMIN
         devices:
-            - /dev/net/tun
+        -   /dev/net/tun
         labels:
-            traefik.enable:                                                  true
-            traefik.http.routers.transmission-rtr.rule:                      Host(`${TRANSMISSION_SUBDOMAIN:-transmission}.${DOMAIN_NAME}`)
-            traefik.http.routers.transmission-rtr.entrypoints:               https
-            traefik.http.routers.transmission-rtr.service:                   transmission-svc
+            traefik.enable: true
+            traefik.http.routers.transmission-rtr.rule: Host(`${TRANSMISSION_SUBDOMAIN:-transmission}.${DOMAIN_NAME}`)
+            traefik.http.routers.transmission-rtr.entrypoints: https
+            traefik.http.routers.transmission-rtr.service: transmission-svc
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
-            traefik.http.routers.transmission-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.transmission-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # NZBGET (USENET DOWNLOADING)
@@ -348,21 +348,21 @@ services:
 
     nzbget:
         <<: *common-keys-apps
-        image:          lscr.io/linuxserver/nzbget:latest
+        image: lscr.io/linuxserver/nzbget:latest
         container_name: nzbget
-        hostname:       ${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}
+        hostname: ${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/nzbget:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads/completed
+        -   ${MEDIA_CENTER_DIRECTORY}/nzbget:/config
+        -   ${COMPLETED_DOWNLOADS}:/downloads/completed
         labels:
-            traefik.enable:                                            true
-            traefik.http.routers.nzbget-rtr.rule:                      Host(`${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}`)
-            traefik.http.routers.nzbget-rtr.entrypoints:               https
-            traefik.http.routers.nzbget-rtr.service:                   nzbget-svc
+            traefik.enable: true
+            traefik.http.routers.nzbget-rtr.rule: Host(`${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}`)
+            traefik.http.routers.nzbget-rtr.entrypoints: https
+            traefik.http.routers.nzbget-rtr.service: nzbget-svc
             traefik.http.services.nzbget-svc.loadbalancer.server.port: 6789
-            traefik.http.routers.nzbget-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.nzbget-rtr.middlewares: chain-oauth-google@file
 
     #######################################
     # PORTAINER (GUI CONTAINER MANAGEMENT)
@@ -370,22 +370,22 @@ services:
 
     portainer:
         container_name: portainer
-        image:          portainer/portainer-ce:latest
-        hostname:       ${PORTAINER_SUBDOMAIN:-portainer}
+        image: portainer/portainer-ce:latest
+        hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         environment:
             TZ: ${TZ}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/portainer:/data
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
-        command:        "-H tcp://socket-proxy:2375 --admin-password='${ADMIN_HTPASSWD}'"
+        -   ${MEDIA_CENTER_DIRECTORY}/portainer:/data
+        -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        command: -H tcp://socket-proxy:2375 --admin-password='${ADMIN_HTPASSWD}'
         networks:
-            traefik: null
-            docker:  null
-        restart:        ${UNIVERSAL_RESTART_POLICY}
+            traefik:
+            docker:
+        restart: ${UNIVERSAL_RESTART_POLICY}
         labels:
-            traefik.enable:                                               true
-            traefik.http.routers.portainer-rtr.rule:                      Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
-            traefik.http.routers.portainer-rtr.entrypoints:               https
-            traefik.http.routers.portainer-rtr.service:                   portainer-svc
+            traefik.enable: true
+            traefik.http.routers.portainer-rtr.rule: Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
+            traefik.http.routers.portainer-rtr.entrypoints: https
+            traefik.http.routers.portainer-rtr.service: portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000
-            traefik.http.routers.portainer-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.portainer-rtr.middlewares: chain-oauth-google@file
