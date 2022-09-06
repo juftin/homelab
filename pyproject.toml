@@ -1,9 +1,16 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "homelab"
 version = "0.1.0"
 description = ""
 authors = ["juftin <juftin@juftin.com>"]
 license = "MIT"
+packages = [
+    { include = "homelab.py" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -12,6 +19,5 @@ rich = "^12.5.1"
 
 [tool.poetry.dev-dependencies]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.scripts]
+homelab = "homelab:main"

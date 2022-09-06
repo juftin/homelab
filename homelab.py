@@ -14,8 +14,7 @@ import subprocess
 import tarfile
 from dataclasses import dataclass
 from os import getenv
-from typing import Optional, Union, List, OrderedDict, Tuple, Iterable
-from typing import Optional, Union, List, OrderedDict, Tuple
+from typing import Iterable, List, Optional, OrderedDict, Tuple, Union
 
 import click
 from rich import traceback
@@ -302,7 +301,10 @@ def backup(
         )
 
 
-if __name__ == "__main__":
+def main():
+    """
+    Run the Main CLI
+    """
     logging_handler = RichHandler(
         level=logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper()),
         rich_tracebacks=True,
@@ -319,3 +321,7 @@ if __name__ == "__main__":
     )
     traceback.install(show_locals=True)
     cli()
+
+
+if __name__ == "__main__":
+    main()
