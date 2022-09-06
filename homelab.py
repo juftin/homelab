@@ -20,7 +20,9 @@ import click
 from rich import traceback
 from rich.logging import RichHandler
 
-_project_dir = pathlib.Path(__file__).resolve().parent
+_default_project_dir = str(pathlib.Path(__file__).resolve().parent)
+_homelab_dir = getenv("HOMELAB_DIRECTORY", _default_project_dir)
+_project_dir = pathlib.Path(_homelab_dir).resolve()
 __version__ = "0.1.0"
 __prog__ = "homelab"
 
