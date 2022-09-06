@@ -16,6 +16,7 @@ media-center/prowlarr/
 media-center/readarr/
 miscellaneous/config/
 miscellaneous/pihole/
+media-center/calibre-web/
 
 traefik/traefik/acme/
 traefik/traefik/logs/
