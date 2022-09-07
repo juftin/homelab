@@ -274,6 +274,56 @@ def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
         file.unlink()
 
 
+def _backup_stack(
+    stack: StackConfig,
+    destination: str,
+    cleanup: bool,
+    additional: Tuple[str],
+    num_backups: int,
+    additional_cleanup: bool,
+    additional_num_backups: int,
+) -> None:
+    """
+    Backup the Docker Stack
+    """
+    stack_formatted = stack.project_name.replace("-", "_")
+    time_format = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    file_name = f"{stack_formatted}_backup_{time_format}.tar.gz"
+    source_directory = stack.compose_file.parent
+    destination_directory = pathlib.Path(destination).resolve()
+    assert all((source_directory.exists(), destination_directory.exists()))
+    backup_file = source_directory.parent.joinpath(file_name)
+    backup_file.parent.mkdir(parents=True, exist_ok=True)
+    logger.info("Backing up %s", source_directory)
+    start_time = datetime.datetime.now()
+    with tarfile.open(backup_file, "w:gz") as tar:
+        tar.add(source_directory, arcname=source_directory.name)
+    duration = datetime.datetime.now() - start_time
+    file_size = convert_size(backup_file.stat().st_size)
+    logger.info(f"Backup file created, %s (%s) (%s)", backup_file, file_size, duration)
+    for additional_str in additional:
+        additional_path = pathlib.Path(additional_str).resolve()
+        assert additional_path.exists() and additional_path.is_dir()
+        additional_file = additional_path.joinpath(backup_file.name)
+        logger.info("Copying file to additional path: %s", additional_file)
+        shutil.copy(backup_file, additional_file)
+        if additional_cleanup is True:
+            file_cleanup(
+                directory=additional_path,
+                pattern=f"{stack_formatted}_backup_*.tar.gz",
+                num_backups=additional_num_backups,
+            )
+    destination_file = destination_directory.joinpath(backup_file.name)
+    logger.info("Moving backup to storage directory: %s", destination_file)
+    shutil.move(backup_file, destination_file)
+    if cleanup is True:
+        file_cleanup(
+            directory=destination_directory,
+            pattern=f"{stack_formatted}_backup_*.tar.gz",
+            num_backups=num_backups,
+        )
+
+
 @cli.command()
 @stack_arg
 @click.argument("destination")
@@ -326,41 +376,16 @@ def backup(
     """
     Backup the Docker Stack
     """
-    stack_formatted = stack.replace("-", "_")
-    time_format = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    file_name = f"{stack_formatted}_backup_{time_format}.tar.gz"
-    source_directory = _project_dir.joinpath(stack)
-    destination_directory = pathlib.Path(destination).resolve()
-    assert all((source_directory.exists(), destination_directory.exists()))
-    backup_file = source_directory.parent.joinpath(file_name)
-    backup_file.parent.mkdir(parents=True, exist_ok=True)
-    logger.info("Backing up %s", source_directory)
-    start_time = datetime.datetime.now()
-    with tarfile.open(backup_file, "w:gz") as tar:
-        tar.add(source_directory, arcname=source_directory.name)
-    duration = datetime.datetime.now() - start_time
-    file_size = convert_size(backup_file.stat().st_size)
-    logger.info(f"Backup file created, %s (%s) (%s)", backup_file, file_size, duration)
-    for additional_str in additional:
-        additional_path = pathlib.Path(additional_str).resolve()
-        assert additional_path.exists() and additional_path.is_dir()
-        additional_file = additional_path.joinpath(backup_file.name)
-        logger.info("Copying file to additional path: %s", additional_file)
-        shutil.copy(backup_file, additional_file)
-        if additional_cleanup is True:
-            file_cleanup(
-                directory=additional_path,
-                pattern=f"{stack_formatted}_backup_*.tar.gz",
-                num_backups=additional_num_backups,
-            )
-    destination_file = destination_directory.joinpath(backup_file.name)
-    logger.info("Moving backup to storage directory: %s", destination_file)
-    shutil.move(backup_file, destination_file)
-    if cleanup is True:
-        file_cleanup(
-            directory=destination_directory,
-            pattern=f"{stack_formatted}_backup_*.tar.gz",
+    configs = get_stacks(stack=stack)
+    for config in configs:
+        _backup_stack(
+            stack=config,
+            destination=destination,
+            cleanup=cleanup,
+            additional=additional,
             num_backups=num_backups,
+            additional_cleanup=additional_cleanup,
+            additional_num_backups=additional_num_backups,
         )
 
 
