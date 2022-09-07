@@ -15,17 +15,17 @@ import tarfile
 from dataclasses import dataclass
 from os import getenv
 from textwrap import dedent
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import click
 from rich import print, traceback
 from rich.logging import RichHandler
 
-_default_project_dir = str(pathlib.Path(__file__).resolve().parent)
+from homelab._version import __application__, __version__
+
+_default_project_dir = str(pathlib.Path(__file__).resolve().parent.parent)
 _homelab_dir = getenv("HOMELAB_DIRECTORY", _default_project_dir)
 _project_dir = pathlib.Path(_homelab_dir).resolve()
-__version__ = "0.2.0"
-__prog__ = "homelab"
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ subdirectories = [
 subdirectory_names = [
     f.name for f in subdirectories if len(list(f.glob("docker-compose.y*ml"))) > 0
 ]
-config_dict = dict(all=[])
+config_dict: Dict[str, List[StackConfig]] = dict(all=[])
 for directory_name in subdirectory_names:
     config = StackConfig(project_name=directory_name)
     config_dict[directory_name] = [config]
@@ -75,6 +75,7 @@ def run_command(
 ) -> None:
     """
     Run a Shell Command
+
     Parameters
     ----------
     command: str
@@ -108,7 +109,7 @@ def run_command(
         raise RuntimeError(stderr)
 
 
-def convert_size(size_bytes) -> str:
+def convert_size(size_bytes: int) -> str:
     """
     Convert Bytes to File Size
     """
@@ -122,6 +123,9 @@ def convert_size(size_bytes) -> str:
 
 
 def generate_docker_compose(command: str, config: StackConfig) -> str:
+    """
+    Build the actual Docker-compose Command String
+    """
     if isinstance(command, tuple):
         command = " ".join(command)
     compose_command = dedent(
@@ -155,7 +159,7 @@ def get_stacks(stack: str) -> List[StackConfig]:
 
 
 @click.group()
-@click.version_option(version=__version__, prog_name=__prog__)
+@click.version_option(version=__version__, prog_name=__application__)
 @click.option(
     "--debug/--no-debug", default=False, help="Enable extra debugging output."
 )
@@ -263,7 +267,7 @@ def update(stack: str) -> None:
         run_command(command=command_2)
 
 
-def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
+def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int) -> None:
     """
     Delete Files in Old Directories
     """
@@ -300,7 +304,7 @@ def _backup_stack(
         tar.add(source_directory, arcname=source_directory.name)
     duration = datetime.datetime.now() - start_time
     file_size = convert_size(backup_file.stat().st_size)
-    logger.info(f"Backup file created, %s (%s) (%s)", backup_file, file_size, duration)
+    logger.info("Backup file created, %s (%s) (%s)", backup_file, file_size, duration)
     for additional_str in additional:
         additional_path = pathlib.Path(additional_str).resolve()
         assert additional_path.exists() and additional_path.is_dir()
