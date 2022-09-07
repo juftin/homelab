@@ -13,7 +13,7 @@ import subprocess
 import tarfile
 from dataclasses import dataclass
 from os import getenv
-from typing import Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import click
 from rich import print
@@ -134,6 +134,21 @@ def generate_docker_compose(command: str, config: StackConfig) -> str:
 stack_arg = click.argument("stack")
 
 
+def get_stacks(stack: str) -> List[StackConfig]:
+    """
+    Get a stack, otherwise raise a nice error
+    """
+    try:
+        return config_dict[stack]
+    except KeyError:
+        ticked_keys = ["`" + key + "`" for key in config_dict.keys()]
+        raise LookupError(
+            "That doesn't look like a valid docker stack. "
+            f"Current docker stacks include {', '.join(ticked_keys)}. Stack names "
+            f"are based off of the {_project_dir} directory."
+        )
+
+
 @click.group()
 @click.version_option(version=__version__, prog_name=__prog__)
 def cli() -> None:
@@ -158,7 +173,7 @@ def pull(stack: str) -> None:
     """
     Pull the Docker Containers for a Stack
     """
-    configs = config_dict[stack]
+    configs = get_stacks(stack=stack)
     for config in configs:
         command = generate_docker_compose(command="pull", config=config)
         run_command(command=command)
@@ -170,7 +185,7 @@ def down(stack: str) -> None:
     """
     Shut a Stack Down
     """
-    configs = config_dict[stack]
+    configs = get_stacks(stack=stack)
     if stack == "all":
         configs = sorted(configs, key=destroy_sort)
     for config in configs:
@@ -184,7 +199,7 @@ def deploy(stack: str) -> None:
     """
     Deploy a Homelab Stack
     """
-    configs = config_dict[stack]
+    configs = get_stacks(stack=stack)
     for config in configs:
         command = generate_docker_compose(command="up -d", config=config)
         run_command(command=command)
@@ -197,7 +212,7 @@ def docker(stack: str, command: str) -> None:
     """
     Run a Docker Compose Command
     """
-    configs = config_dict[stack]
+    configs = get_stacks(stack=stack)
     for config in configs:
         docker_command = generate_docker_compose(command=command, config=config)
         run_command(command=docker_command)
@@ -209,7 +224,7 @@ def update(stack: str) -> None:
     """
     Update and Redeploy a Homelab Stack
     """
-    configs = config_dict[stack]
+    configs = get_stacks(stack=stack)
     for config in configs:
         command = generate_docker_compose(command="pull", config=config)
         run_command(command=command)

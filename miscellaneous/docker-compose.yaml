@@ -7,8 +7,8 @@ version: '3.9'
 networks:
 
     traefik:
-        external:
-            name: traefik_traefik
+        external: true
+        name: traefik_traefik
 
 ################################################################################
 # SERVICES CONFIGURATION
