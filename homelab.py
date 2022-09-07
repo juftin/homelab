@@ -4,7 +4,6 @@
 Homelab Command Line Interface
 """
 
-import collections
 import datetime
 import logging
 import math
@@ -14,10 +13,10 @@ import subprocess
 import tarfile
 from dataclasses import dataclass
 from os import getenv
-from typing import Iterable, List, Optional, OrderedDict, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import click
-from rich import traceback
+from rich import print
 from rich.logging import RichHandler
 
 _default_project_dir = str(pathlib.Path(__file__).resolve().parent)
@@ -27,6 +26,43 @@ __version__ = "0.1.0"
 __prog__ = "homelab"
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class StackConfig:
+    """
+    Stack Configuration
+    """
+
+    project_name: str
+
+    @property
+    def compose_file(self) -> pathlib.Path:
+        """
+        Stack Docker Compose File
+        """
+        return _project_dir.joinpath(self.project_name).joinpath("docker-compose.yaml")
+
+
+build_order = {
+    "traefik": 1,
+    "media-center": 2,
+}
+subdirectories = [
+    f for f in _project_dir.iterdir() if f.is_dir() and not f.name.startswith(".")
+]
+subdirectory_names = [
+    f.name for f in subdirectories if len(list(f.glob("docker-compose.y*ml"))) > 0
+]
+config_dict = dict(all=[])
+for directory_name in subdirectory_names:
+    config = StackConfig(project_name=directory_name)
+    config_dict[directory_name] = [config]
+    config_dict["all"] += [config]
+
+build_sort = lambda x: build_order.get(x.project_name, 99)
+destroy_sort = lambda x: -build_order.get(x.project_name, 99)
+config_dict["all"] = sorted(config_dict["all"], key=build_sort)
 
 
 def run_command(
@@ -82,22 +118,6 @@ def convert_size(size_bytes) -> str:
     return "%s %s" % (s, size_name[i])
 
 
-@dataclass
-class StackConfig:
-    """
-    Stack Configuration
-    """
-
-    project_name: str
-
-    @property
-    def compose_file(self) -> pathlib.Path:
-        """
-        Stack Docker Compose File
-        """
-        return _project_dir.joinpath(self.project_name).joinpath("docker-compose.yaml")
-
-
 def generate_docker_compose(command: str, config: StackConfig) -> str:
     if isinstance(command, tuple):
         command = " ".join(command)
@@ -111,23 +131,7 @@ def generate_docker_compose(command: str, config: StackConfig) -> str:
     return compose_command
 
 
-traefik_project = "traefik"
-media_center_project = "media-center"
-miscellaneous_project = "miscellaneous"
-
-traefik_config = StackConfig(project_name=traefik_project)
-media_center_config = StackConfig(project_name=media_center_project)
-miscellaneous_config = StackConfig(project_name=miscellaneous_project)
-
-config_dict: OrderedDict[str, List[StackConfig]] = collections.OrderedDict()
-config_dict["traefik"] = [traefik_config]
-config_dict["media-center"] = [media_center_config]
-config_dict["miscellaneous"] = [miscellaneous_config]
-config_dict["all"] = [
-    traefik_config,
-    media_center_config,
-    miscellaneous_config,
-]
+stack_arg = click.argument("stack")
 
 
 @click.group()
@@ -140,7 +144,16 @@ def cli() -> None:
 
 
 @cli.command()
-@click.argument("stack")
+def stacks() -> None:
+    """
+    List the Docker Stacks
+    """
+    for config in config_dict["all"]:
+        print(f"{config.project_name}: {config.compose_file}")
+
+
+@cli.command()
+@stack_arg
 def pull(stack: str) -> None:
     """
     Pull the Docker Containers for a Stack
@@ -152,19 +165,21 @@ def pull(stack: str) -> None:
 
 
 @cli.command()
-@click.argument("stack")
+@stack_arg
 def down(stack: str) -> None:
     """
     Shut a Stack Down
     """
     configs = config_dict[stack]
+    if stack == "all":
+        configs = sorted(configs, key=destroy_sort)
     for config in configs:
         command = generate_docker_compose(command="down", config=config)
         run_command(command=command)
 
 
 @cli.command()
-@click.argument("stack")
+@stack_arg
 def deploy(stack: str) -> None:
     """
     Deploy a Homelab Stack
@@ -176,7 +191,7 @@ def deploy(stack: str) -> None:
 
 
 @cli.command()
-@click.argument("stack")
+@stack_arg
 @click.argument("command", nargs=-1)
 def docker(stack: str, command: str) -> None:
     """
@@ -189,7 +204,7 @@ def docker(stack: str, command: str) -> None:
 
 
 @cli.command()
-@click.argument("stack")
+@stack_arg
 def update(stack: str) -> None:
     """
     Update and Redeploy a Homelab Stack
@@ -214,7 +229,7 @@ def file_cleanup(directory: pathlib.Path, pattern: str, num_backups: int):
 
 
 @cli.command()
-@click.argument("stack")
+@stack_arg
 @click.argument("destination")
 @click.option(
     "--additional",
@@ -321,7 +336,7 @@ def main():
             logging_handler,
         ],
     )
-    traceback.install(show_locals=True)
+    # traceback.install(show_locals=False, suppress="homelab")
     cli()
 
 
