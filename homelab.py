@@ -14,6 +14,7 @@ import sys
 import tarfile
 from dataclasses import dataclass
 from os import getenv
+from textwrap import dedent
 from typing import List, Optional, Tuple, Union
 
 import click
@@ -123,13 +124,15 @@ def convert_size(size_bytes) -> str:
 def generate_docker_compose(command: str, config: StackConfig) -> str:
     if isinstance(command, tuple):
         command = " ".join(command)
-    compose_command = f"""
+    compose_command = dedent(
+        f"""
     docker-compose \\
       --project-name "{config.project_name}" \\
       --file "{config.compose_file}" \\
       --env-file "{str(_project_dir.joinpath('.env'))}" \\
       {command}
     """.strip()
+    ).replace("    ", "")
     return compose_command
 
 
