@@ -1,2 +1,30 @@
-.idea/
+# Secrets
 .env
+# Media Center
+media-center/heimdall/
+media-center/jackett/
+media-center/ombi/
+media-center/plex/
+media-center/portainer/
+media-center/radarr/
+media-center/sonarr/
+media-center/tautulli/
+media-center/transmission/
+media-center/calibre/
+media-center/nzbget/
+media-center/prowlarr/
+media-center/readarr/
+media-center/calibre-web/
+# Traefik
+traefik/traefik/acme/
+traefik/traefik/logs/
+# Miscellaneous
+miscellaneous/config/
+miscellaneous/pihole/
+# Development Files
+.idea/
+.tox/
+dist/
+venv/
+__pycache__/
+*.py[cod]

@@ -9,17 +9,17 @@ http:
         chain-local-testing:
             chain:
                 middlewares:
-                    - middlewares-rate-limit
+                -   middlewares-rate-limit
 
         chain-no-auth:
             chain:
                 middlewares:
-                    - middlewares-rate-limit
-                    - middlewares-secure-headers
+                -   middlewares-rate-limit
+                -   middlewares-secure-headers
 
         chain-oauth-google:
             chain:
                 middlewares:
-                    - middlewares-rate-limit
-                    - middlewares-secure-headers
-                    - middlewares-oauth
+                -   middlewares-rate-limit
+                -   middlewares-secure-headers
+                -   middlewares-oauth

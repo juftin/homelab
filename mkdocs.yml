@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+site_name: homelab
+theme:
+    favicon: images/favicon-32x32.png
+    logo: images/juftin.png
+    name: material
+    palette:
+    # Palette toggle for light mode
+    -   media: '(prefers-color-scheme: light)'
+        scheme: default
+        toggle:
+            icon: material/brightness-7
+            name: Switch to dark mode
+    # Palette toggle for dark mode
+    -   media: '(prefers-color-scheme: dark)'
+        scheme: slate
+        toggle:
+            icon: material/brightness-4
+            name: Switch to light mode
+repo_url: https://github.com/juftin/homelab/
+repo_name: homelab
+edit_uri: blob/main/docs/
+site_author: juftin
+remote_branch: gh-pages
+copyright: Copyright &copy; 2022 Justin Flannery
+#nav:
+#  - index.md
+#  - git.md
+extra:
+    generator: false
+markdown_extensions:
+-   toc:
+        permalink: '#'
+-   pymdownx.snippets:
+-   pymdownx.magiclink:
+-   attr_list:
+plugins:
+-   search

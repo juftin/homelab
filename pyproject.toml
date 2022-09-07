@@ -1,0 +1,24 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "homelab"
+version = "0.2.0"
+description = ""
+authors = ["juftin <juftin@juftin.com>"]
+license = "MIT"
+packages = [
+    { include = "homelab.py" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^8.1.3"
+rich = "^12.5.1"
+
+[tool.poetry.dev-dependencies]
+mkdocs-material = "^8.4.2"
+
+[tool.poetry.scripts]
+homelab = "homelab:cli"
