@@ -98,6 +98,7 @@ def run_command(
     )
     if stream_output is False:
         kwargs.update(dict(stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+    logger.debug(command)
     child = subprocess.Popen(command, **kwargs)  # type: ignore
     stdout, stderr = child.communicate()
     exit_code = child.wait()
