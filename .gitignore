@@ -26,3 +26,5 @@ miscellaneous/pihole/
 .tox/
 dist/
 venv/
+__pycache__/
+*.py[cod]
