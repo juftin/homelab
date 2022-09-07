@@ -10,13 +10,14 @@ import math
 import pathlib
 import shutil
 import subprocess
+import sys
 import tarfile
 from dataclasses import dataclass
 from os import getenv
 from typing import List, Optional, Tuple, Union
 
 import click
-from rich import print
+from rich import print, traceback
 from rich.logging import RichHandler
 
 _default_project_dir = str(pathlib.Path(__file__).resolve().parent)
@@ -151,11 +152,37 @@ def get_stacks(stack: str) -> List[StackConfig]:
 
 @click.group()
 @click.version_option(version=__version__, prog_name=__prog__)
-def cli() -> None:
+@click.option(
+    "--debug/--no-debug", default=False, help="Enable extra debugging output."
+)
+@click.pass_context
+def cli(ctx: click.core.Context, debug: bool) -> None:
     """
     Homelab: Command Line Interface
     """
-    pass
+    ctx.ensure_object(dict)
+    ctx.obj["DEBUG"] = debug
+    log_level = "INFO" if debug is False else "DEBUG"
+    logging_handler = RichHandler(
+        level=logging.getLevelName(log_level),
+        rich_tracebacks=True,
+        omit_repeated_times=False,
+        show_path=False,
+    )
+    logging.basicConfig(
+        format="%(message)s",
+        level=logging.NOTSET,
+        datefmt="[%Y-%m-%d %H:%M:%S]",
+        handlers=[
+            logging_handler,
+        ],
+    )
+    if debug is True:
+        logger.debug("Setting up homelab debugging")
+        logger.debug("Homelab Version: %s", __version__)
+        logger.debug("Python Version: %s", sys.version.split(" ")[0])
+        logger.debug("Platform: %s", sys.platform)
+        traceback.install(show_locals=debug)
 
 
 @cli.command()
@@ -333,27 +360,5 @@ def backup(
         )
 
 
-def main():
-    """
-    Run the Main CLI
-    """
-    logging_handler = RichHandler(
-        level=logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper()),
-        rich_tracebacks=True,
-        omit_repeated_times=False,
-        show_path=False,
-    )
-    logging.basicConfig(
-        format="%(message)s",
-        level=logging.NOTSET,
-        datefmt="[%Y-%m-%d %H:%M:%S]",
-        handlers=[
-            logging_handler,
-        ],
-    )
-    # traceback.install(show_locals=False, suppress="homelab")
-    cli()
-
-
 if __name__ == "__main__":
-    main()
+    cli()
