@@ -20,4 +20,4 @@ rich = "^12.5.1"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-homelab = "homelab:main"
+homelab = "homelab:cli"
