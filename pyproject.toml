@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "homelab"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["juftin <juftin@juftin.com>"]
 license = "MIT"

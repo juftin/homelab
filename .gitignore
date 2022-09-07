@@ -1,6 +1,6 @@
-.idea/
+# Secrets
 .env
-
+# Media Center
 media-center/heimdall/
 media-center/jackett/
 media-center/ombi/
@@ -14,9 +14,15 @@ media-center/calibre/
 media-center/nzbget/
 media-center/prowlarr/
 media-center/readarr/
-miscellaneous/config/
-miscellaneous/pihole/
 media-center/calibre-web/
-
+# Traefik
 traefik/traefik/acme/
 traefik/traefik/logs/
+# Miscellaneous
+miscellaneous/config/
+miscellaneous/pihole/
+# Development Files
+.idea/
+.tox/
+dist/
+venv/

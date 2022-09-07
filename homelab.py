@@ -24,7 +24,7 @@ from rich.logging import RichHandler
 _default_project_dir = str(pathlib.Path(__file__).resolve().parent)
 _homelab_dir = getenv("HOMELAB_DIRECTORY", _default_project_dir)
 _project_dir = pathlib.Path(_homelab_dir).resolve()
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __prog__ = "homelab"
 
 logger = logging.getLogger(__name__)
