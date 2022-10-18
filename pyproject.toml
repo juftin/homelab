@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "homelab"
 description = "Homelab Deployment Via Docker-Compose (Made Easy)"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Justin Flannery <juftin@juftin.com>"]
 license = "MIT"
 readme = "README.md"
