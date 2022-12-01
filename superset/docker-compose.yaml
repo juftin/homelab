@@ -120,3 +120,6 @@ networks:
         name: traefik_traefik
     internal:
         driver: bridge
+    docker:
+        external: true
+        name: traefik_docker

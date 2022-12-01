@@ -321,6 +321,9 @@ services:
             TRANSMISSION_WEB_UI: combustion
             TRANSMISSION_DOWNLOAD_DIR: /downloads
             LOCAL_NETWORK: ${PHYSICAL_SERVER_NETWORK}
+            NORDVPN_COUNTRY: US
+            NORDVPN_CATEGORY: legacy_p2p
+            NORDVPN_PROTOCOL: tcp
         volumes:
         -   /etc/localtime:/etc/localtime:ro
         -   ${MEDIA_CENTER_DIRECTORY}/transmission:/data/transmission-home
