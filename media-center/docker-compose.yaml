@@ -326,7 +326,7 @@ services:
             NORDVPN_PROTOCOL: tcp
         volumes:
         -   /etc/localtime:/etc/localtime:ro
-        -   ${MEDIA_CENTER_DIRECTORY}/transmission:/data/transmission-home
+        -   ${MEDIA_CENTER_DIRECTORY}/transmission:/config/transmission-home
         -   ${COMPLETED_DOWNLOADS}:/downloads
         -   ${INCOMPLETE_DOWNLOADS}:/data/incomplete
         -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared

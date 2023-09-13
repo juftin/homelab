@@ -130,7 +130,7 @@ def generate_docker_compose(command: str, config: StackConfig) -> str:
         command = " ".join(command)
     compose_command = dedent(
         f"""
-    docker-compose \\
+    docker compose \\
       --project-name "{config.project_name}" \\
       --file "{config.compose_file}" \\
       --env-file "{str(_project_dir.joinpath('.env'))}" \\
