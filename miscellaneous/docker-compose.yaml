@@ -95,3 +95,20 @@ services:
             traefik.http.services.chat-svc.loadbalancer.server.port: 3000
             traefik.http.routers.chat-rtr.entrypoints: https
             traefik.http.routers.chat-rtr.middlewares: chain-oauth-google@file
+
+    ####################################
+    # ChatGPT Slack Bot
+    ####################################
+
+    chatgpt-in-slack:
+        container_name: chatgpt-in-slack
+        image: juftin/chatgpt-in-slack:latest
+        environment:
+            SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+            SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+            OPENAI_MODEL: ${OPENAI_MODEL:-gpt-3.5-turbo}
+            TRANSLATE_MARKDOWN: ${TRANSLATE_MARKDOWN:-true}
+            SLACK_APP_LOG_LEVEL: ${SLACK_APP_LOG_LEVEL:-DEBUG}
+            TZ: ${TZ}
+        restart: unless-stopped
