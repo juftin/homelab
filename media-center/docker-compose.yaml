@@ -414,5 +414,5 @@ services:
             traefik.http.routers.audiobookshelf-rtr.rule: Host(`${AUDIOBOOKSHELF_WEB_SUBDOMAIN:-audiobookshelf}.${DOMAIN_NAME}`)
             traefik.http.routers.audiobookshelf-rtr.entrypoints: https
             traefik.http.routers.audiobookshelf-rtr.service: audiobookshelf-svc
-            traefik.http.services.audiobookshelf-svc.loadbalancer.server.port: 13378
+            traefik.http.services.audiobookshelf-svc.loadbalancer.server.port: 80
             traefik.http.routers.audiobookshelf-rtr.middlewares: chain-oauth-google@file
