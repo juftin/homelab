@@ -393,3 +393,26 @@ services:
             traefik.http.routers.portainer-rtr.service: portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000
             traefik.http.routers.portainer-rtr.middlewares: chain-oauth-google@file
+
+    #######################################
+    # AUDIOBOOKSHELF (AUDIOBOOK MANAGEMENT)
+    #######################################
+
+    audiobookshelf:
+        <<: *common-keys-apps
+        image: ghcr.io/advplyr/audiobookshelf:latest
+        hostname: ${AUDIOBOOKSHELF_SUBDOMAIN:-audiobookshelf}
+        container_name: audiobookshelf
+        environment:
+            <<: *default-tz-puid-pgid
+        volumes:
+        -   ${MEDIA_CENTER_DIRECTORY}/audiobookshelf/metadata:/metadata
+        -   ${MEDIA_CENTER_DIRECTORY}/audiobookshelf/config:/config
+        -   ${BOOKS_DIR}:/audiobooks
+        labels:
+            traefik.enable: true
+            traefik.http.routers.audiobookshelf-rtr.rule: Host(`${AUDIOBOOKSHELF_WEB_SUBDOMAIN:-audiobookshelf}.${DOMAIN_NAME}`)
+            traefik.http.routers.audiobookshelf-rtr.entrypoints: https
+            traefik.http.routers.audiobookshelf-rtr.service: audiobookshelf-svc
+            traefik.http.services.audiobookshelf-svc.loadbalancer.server.port: 13378
+            traefik.http.routers.audiobookshelf-rtr.middlewares: chain-oauth-google@file
