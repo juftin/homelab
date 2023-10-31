@@ -395,24 +395,25 @@ services:
             traefik.http.routers.portainer-rtr.middlewares: chain-oauth-google@file
 
     #######################################
-    # AUDIOBOOKSHELF (AUDIOBOOK MANAGEMENT)
+    # FILEBROWSER (FILE MANAGEMENT)
     #######################################
 
-    audiobookshelf:
+    filebrowser:
         <<: *common-keys-apps
-        image: ghcr.io/advplyr/audiobookshelf:latest
-        hostname: ${AUDIOBOOKSHELF_SUBDOMAIN:-audiobookshelf}
-        container_name: audiobookshelf
+        image: filebrowser/filebrowser:latest
+        hostname: filebrowser
+        container_name: filebrowser
         environment:
             <<: *default-tz-puid-pgid
         volumes:
-        -   ${MEDIA_CENTER_DIRECTORY}/audiobookshelf/metadata:/metadata
-        -   ${MEDIA_CENTER_DIRECTORY}/audiobookshelf/config:/config
-        -   ${BOOKS_DIR}:/audiobooks
+        -   ${BOOKS_DIR}:/srv/books/
+        -   ${COMPLETED_DOWNLOADS}:/srv/downloads/
+        -   ${MEDIA_CENTER_DIRECTORY}/filebrowser/settings.json:/config/settings.json
+        -   ${MEDIA_CENTER_DIRECTORY}/filebrowser/filebrowser.db:/database/filebrowser.db
         labels:
             traefik.enable: true
-            traefik.http.routers.audiobookshelf-rtr.rule: Host(`${AUDIOBOOKSHELF_WEB_SUBDOMAIN:-audiobookshelf}.${DOMAIN_NAME}`)
-            traefik.http.routers.audiobookshelf-rtr.entrypoints: https
-            traefik.http.routers.audiobookshelf-rtr.service: audiobookshelf-svc
-            traefik.http.services.audiobookshelf-svc.loadbalancer.server.port: 80
-            traefik.http.routers.audiobookshelf-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.filebrowser-rtr.rule: Host(`filebrowser.${DOMAIN_NAME}`)
+            traefik.http.routers.filebrowser-rtr.entrypoints: https
+            traefik.http.routers.filebrowser-rtr.service: filebrowser-svc
+            traefik.http.services.filebrowser-svc.loadbalancer.server.port: 80
+            traefik.http.routers.filebrowser-rtr.middlewares: chain-oauth-google@file
