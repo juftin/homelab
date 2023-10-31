@@ -129,6 +129,7 @@ services:
         -   ${MOVIE_DIR}:/movies
         -   ${MEDIA_CENTER_DIRECTORY}/shared:/shared
         -   /tmp:/transcode
+        -   ${BOOKS_DIR}:/books
         devices:
         -   /dev/dri:/dev/dri
         -   /dev/dvb:/dev/dvb
