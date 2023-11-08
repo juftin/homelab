@@ -82,7 +82,7 @@ services:
 
     chat-gpt-next-web:
         container_name: chat-gpt-next-web
-        image: yidadaa/chatgpt-next-web:v2.9.6
+        image: yidadaa/chatgpt-next-web:v2.9.10
         networks:
             traefik:
         environment:
