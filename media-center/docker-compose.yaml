@@ -325,6 +325,7 @@ services:
             NORDVPN_COUNTRY: US
             NORDVPN_CATEGORY: legacy_p2p
             NORDVPN_PROTOCOL: tcp
+            HEALTH_CHECK_HOST: github.com
         volumes:
         -   /etc/localtime:/etc/localtime:ro
         -   ${MEDIA_CENTER_DIRECTORY}/transmission:/config/transmission-home
