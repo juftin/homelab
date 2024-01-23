@@ -119,7 +119,7 @@ services:
             traefik.http.routers.umami-rtr.service: umami-svc
             traefik.http.services.umami-svc.loadbalancer.server.port: 3000
             traefik.http.routers.umami-rtr.entrypoints: https
-            traefik.http.routers.umami-rtr.middlewares: chain-no-auth@file
+            traefik.http.routers.umami-rtr.middlewares: chain-rate-limit@file
     db:
         image: postgres:15-alpine
         container_name: umami-db

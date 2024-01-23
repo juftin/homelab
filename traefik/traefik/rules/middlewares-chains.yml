@@ -6,7 +6,7 @@ http:
         # CHAINS
         ####################################
 
-        chain-local-testing:
+        chain-rate-limit:
             chain:
                 middlewares:
                 -   middlewares-rate-limit
