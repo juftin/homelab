@@ -50,33 +50,6 @@ services:
             traefik.http.routers.pihole-rtr.middlewares: chain-oauth-google@file
 
     ####################################
-    # HOSTED JUPYTER NOTEBOOK
-    ####################################
-
-    jupyter:
-        container_name: jupyter
-        image: juftin/jupyter:latest
-        networks:
-            traefik:
-        restart: unless-stopped
-        user: root
-        environment:
-            NB_USER: ${ADMIN_USER}
-            NB_UID: ${PUID}
-            NB_GID: ${PGID}
-            JUPYTER_TOKEN: ${ADMIN_PASSWORD}
-            PYTHONPATH: $${PYTHONPATH}:/home/${ADMIN_USER}/${SHARED_DIRECTORY_NAME}
-        volumes:
-        -   ${SHARED_DIRECTORY}:/home/${ADMIN_USER}/${SHARED_DIRECTORY_NAME}:rw
-        labels:
-            traefik.enable: true
-            traefik.http.routers.jupyter-rtr.rule: Host(`${JUPYTER_SUBDOMAIN:-jupyter}.${DOMAIN_NAME}`)
-            traefik.http.routers.jupyter-rtr.service: jupyter-svc
-            traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
-            traefik.http.routers.jupyter-rtr.entrypoints: https
-            traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
-
-    ####################################
     # ChatGPT Next Web
     ####################################
 
@@ -112,3 +85,49 @@ services:
             SLACK_APP_LOG_LEVEL: ${SLACK_APP_LOG_LEVEL:-DEBUG}
             TZ: ${TZ}
         restart: unless-stopped
+
+    ####################################
+    # Umami Analytics
+    ####################################
+
+    umami:
+        image: ghcr.io/umami-software/umami:postgresql-latest
+        ports:
+        -   3000:3000
+        environment:
+            DATABASE_URL: postgresql://umami:umami@db:5432/umami
+            DATABASE_TYPE: postgresql
+            APP_SECRET: replace-me-with-a-random-string
+        depends_on:
+            db:
+                condition: service_healthy
+        restart: always
+        healthcheck:
+            test: [CMD-SHELL, "curl http://localhost:3000/api/heartbeat"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        labels:
+            traefik.enable: true
+            traefik.http.routers.umami-rtr.rule: Host(`${UMAMI_SUBDOMAIN:-umami}.${DOMAIN_NAME}`)
+            traefik.http.routers.umami-rtr.service: umami-svc
+            traefik.http.services.umami-svc.loadbalancer.server.port: 3000
+            traefik.http.routers.umami-rtr.entrypoints: https
+            traefik.http.routers.umami-rtr.middlewares: chain-no-auth@file
+    db:
+        image: postgres:15-alpine
+        environment:
+            POSTGRES_DB: umami
+            POSTGRES_USER: umami
+            POSTGRES_PASSWORD: umami
+        volumes:
+        -   umami-db-data:/var/lib/postgresql/data
+        restart: always
+        healthcheck:
+            test: [CMD-SHELL, 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+volumes:
+  umami-db-data:
