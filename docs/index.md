@@ -1,8 +1,6 @@
 <div align="center">
  <h1>homelab</h1>
-  <a href="https://github.com/juftin/homelab">
-    <img src="docs/static/homelab.png" alt="homelab" width="500" />
-  </a>
+  <img src="static/homelab.png" alt="homelab" width="500" />
   <p align="center">
     homelab deployment via docker compose <i>(made easy)</i>
   </p>
@@ -71,15 +69,6 @@ everything.
 │   └── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
 └── README.md
 ```
-
-### Configuration
-
-All services are configured via a singular `.env` file at the root of the project.
-This file is used to define environment variables that are used in various `docker-compose.yaml`
-files - there is a template available at [example.env](docs/example.env).
-
-See the [docs](https://juftin.github.io/homelab/) for more information on configuration and
-getting started.
 
 [traefik]: https://github.com/traefik/traefik
 [OAuth]: https://github.com/thomseddon/traefik-forward-auth
