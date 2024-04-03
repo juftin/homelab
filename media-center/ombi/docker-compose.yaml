@@ -1,0 +1,28 @@
+#######################################
+# OMBI (DOWNLOAD REQUESTS)
+#######################################
+
+services:
+    ombi:
+        container_name: ombi
+        image: lscr.io/linuxserver/ombi:latest
+        hostname: ${OMBI_SUBDOMAIN:-ombi}
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/ombi/config:/config
+        security_opt:
+            - no-new-privileges:true
+        restart: unless-stopped
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.ombi-rtr.rule: Host(`${OMBI_SUBDOMAIN:-ombi}.${DOMAIN_NAME}`)
+            traefik.http.routers.ombi-rtr.entrypoints: https
+            traefik.http.routers.ombi-rtr.service: ombi-svc
+            traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
+            traefik.http.routers.ombi-rtr.middlewares: chain-oauth-google@file

@@ -1,0 +1,27 @@
+########################################################
+# HEIMDALL HOMEPAGE
+########################################################
+
+services:
+    heimdall:
+        container_name: heimdall
+        image: lscr.io/linuxserver/heimdall:latest
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/heimdall/config:/config
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: unless-stopped
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.heimdall-rtr.rule: Host(`${DOMAIN_NAME}`,`www.${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.entrypoints: https
+            traefik.http.routers.heimdall-rtr.service: heimdall-svc
+            traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
+            traefik.http.routers.heimdall-rtr.middlewares: chain-oauth-google@file

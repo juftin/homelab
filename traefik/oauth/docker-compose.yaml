@@ -1,0 +1,37 @@
+####################################
+# OAUTH (GOOGLE OAUTH FOR ADMIN)
+####################################
+
+services:
+    oauth:
+        container_name: oauth
+        image: thomseddon/traefik-forward-auth:latest
+        hostname: oauth
+        environment:
+            PROVIDERS_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            PROVIDERS_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            SECRET: ${OAUTH_SECRET}
+            COOKIE_DOMAIN: ${DOMAIN_NAME}
+            INSECURE_COOKIE: "false"
+            AUTH_HOST: ${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}
+            URL_PATH: /_oauth
+            WHITELIST: ${OAUTH_WHITELIST}
+            LOG_LEVEL: DEBUG
+            LIFETIME: 2592000
+            DEFAULT_ACTION: auth
+            DEFAULT_PROVIDER: google
+        networks:
+            traefik:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        depends_on:
+            - duckdns
+        labels:
+            traefik.enable: true
+            traefik.http.routers.oauth-rtr.rule: Host(`${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}`)
+            traefik.http.routers.oauth-rtr.entrypoints: https
+            traefik.http.routers.oauth-rtr.service: oauth-svc
+            traefik.http.services.oauth-svc.loadbalancer.server.port: 4181
+            traefik.http.routers.oauth-rtr.middlewares: chain-oauth-google@file

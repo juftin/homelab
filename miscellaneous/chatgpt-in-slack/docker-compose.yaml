@@ -1,0 +1,20 @@
+####################################
+# ChatGPT Slack Bot
+####################################
+
+services:
+    chatgpt-in-slack:
+        container_name: chatgpt-in-slack
+        image: juftin/chatgpt-in-slack:latest
+        networks:
+            internal:
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        environment:
+            SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+            SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+            OPENAI_MODEL: ${OPENAI_MODEL:-gpt-3.5-turbo}
+            TRANSLATE_MARKDOWN: ${TRANSLATE_MARKDOWN:-true}
+            SLACK_APP_LOG_LEVEL: ${SLACK_APP_LOG_LEVEL:-DEBUG}
+            TZ: ${TZ}
+        restart: unless-stopped

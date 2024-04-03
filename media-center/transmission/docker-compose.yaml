@@ -1,0 +1,51 @@
+#######################################
+# TRANSMISSION (TORRENTING BEHIND VPN)
+#######################################
+
+services:
+    transmission:
+        container_name: transmission
+        image: haugene/transmission-openvpn:latest
+        hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ${MEDIA_CENTER_DIRECTORY}/transmission/config:/config/transmission-home
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
+            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            OPENVPN_PROVIDER: ${OPENVPN_PROVIDER}
+            OPENVPN_USERNAME: ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+            TRANSMISSION_IDLE_SEEDING_LIMIT: 0
+            TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED: "true"
+            TRANSMISSION_WEB_UI: combustion
+            TRANSMISSION_DOWNLOAD_DIR: /downloads
+            LOCAL_NETWORK: ${PHYSICAL_SERVER_NETWORK}
+            NORDVPN_COUNTRY: US
+            NORDVPN_CATEGORY: legacy_p2p
+            NORDVPN_PROTOCOL: tcp
+            HEALTH_CHECK_HOST: github.com
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun
+        security_opt:
+            - no-new-privileges:true
+        restart: unless-stopped
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.transmission-rtr.rule: Host(`${TRANSMISSION_SUBDOMAIN:-transmission}.${DOMAIN_NAME}`)
+            traefik.http.routers.transmission-rtr.entrypoints: https
+            traefik.http.routers.transmission-rtr.service: transmission-svc
+            traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
+            traefik.http.routers.transmission-rtr.middlewares: chain-oauth-google@file

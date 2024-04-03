@@ -1,0 +1,26 @@
+#######################################
+# PLEX (MOVIES AND TV SERVER)
+#######################################
+
+services:
+    plex:
+        container_name: plex
+        image: lscr.io/linuxserver/plex:latest
+        network_mode: host
+        volumes:
+            - ${MEDIA_CENTER_DIRECTORY}/plex/config:/config
+            - ${TV_DIR}:/tv
+            - ${MOVIE_DIR}:/movies
+            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - /tmp:/transcode
+            - ${BOOKS_DIR}:/books
+        devices:
+            - /dev/dri:/dev/dri
+            - /dev/dvb:/dev/dvb
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            VERSION: docker
+            PLEX_CLAIM: ${PLEX_CLAIM}
+        restart: ${UNIVERSAL_RESTART_POLICY}
