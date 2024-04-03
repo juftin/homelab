@@ -1,0 +1,22 @@
+####################################
+# DUCKDNS (DYNAMIC DNS MONITORING)
+####################################
+
+services:
+    duckdns:
+        container_name: duckdns
+        image: lscr.io/linuxserver/duckdns:latest
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            SUBDOMAINS: ${DUCKDNS_SUBDOMAIN}
+            TOKEN: ${DUCKDNS_TOKEN}
+        networks:
+            internal:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        labels:
+            com.ouroboros.enable: "true"

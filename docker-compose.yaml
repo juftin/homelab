@@ -1,0 +1,24 @@
+################################################################################
+# HOMELAB
+################################################################################
+
+####################################
+# INCLUDED STACKS
+####################################
+
+include:
+    - traefik/docker-compose.yaml
+    - media-center/docker-compose.yaml
+    - miscellaneous/docker-compose.yaml
+
+####################################
+# NETWORKS CONFIGURATION
+####################################
+
+networks:
+    traefik:
+        driver: bridge
+    docker:
+        driver: bridge
+    internal:
+        driver: bridge

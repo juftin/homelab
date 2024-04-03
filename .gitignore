@@ -1,26 +1,26 @@
 # Secrets
 .env
 # Media Center
-media-center/heimdall/
-media-center/jackett/
-media-center/ombi/
-media-center/plex/
-media-center/portainer/
-media-center/radarr/
-media-center/sonarr/
-media-center/tautulli/
-media-center/transmission/
-media-center/calibre/
-media-center/nzbget/
-media-center/prowlarr/
-media-center/readarr/
-media-center/calibre-web/
+media-center/heimdall/config/
+media-center/jackett/config/
+media-center/ombi/config/
+media-center/plex/config/
+media-center/portainer/config/
+media-center/radarr/config/
+media-center/sonarr/config/
+media-center/tautulli/config/
+media-center/transmission/config/
+media-center/calibre/config/
+media-center/nzbget/config/
+media-center/prowlarr/config/
+media-center/readarr/config/
+media-center/calibre-web/config/
+media-center/sftpgo/config/
+media-center/sftpgo/data/
 # Traefik
-traefik/traefik/acme/
-traefik/traefik/logs/
+traefik/traefik/config/
 # Miscellaneous
-miscellaneous/config/
-miscellaneous/pihole/
+miscellaneous/pihole/config/
 
 __pycache__/
 *.py[cod]

@@ -1,0 +1,89 @@
+####################################
+# TRAEFIK (REVERSE PROXY)
+####################################
+
+services:
+    traefik:
+        container_name: traefik
+        image: library/traefik:v2.6
+        hostname: ${TRAEFIK_SUBDOMAIN:-traefik}
+        ports:
+            - published: 80
+              target: 80
+              protocol: tcp
+              mode: host
+            - published: 443
+              target: 443
+              protocol: tcp
+              mode: host
+        environment:
+            CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+            CF_API_KEY: ${CLOUDFLARE_API_KEY}
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${TRAEFIK_DIRECTORY}/traefik/rules:/rules
+            - ${TRAEFIK_DIRECTORY}/traefik/config/logs:/logs
+            - ${TRAEFIK_DIRECTORY}/traefik/config/traefik:/etc/traefik
+            - ${TRAEFIK_DIRECTORY}/traefik/config/acme/acme.json:/acme.json
+        networks:
+            traefik:
+            docker:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        depends_on:
+            - socket-proxy
+            - duckdns
+            - oauth
+        command:
+            # GLOBAL SETTINGS
+            - --global.checkNewVersion=true
+            - --global.sendAnonymousUsage=false
+            # API SETTINGS
+            - --api=true
+            - --api.dashboard=true
+            # LOGGING SETTINGS
+            - --log=true
+            - --log.level=INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --log.format=COMMON
+            - --accessLog=true
+            - --accessLog.filePath=/logs/access.log
+            - --accessLog.format=JSON
+            - --accessLog.bufferingSize=100
+            - --accessLog.filters.statusCodes=400-499
+            - --accessLog.filters.retryAttempts=true
+            - --accessLog.filters.minDuration=10ms
+            # PROVIDERS
+            - --providers.docker=true
+            - --providers.docker.endpoint=tcp://socket-proxy:2375
+            - --providers.docker.exposedByDefault=false
+            - --providers.docker.network=homelab_traefik
+            - --providers.docker.swarmMode=false
+            - --providers.file.directory=/rules
+            - --providers.file.watch=true
+            # ENTRYPOINTS
+            - --entryPoints.http.address=:80
+            - --entryPoints.https.address=:443
+            - --entryPoints.traefik.address=:8080
+            - --entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22
+            - --entrypoints.https.http.tls.certresolver=dns-cloudflare
+            - --entrypoints.https.http.tls.domains[0].main=${DOMAIN_NAME}
+            - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN_NAME}
+            - --entrypoints.https.http.tls.options=tls-opts@file
+            # CERTIFICATE RESOLVERS
+            - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
+            - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
+        labels:
+            traefik.enable: true
+            traefik.http.routers.traefik-rtr.rule: Host(`${TRAEFIK_SUBDOMAIN:-traefik}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik-rtr.entrypoints: https
+            traefik.http.routers.traefik-rtr.service: api@internal
+            traefik.http.routers.http-catchall.entrypoints: http
+            traefik.http.routers.http-catchall.rule: HostRegexp(`{host:.+}`)
+            traefik.http.routers.http-catchall.middlewares: redirect-to-https
+            traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+            traefik.http.routers.traefik-rtr.middlewares: chain-oauth-google@file

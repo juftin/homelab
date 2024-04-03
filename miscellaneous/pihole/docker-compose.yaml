@@ -1,0 +1,34 @@
+####################################
+# HOSTED PI-HOLE DNS
+####################################
+
+services:
+    pihole:
+        container_name: pihole
+        image: pihole/pihole:latest
+        restart: ${UNIVERSAL_RESTART_POLICY}
+        environment:
+            TZ: ${TZ}
+            WEBPASSWORD: ${ADMIN_PASSWORD}
+            DNS1: 8.8.8.8
+            DNS2: 8.8.4.4
+            VIRTUAL_HOST: ${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}
+        volumes:
+            - ${MISCELLANEOUS_DIRECTORY}/pihole/config/pihole/:/etc/pihole/
+            - ${MISCELLANEOUS_DIRECTORY}/pihole/config/dnsmasq.d/:/etc/dnsmasq.d/
+        networks:
+            traefik:
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        ports:
+            - ${PHYSICAL_SERVER_IP}:53:53/tcp
+            - ${PHYSICAL_SERVER_IP}:53:53/udp
+            - ${PHYSICAL_SERVER_IP}:67:67/udp
+        cap_add:
+            - NET_ADMIN
+        labels:
+            traefik.enable: true
+            traefik.http.routers.pihole-rtr.rule: Host(`${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}`)
+            traefik.http.routers.pihole-rtr.service: pihole-svc
+            traefik.http.services.pihole-svc.loadbalancer.server.port: 80
+            traefik.http.routers.pihole-rtr.entrypoints: https
+            traefik.http.routers.pihole-rtr.middlewares: chain-oauth-google@file

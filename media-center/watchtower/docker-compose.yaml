@@ -1,0 +1,23 @@
+#######################################
+# WATCHTOWER (CONTAINER IMAGE UPDATING)
+#######################################
+
+services:
+    watchtower:
+        container_name: watchtower
+        image: containrrr/watchtower:latest
+        networks:
+            internal:
+            docker:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        environment:
+            TZ: ${TZ}
+            WATCHTOWER_CLEANUP: "true"
+            WATCHTOWER_REMOVE_VOLUMES: "true"
+            WATCHTOWER_INCLUDE_STOPPED: "true"
+            WATCHTOWER_NO_STARTUP_MESSAGE: "false"
+            WATCHTOWER_SCHEDULE: 0 30 12 * * *
+            DOCKER_HOST: tcp://socket-proxy:2375
