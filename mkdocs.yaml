@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+site_name: homelab
+nav:
+    - HomeLab 🤖: index.md
+    - Configuration ⚙️: config.md
+    - Traefik 🚦: traefik.md
+    - Media Center 📺: media_center.md
+    - Command Line Usage 🖥️: cli.md
+    - Migrations 🚚: migrations.md
+theme:
+    favicon: https://raw.githubusercontent.com/juftin/juftin/main/static/favicon.ico
+    logo: https://raw.githubusercontent.com/juftin/juftin/main/static/juftin.png
+    name: material
+    features:
+        - navigation.tracking
+        - content.code.annotate
+        - content.code.copy
+        - navigation.indexes
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          primary: deep purple
+          accent: red
+          toggle:
+              icon: material/weather-sunny
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: deep purple
+          accent: red
+          toggle:
+              icon: material/weather-night
+              name: Switch to light mode
+repo_url: https://github.com/juftin/homelab
+repo_name: homelab
+edit_uri: blob/main/docs/
+site_author: juftin
+remote_branch: gh-pages
+extra:
+    generator: false
+exclude_docs: |
+    gen_pages.py
+    requirements.txt
+markdown_extensions:
+    - toc:
+          permalink: "#"
+    - attr_list
+    - md_in_html
+    - markdown.extensions.attr_list
+    - admonition
+    - pymdownx.details
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    - pymdownx.highlight:
+          anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.keys
+    - pymdownx.magiclink
+    - pymdownx.snippets:
+          base_path:
+              - !relative $config_dir
+    - pymdownx.superfences
+    - pymdownx.tabbed:
+          alternate_style: true
+    - pymdownx.tasklist
+    - pymdownx.tilde
+
+plugins:
+    - search
+    - section-index
+    - callouts
+    - markdown-exec
