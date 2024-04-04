@@ -1,7 +1,7 @@
 <div align="center">
  <h1>homelab</h1>
   <a href="https://github.com/juftin/homelab">
-    <img src="docs/static/homelab.png" alt="homelab" width="500" />
+    <img src="docs/static/homelab.png" alt="homelab" width="350" />
   </a>
   <p align="center">
     homelab deployment via docker compose <i>(made easy)</i>

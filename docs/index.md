@@ -1,6 +1,6 @@
 <div align="center">
  <h1>homelab</h1>
-  <img src="static/homelab.png" alt="homelab" width="500" />
+  <img src="static/homelab.png" alt="homelab" width="350" />
   <p align="center">
     homelab deployment via docker compose <i>(made easy)</i>
   </p>
