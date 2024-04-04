@@ -21,12 +21,10 @@ anywhere in the world.
 
 This configuration was inspired by, and
 immensely helped by the article at
-[https://smarthomebeginner.com](https://www.smarthomebeginner.com/traefik-2-docker-tutorial).
+[smarthomebeginner.com](https://smarthomebeginner.com/traefik-2-docker-tutorial).
 
 [Here](https://github.com/htpcBeginner/docker-traefik)
-is their massive home server setup on GitHub, and the accompanying
-[docker-compose](https://github.com/htpcBeginner/docker-traefik/blob/master/docker-compose-t2.yml)
-file.
+is their massive home server setup on GitHub which this project is based on.
 
 ## Prerequisites
 
