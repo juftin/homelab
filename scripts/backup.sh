@@ -67,9 +67,9 @@ echo -e "Target: ${BACKUP_PATH} 📦"
 
 
 if [ -z "${PS1}" ]; then
-    tar -czf "${BACKUP_PATH}" --exclude=".venv" --exclude=".git" -C "$(dirname "${SOURCE_DIR}")" "$(basename "${SOURCE_DIR}")" & spinner
+    tar -czf "${BACKUP_PATH}" --exclude=".venv" --exclude=".git" --exclude "acme.json" -C "$(dirname "${SOURCE_DIR}")" "$(basename "${SOURCE_DIR}")" & spinner
 else
-    tar -czf "${BACKUP_PATH}" --exclude=".venv" --exclude=".git" -C "$(dirname "${SOURCE_DIR}")" "$(basename "${SOURCE_DIR}")"
+    tar -czf "${BACKUP_PATH}" --exclude=".venv" --exclude=".git" --exclude "acme.json" -C "$(dirname "${SOURCE_DIR}")" "$(basename "${SOURCE_DIR}")"
 fi
 
 if [ ${?} -eq 0 ]; then
