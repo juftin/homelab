@@ -46,6 +46,13 @@ Update the homelab services to the latest versions
     make update
     ```
 
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose pull
+    homelab-compose up -d
+    ```
+
 #### pull
 
 Pull the latest images for the homelab services.
@@ -66,6 +73,12 @@ Pull the latest images for the homelab services.
 
     ```shell
     make pull
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose pull
     ```
 
 #### up
@@ -90,6 +103,12 @@ Start the homelab services.
     make up
     ```
 
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose up -d
+    ```
+
 #### down
 
 Stop the homelab services.
@@ -110,6 +129,12 @@ Stop the homelab services.
 
     ```shell
     make down
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose down
     ```
 
 #### stop
@@ -134,6 +159,12 @@ Stop the homelab services.
     make stop
     ```
 
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose stop
+    ```
+
 #### logs
 
 Show the logs for the homelab services.
@@ -154,6 +185,12 @@ Show the logs for the homelab services.
 
     ```shell
     make logs
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose logs -f
     ```
 
 #### restart
@@ -178,6 +215,12 @@ Restart the homelab services.
     make restart
     ```
 
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose restart
+    ```
+
 #### ps
 
 Show the status of the homelab services.
@@ -200,6 +243,12 @@ Show the status of the homelab services.
     make ps
     ```
 
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+    ```
+
 #### up-traefik
 
 Start just the traefik services.
@@ -220,6 +269,12 @@ Start just the traefik services.
 
     ```shell
     make up-traefik
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose up -d traefik oauth socket-proxy duckdns
     ```
 
 #### acme-init
@@ -245,4 +300,55 @@ Initialize the `acme.json` file for traefik.
 
     ```shell
     make acme-init
+    ```
+
+#### backup
+
+Backup the homelab services.
+
+See the [backup script documentation](scripts.md#backupsh)
+for more information.
+
+=== "homelab"
+
+    ```shell
+    BACKUP_DIR=/backup/dir homelab backup
+    ```
+
+=== "bash"
+
+    ```shell
+    bash ./scripts/backup.sh . /backup/dir
+    ```
+
+=== "make"
+
+    ```shell
+    BACKUP_DIR=/backup/dir make backup
+    ```
+
+#### backup-no-timestamp
+
+Backup the homelab services without a timestamp. This
+overwrites the previous backup.
+
+See the [backup script documentation](scripts.md#backupsh)
+for more information.
+
+=== "homelab"
+
+    ```shell
+    BACKUP_DIR=/backup/dir homelab backup-no-timestamp
+    ```
+
+=== "bash"
+
+    ```shell
+    bash ./scripts/backup.sh . /backup/dir --no-timestamp
+    ```
+
+=== "make"
+
+    ```shell
+    BACKUP_DIR=/backup/dir make backup-no-timestamp
     ```

@@ -41,6 +41,25 @@ ps: ## Show the status of the services.
 up-traefik: ## Start just the traefik services
 	docker compose --project-directory "$(ROOT_DIR)" up -d traefik oauth socket-proxy duckdns
 
+##@ Configuration 🪛
+
+.PHONY: acme-init
+acme-init: ## Initialize the acme.json file.
+	mkdir -p traefik/traefik/config/acme/
+	rm -f traefik/traefik/config/acme/acme.json
+	touch traefik/traefik/config/acme/acme.json
+	chmod 600 traefik/traefik/config/acme/acme.json
+
+##@ Backup 🗂️
+
+.PHONY: backup
+backup: ## Backup the homelab repo to the ${BACKUP_DIR}.
+	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR) $(BACKUP_DIR)
+
+.PHONY: backup-no-timestamp
+backup-no-timestamp: ## Backup the homelab repo to the ${BACKUP_DIR} without a timestamp.
+	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR) $(BACKUP_DIR) --no-timestamp
+
 ##@ development 🛠
 
 .PHONY: docs
@@ -50,15 +69,6 @@ docs: ## Build the documentation.
 .PHONY: lint
 lint: ## Lint the code with pre-commit.
 	pre-commit run --all-files
-
-##@ Configuration 🪛
-
-.PHONY: acme-init
-acme-init: ## Initialize the acme.json file.
-	mkdir -p traefik/traefik/config/acme/
-	rm -f traefik/traefik/config/acme/acme.json
-	touch traefik/traefik/config/acme/acme.json
-	chmod 600 traefik/traefik/config/acme/acme.json
 
 ##@ general 🌐
 
@@ -76,4 +86,4 @@ version: ## Show the version of the project.
 .DEFAULT_GOAL := help
 .PHONY: help
 help: ## Show this help message and exit
-	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  homelab \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  homelab \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-19s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)

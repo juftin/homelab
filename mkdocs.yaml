@@ -7,6 +7,7 @@ nav:
     - Traefik 🚦: traefik.md
     - Media Center 📺: media_center.md
     - Command Line Usage 🖥️: cli.md
+    - Scripts 📜: scripts.md
     - Migrations 🚚: migrations.md
 theme:
     favicon: https://raw.githubusercontent.com/juftin/juftin/main/static/favicon.ico
