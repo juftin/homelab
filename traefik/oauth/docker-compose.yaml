@@ -33,5 +33,6 @@ services:
             traefik.http.routers.oauth-rtr.rule: Host(`${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}`)
             traefik.http.routers.oauth-rtr.entrypoints: https
             traefik.http.routers.oauth-rtr.service: oauth-svc
+            traefik.http.routers.oauth-rtr.tls: true
             traefik.http.services.oauth-svc.loadbalancer.server.port: 4181
             traefik.http.routers.oauth-rtr.middlewares: chain-oauth-google@file
