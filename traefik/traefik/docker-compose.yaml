@@ -63,7 +63,7 @@ services:
             - --entrypoints.http.http.redirections.entrypoint.to=https
             - --entrypoints.http.http.redirections.entrypoint.scheme=https
             - --entrypoints.http.http.redirections.entrypoint.permanent=true
-            - --entrypoints.websecure.forwardedHeaders.trustedIPs=${CLOUDFLARE_IPS},${LOCAL_IPS}
+            - --entrypoints.https.forwardedHeaders.trustedIPs=${CLOUDFLARE_IPS},${LOCAL_IPS}
             - --entrypoints.https.http.tls.certresolver=dns-cloudflare
             - --entrypoints.https.http.tls.domains[0].main=${DOMAIN_NAME}
             - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN_NAME}
