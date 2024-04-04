@@ -6,10 +6,10 @@ will be minimized as much as possible.
 
 ## 1.0.0
 
-The `1.0.0` release of the `homelab` project involved a key change to for any users already
-using the project. This change includes adding a `config` directory under each service
-directory. This changes the existing pattern of mouning the service directory directly
-into the container.
+The `1.0.0` release introduces a pivotal update for existing users of the homelab project.
+This update mandates the creation of a new config directory within each service directory,
+deviating from the previous approach of directly mounting the service directory into the container.
+This change is designed to enhance organization and management of service configurations.
 
 <details><summary>1.0.0 Migration</summary>
 <p>

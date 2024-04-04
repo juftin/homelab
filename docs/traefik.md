@@ -1,24 +1,11 @@
 # Traefik
 
-<img src="../static/traefik_logo.png" width="400" alt="traefik logo">
+![](https://i.imgur.com/JVARxB6.png)
 
-Hosted Reverse Proxy with Google OAuth for operating a webserver
-from home. This reverse-proxy automatically picks up new docker services
-given the proper labels are applied.
-
--   [Configuration](#configuration)
-    -   [Port Forwarding](#port-forwarding)
-    -   [CloudFlare](#cloudflare)
-    -   [Google OAuth 2.0](#google-oauth-20)
-    -   [DuckDNS](#duckdns)
-    -   [File Configuration](#file-configuration)
-        -   [.env](#env)
-        -   [acme.json](#acmejson)
--   [Usage](#usage)
-    -   [Jupyter Example](#jupyter-example)
-    -   [Local Usage](#local-usage)
-
-## Configuration
+The Traefik reverse proxy is a powerful tool for managing web traffic to your
+Docker containers. It can automatically generate SSL certificates, route traffic
+to the correct container, and provide a secure way to access your services from
+anywhere in the world.
 
 > [!WARNING]
 >
@@ -41,31 +28,40 @@ is their massive home server setup on GitHub, and the accompanying
 [docker-compose](https://github.com/htpcBeginner/docker-traefik/blob/master/docker-compose-t2.yml)
 file.
 
+## Prerequisites
+
 ### Port Forwarding
 
-In order to reach the outside world, you must forward ports
-`80` and `443` from your server IP address through your router.
-See your router's manual for Instructions.
+In order to reach the outside world, you must forward ports `80` and `443`
+from your server IP address through your router. See your router's manual
+for Instructions. See this [blog post](https://nordvpn.com/blog/open-ports-on-router/)
+for more information on port forwarding
 
 ### CloudFlare
 
-This guide leverages [CloudFlare](https://dash.cloudflare.com/) for free
-DNS services. The CloudFlare section of the article can be found
-[here](https://www.smarthomebeginner.com/traefik-reverse-proxy-tutorial-for-docker/#Dynamic_DNS_or_Your_Own_Domain_Name).
+This guide leverages [CloudFlare](https://cloudflare.com/) for free
+DNS services. SmartHomeBeginner has a great guide on setting up CloudFlare
+[here](https://www.smarthomebeginner.com/cloudflare-settings-for-traefik-docker/).
 
 ### Google OAuth 2.0
 
 The Google Oauth 2.0 configuration can be
-found [here](https://www.smarthomebeginner.com/google-oauth-with-traefik-docker/#How_do_I_setup_OAuth).
-This configuration requires Google Authentication to access any services published on the web.
+found [here](https://www.smarthomebeginner.com/traefik-forward-auth-google-oauth-2022/).
+Essentially you must create a project in the Google Developer Console to enable
+the Google OAuth 2.0 service. You will share credentials with the `oauth` service
+in the `.env` file and manually whitelist users per email address.
 
 ### DuckDNS
 
 A free DuckDNS dynamic DNS subdomain can be set up [here](https://www.duckdns.org).
+DuckDNS will provide you with a token that you will use in the `.env` file.
+Behind the scenes, the `duckdns` service will update your IP address with DuckDNS
+every 5 minutes which makes it possible to reach your server from anywhere. You will
+provide CloudFlare with the DuckDNS subdomain to point to your server.
 
 ### File Configuration
 
-#### `.env`
+#### .env
 
 The [`example.env`](example.env) file can be modified and renamed `.env` in order
 for the containers to be build properly. This is the entire configuration file for
@@ -85,16 +81,30 @@ cp docs/example.env .env
 </p>
 </details>
 
-#### `acme.json`
+Once you're done with all of the steps in this process you should have the following
+fields filled out in the `.env` file:
+
+```text
+DUCKDNS_TOKEN=XXXXXX-XXX-XXXXX-XXXXX
+DUCKDNS_SUBDOMAIN=example
+
+GOOGLE_CLIENT_ID=XXXXXXXXXXXXX-XXXXXXXXXXXXXXXXX.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXX
+OAUTH_SECRET=RANDOM_STRING_OF_CHARACTERS
+OAUTH_WHITELIST=example@gmail.com,user_1@gmail.com,user_2@gmail.com
+
+CLOUDFLARE_EMAIL=example@gmail.com
+CLOUDFLARE_API_KEY=XXXXXXXXXXXXX
+```
+
+#### acme.json
 
 You will need to create an empty `acme.json` file for the
 application to work and generate an SSL Certificate through LetsEncrypt.
 However, while initially setting up it will be useful to remove and recreate the file to force
 certificate recreation. Keep in mind that certificate creation and registration can take some tie.
-uncomment
-the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory`
+uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory`
 command on the traefik service in the `docker-compose` file while testing.
-The instructions are below:
 
 -   file location: `traefik/traefik/config/acme/acme.json`
 -   file permissions (chmod): `600`
@@ -110,36 +120,64 @@ mkdir -p traefik/traefik/config/acme/ && \
 > If you're comfortable with the `Makefile` at the root of the project, you can run
 > `make acme-init` to create the `acme.json` as described above.
 
-## Usage
+## Containers in Traefik Stack
 
-### Jupyter Example:
+-   [traefik](applications/traefik.md#traefik)
+-   [oauth](applications/traefik.md#oauth)
+-   [duckdns](applications/traefik.md#duckdns)
+-   [docker-socket-proxy](applications/traefik.md#docker-socket-proxy)
 
-The below example allows the jupyter container to speak to the `traefik_reverse-proxy` (the
-external network created by this _compose_ configuration - notice the docker-compose
-project name added before the network name). Apart from the networking, everything
-else is performed with the labels.
+## Creating New Services
 
-```yaml
-version: "3.7"
-networks:
-    traefik:
-        external:
-            name: traefik_reverse-proxy
-services:
-    jupyter:
-        container_name: jupyter
-        image: jupyter/all-spark-notebook:latest
-        networks:
-            traefik: null
-        command: start.sh jupyter lab
-        labels:
-            traefik.enable: true
-            traefik.http.routers.jupyter-rtr.rule: Host(`jupyter.${DOMAIN_NAME}`)
-            traefik.http.routers.jupyter-rtr.service: jupyter-svc
-            traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
-            traefik.http.routers.jupyter-rtr.entrypoints: https
-            traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
-```
+The below example shows you how to create a new service in the docker compose
+stack and make it accessible via Traefik. In this example, we are creating a
+Jupyter notebook service that can be accessed at `jupyter.example.com`.
+
+=== "miscellaneous/jupyter/docker-compose.yaml"
+
+    ```yaml
+    ####################################
+    # JUPYTER LAB
+    ####################################
+
+    services:
+        jupyter:
+            container_name: jupyter
+            image: jupyter/all-spark-notebook:latest
+            security_opt:
+                - no-new-privileges:true
+            networks:
+                traefik:
+            command: start.sh jupyter lab
+            labels:
+                traefik.enable: true
+                traefik.http.routers.jupyter-rtr.rule: Host(`jupyter.${DOMAIN_NAME}`)
+                traefik.http.routers.jupyter-rtr.service: jupyter-svc
+                traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
+                traefik.http.routers.jupyter-rtr.entrypoints: https
+                traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
+    ```
+
+=== "miscellaneous/docker-compose.yaml"
+
+    ```yaml
+    ################################################################################
+    # DOCKER COMPOSE - MISCELLANEOUS
+    ################################################################################
+
+    ####################################
+    # INCLUDED APPLICATIONS
+    ####################################
+
+    include:
+    - jupyter/docker-compose.yaml # Jupyter Lab
+    ```
+
+=== "docker-compose.yaml"
+
+    ```yaml
+    --8<-- "docker-compose.yaml"
+    ```
 
 -   `traefik.enable`
     -   Allows Traefik to interact with this application
@@ -154,62 +192,3 @@ services:
 -   `traefik.http.routers.jupyter-rtr.middlewares:`
     -   Instructs the router to use the middleware service, `chain-oauth-google@file`
         which requires Google OAuth for access
-
-# Containers
-
--   [traefik](#traefik)
--   [oauth](#oauth)
--   [duckdns](#duckdns)
--   [docker-socket-proxy](#docker-socket-proxy)
-
-## traefik
-
-[Docker Hub](https://hub.docker.com/_/traefik) \|\|
-[GitHub](https://github.com/containous/traefik) \|\|
-[Website](https://traefik.io/) \|\|
-[Documentation](https://docs.traefik.io/)
-
-<img src="../static/traefik_logo.png" width="300" alt="traefik Logo">
-
-Traefik (pronounced traffic) is a modern HTTP reverse proxy
-and load balancer that makes deploying microservices easy.
-Traefik integrates with your existing infrastructure components
-(Docker, Swarm mode, Kubernetes, Marathon, Consul, Etcd, Rancher, Amazon ECS, ...)
-and configures itself automatically and dynamically. Pointing Traefik
-at your orchestrator should be the only configuration step you need.
-
-## oauth
-
-[Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
-[GitHub](https://github.com/thomseddon/traefik-forward-auth)
-
-<img src="../static/oauth2.png" width="250" alt="oauth">
-
-A minimal forward authentication service that provides Google oauth based
-login and authentication for the traefik reverse proxy/load balancer.
-
-## duckdns
-
-[Docker Hub](https://hub.docker.com/r/linuxserver/duckdns/) \|\|
-[GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
-[Website](https://www.duckdns.org)
-
-<img src="../static/duckdns.jpg" width="250" alt="duckdns">
-
-Duckdns is a free service which will point a DNS (sub domains of duckdns.org)
-to an IP of your choice. The service is completely free, and doesn't
-require reactivation or forum posts to maintain its existence.
-
-## docker-socket-proxy
-
-[Docker Hub](https://hub.docker.com/r/tecnativa/docker-socket-proxy) \|\|
-[GitHub](https://github.com/Tecnativa/docker-socket-proxy)
-
-`docker-socket-proxy` is a security-enhanced proxy for the Docker Socket.
-It blocks access to the Docker socket API according to the environment
-variables you set. It returns a HTTP 403 Forbidden status for those
-dangerous requests that should never happen.
-
----
-
----

@@ -5,7 +5,10 @@ nav:
     - HomeLab 🤖: index.md
     - Configuration ⚙️: config.md
     - Traefik 🚦: traefik.md
-    - Media Center 📺: media_center.md
+    - Applications 📦:
+          - Traefik Stack 🚥: applications/traefik.md
+          - Media Center Stack 🎬: applications/media_center.md
+          - Miscellaneous Stack 🥞: applications/miscellaneous.md
     - Command Line Usage 🖥️: cli.md
     - Scripts 📜: scripts.md
     - Migrations 🚚: migrations.md
