@@ -10,9 +10,10 @@ services:
         volumes:
             - ${MEDIA_CENTER_DIRECTORY}/portainer/config:/data
             - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
-        command: -H tcp://socket-proxy:2375 --admin-password='${ADMIN_HTPASSWD}'
+        command: -H tcp://socket-proxy:2375
         environment:
             TZ: ${TZ}
+            DOCKER_HOST: tcp://socket-proxy:2375
         networks:
             traefik:
             docker:
