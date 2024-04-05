@@ -74,6 +74,8 @@ services:
             - --entryPoints.websecure.http.tls.certresolver=dns-cloudflare
             - --entryPoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
             - --entryPoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
+            # - --entrypoints.websecure.http.tls.domains[1].main=${SECONDARY_DOMAIN_NAME}
+            # - --entrypoints.websecure.http.tls.domains[1].sans=*.${SECONDARY_DOMAIN_NAME}
             - --entryPoints.websecure.http.tls=true
             - --entryPoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS

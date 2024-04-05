@@ -166,9 +166,9 @@ based on information given in nzb-files.
 
 <img src="https://i.imgur.com/1OGtKxA.png" width="300" alt="SABnzbd Logo">
 
-NZBHydra 2 is a meta search for newznab indexers and torznab trackers. 
-It provides easy access to newznab indexers and many torznab trackers via Jackett. 
-You can search all your indexers and trackers from one place and use it as an indexer 
+NZBHydra 2 is a meta search for newznab indexers and torznab trackers.
+It provides easy access to newznab indexers and many torznab trackers via Jackett.
+You can search all your indexers and trackers from one place and use it as an indexer
 source for tools like Sonarr, Radarr, Lidarr or CouchPotato.
 
 ### Configuration

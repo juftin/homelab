@@ -36,3 +36,41 @@ It's a great way to interact with language models directly from your Slack works
 LibreOffice is a free and powerful office suite, and a successor to OpenOffice.org
 (commonly known as OpenOffice). Its clean interface and feature-rich tools help you
 unleash your creativity and enhance your productivity.
+
+## umami
+
+[![](https://img.shields.io/static/v1?message=umami-software/umami-postgresql&logo=docker&label=docker&color=blue)](https://github.com/umami-software/umami/pkgs/container/umami)
+[![](https://img.shields.io/static/v1?message=umami-software/umami&logo=github&label=github)](https://github.com/umami-software/umami)
+[![](https://img.shields.io/static/v1?message=umami.is&logo=google+chrome&label=website&color=teal)](https://umami.is)
+
+> [!NOTE] Umami is not enabled by default
+
+<img src="https://i.imgur.com/4iJcXk0.png" width="250" alt="Umami Logo">
+
+Umami is a simple, fast, privacy-focused alternative to Google Analytics.
+
+> [!WARNING] Important
+>
+> Umami needs a PostgreSQL database to work, the `stacks/utilities/postgres.yaml` service
+> is a dependency of Umami. You must also add "umami" to the `POSTGRES_MULTIPLE_DATABASES`
+> variable in your `.env` file or manually create the database yourself before starting:
+>
+> ```sql
+> CREATE USER umami WITH PASSWORD '$POSTGRES_PASSWORD';
+> CREATE DATABASE umami;
+> GRANT SET ON PARAMETER session_replication_role TO umami;
+> ALTER DATABASE umami OWNER TO umami;
+> ```
+
+> [!WARNING] Important
+>
+> The default username is `admin` and the default password
+> is `umami`. You should change this as soon as you log in the first time.
+
+> [!NOTE]
+>
+> The current setup of Umami uses a secondary domain for the ultimate
+> tracking URL. You can change this in the `umami.yaml` file. If you choose to use
+> the secondary domain, you must uncomment `SECONDARY_DOMAIN_NAME` settings in the
+> `stacks/core/traefik/docker-compose.yaml` file and uncomment the `SECONDARY_DOMAIN_NAME`
+> variable in your `.env` file before regenerating HTTPS certificates.

@@ -49,6 +49,7 @@ include:
     # - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
     # - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
     # - stacks/miscellaneous/libreoffice.yaml # LibreOffice (Office Suite)
+    # - stacks/miscellaneous/umami.yaml # Umami Analytics
 
 ################################################################################
 # NETWORK CONFIGURATION
