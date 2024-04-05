@@ -30,10 +30,13 @@ include:
     - stacks/media-center/sftpgo.yaml # SFTPGo (File Management)
     #############################################################################
     # MISCELLANEOUS
+    #
+    # * Note the existing services that are disabled by default.
     #############################################################################
     - stacks/miscellaneous/pihole.yaml # Pi-hole (DNS Ad-Blocking)
     - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
     - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+    # - stacks/miscellaneous/libreoffice.yaml # LibreOffice (Office Suite)
 
 ################################################################################
 # NETWORK CONFIGURATION

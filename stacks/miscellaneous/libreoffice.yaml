@@ -1,0 +1,26 @@
+####################################
+# LIBREOFFICE (OFFICE SUITE)
+####################################
+
+services:
+    libreoffice:
+        container_name: libreoffice
+        image: lscr.io/linuxserver/libreoffice:latest
+        profiles: ["miscellaneous", "all"]
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=${TZ}
+        volumes:
+            - ${USERDIR}/appdata/miscellaneous/libreoffice:/config
+        security_opt:
+            - no-new-privileges:true
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.libreoffice-rtr.rule: Host(`libreoffice.${DOMAIN_NAME}`)
+            traefik.http.routers.libreoffice-rtr.service: libreoffice-svc
+            traefik.http.services.libreoffice-svc.loadbalancer.server.port: 8888
+            traefik.http.routers.libreoffice-rtr.entrypoints: websecure
+            traefik.http.routers.libreoffice-rtr.middlewares: chain-oauth-google@file

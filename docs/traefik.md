@@ -15,7 +15,7 @@ anywhere in the world.
 > to get started.
 >
 > Once you have all of the pre-requisites set up, you can use the
-> [up-traefik](cli.md#up-traefik) command to start just the Traefik services
+> [core-upk](cli.md#core-upk) command to start just the Traefik services
 > and confirm that everything is working as at https://traefik.yourdomain.com.
 > Initial DNS propagation and certificate generation can take some time, so
 > be patient on the first run.
@@ -141,7 +141,7 @@ mkdir -p appdata/traefik/traefik/acme/ && \
 
 > [!NOTE]
 > If you're comfortable with the `Makefile` at the root of the project, you can run
-> `make acme-init` to create the `acme.json` as described above.
+> `make config-acme` to create the `acme.json` as described above.
 
 ## Containers in Traefik Stack
 
@@ -152,33 +152,20 @@ mkdir -p appdata/traefik/traefik/acme/ && \
 
 ## Creating New Services
 
-The below example shows you how to create a new service in the docker compose
-stack and make it accessible via Traefik. In this example, we are creating a
-Jupyter notebook service that can be accessed at `jupyter.example.com`.
+The below example (which has already been done) shows you how to create a
+new service in the docker compose stack and make it accessible via Traefik.
+In this example, we are creating a LibreOffice service that can be accessed
+at `https://libreoffice.example.com`. If possible, I recommend using a
+[LinuxServer](https://github.com/linuxserver) image as they are well
+maintained and have a common configuration. Once the `libreoffice.yaml` file
+is created, you can reference it in the root `docker-compose.yaml` (by uncommenting
+the reference to `stacks/miscellaneous/libreoffice.yaml` line) and then run
+`docker-compose up -d`.
 
-=== "stacks/miscellaneous/jupyter.yaml"
+=== "stacks/miscellaneous/libreoffice.yaml"
 
     ```yaml
-    ####################################
-    # JUPYTER LAB
-    ####################################
-
-    services:
-        jupyter:
-            container_name: jupyter
-            image: jupyter/all-spark-notebook:latest
-            security_opt:
-                - no-new-privileges:true
-            networks:
-                traefik:
-            command: start.sh jupyter lab
-            labels:
-                traefik.enable: true
-                traefik.http.routers.jupyter-rtr.rule: Host(`jupyter.${DOMAIN_NAME}`)
-                traefik.http.routers.jupyter-rtr.service: jupyter-svc
-                traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
-                traefik.http.routers.jupyter-rtr.entrypoints: websecure
-                traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
+    --8<-- "stacks/miscellaneous/libreoffice.yaml"
     ```
 
 === "docker-compose.yaml"
@@ -189,14 +176,14 @@ Jupyter notebook service that can be accessed at `jupyter.example.com`.
 
 -   `traefik.enable`
     -   Allows Traefik to interact with this application
--   `traefik.http.routers.jupyter-rtr.rule`
-    -   Creates a router, "jupyter-rtr", that can be accessed @ jupyter.example.com
--   `traefik.http.routers.jupyter-rtr.service`
-    -   Attaches a load balancing service, "jupyter-svc",to the router
--   `traefik.http.services.jupyter-svc.loadbalancer.server.port`
+-   `traefik.http.routers.libreoffice-rtr.rule`
+    -   Creates a router, "libreoffice-rtr", that can be accessed @ libreoffice.example.com
+-   `traefik.http.routers.libreoffice-rtr.service`
+    -   Attaches a load balancing service, "libreoffice-svc",to the router
+-   `traefik.http.services.libreoffice-svc.loadbalancer.server.port`
     -   Instructs the load balancer to operate on port 8888 (the exposed port of the application)
--   `traefik.http.routers.jupyter-rtr.entrypoints`
-    -   Instructs the router to use the "websecure" entrypoint (https://jupyter.example.com)
--   `traefik.http.routers.jupyter-rtr.middlewares:`
+-   `traefik.http.routers.libreoffice-rtr.entrypoints`
+    -   Instructs the router to use the "websecure" entrypoint (https://libreoffice.example.com)
+-   `traefik.http.routers.libreoffice-rtr.middlewares:`
     -   Instructs the router to use the middleware service, `chain-oauth-google@file`
         which requires Google OAuth for access

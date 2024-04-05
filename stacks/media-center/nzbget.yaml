@@ -6,6 +6,7 @@ services:
     nzbget:
         container_name: nzbget
         image: lscr.io/linuxserver/nzbget:latest
+        profiles: ["media-center", "all"]
         hostname: ${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/nzbget:/config

@@ -2,49 +2,79 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 PYTHON:=$(ROOT_DIR)/.venv/bin/python
 SHELL:=/bin/bash
 
-##@ docker compose 🐳
+##@ Homelab 🐳
 
 .PHONY: update
-update: ## Update the services.
-	docker compose --project-directory "$(ROOT_DIR)" pull
-	docker compose --project-directory "$(ROOT_DIR)" up -d
+update: ## Update the service(s) *
+	docker compose --project-directory "$(ROOT_DIR)" --profile all pull $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP)
 
 .PHONY: pull
-pull: ## Pull the latest images.
-	docker compose --project-directory "$(ROOT_DIR)" pull
+pull: ## Pull the latest image(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all pull $(APP)
 
 .PHONY: up
-up: ## Start the services.
-	docker compose --project-directory "$(ROOT_DIR)" up -d
+up: ## Start the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP)
 
 .PHONY: down
-down: ## Stop the services.
-	docker compose --project-directory "$(ROOT_DIR)" down
+down: ## Stop the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all down $(APP)
 
 .PHONY: stop
-stop: ## Stop the services.
-	docker compose --project-directory "$(ROOT_DIR)" stop
+stop: ## Stop the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all stop $(APP)
 
 .PHONY: logs
-logs: ## Show the logs.
-	docker compose --project-directory "$(ROOT_DIR)" logs -ft
+logs: ## Show the logs*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all logs $(APP) -ft
 
 .PHONY: restart
-restart: ## Restart the services.
-	docker compose --project-directory "$(ROOT_DIR)" restart
+restart: ## Restart the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all restart  $(APP)
 
 .PHONY: ps
-ps: ## Show the status of the services.
-	docker compose --project-directory "$(ROOT_DIR)" ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+ps: ## Show the status of the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
 
-.PHONY: up-traefik
-up-traefik: ## Start just the traefik services
-	docker compose --project-directory "$(ROOT_DIR)" up -d traefik oauth socket-proxy duckdns
+.PHONY: config
+config: ## Show the configuration of the service(s)*
+	docker compose --project-directory "$(ROOT_DIR)" --profile all config $(APP)
+
+##@ Core Services 🧠
+
+.PHONY: core-up
+core-up: ## Start just the core services (traefik, oauth2, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile core up -d
+
+.PHONY: core-down
+core-down: ## Stop just the core services (traefik, oauth2, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile core down
+
+.PHONY: core-logs
+core-logs: ## Show the logs for the core services (traefik, oauth2, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile core logs -ft
+
+##@ Media Services 📺
+
+.PHONY: media-up
+media-up: ## Start just the media services (plex, sonarr, radarr, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile media-center up -d
+
+.PHONY: media-down
+media-down: ## Stop just the media services (plex, sonarr, radarr, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile media-center down
+
+.PHONY: media-logs
+media-logs: ## Show the logs for the media services (plex, sonarr, radarr, etc).
+	docker compose --project-directory "$(ROOT_DIR)" --profile media-center logs -ft
+
+.PHONY: Misc Services 🧰
 
 ##@ Configuration 🪛
 
-.PHONY: acme-init
-acme-init: ## Initialize the acme.json file.
+.PHONY: config-acme
+config-acme: ## Initialize the acme.json file.
 	mkdir -p appdata/traefik/traefik/acme/
 	rm -f appdata/traefik/traefik/acme/acme.json
 	touch appdata/traefik/traefik/acme/acme.json
@@ -60,7 +90,7 @@ backup: ## Backup the homelab repo to the ${BACKUP_DIR}.
 backup-no-timestamp: ## Backup the homelab repo to the ${BACKUP_DIR} without a timestamp.
 	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR)/appdata $(BACKUP_DIR) --no-timestamp
 
-##@ development 🛠
+##@ Development 🛠
 
 .PHONY: docs
 docs: ## Build the documentation.
@@ -70,7 +100,7 @@ docs: ## Build the documentation.
 lint: ## Lint the code with pre-commit.
 	pre-commit run --all-files
 
-##@ general 🌐
+##@ General 🌐
 
 .PHONY: version
 version: ## Show the version of the project.
@@ -86,4 +116,7 @@ version: ## Show the version of the project.
 .DEFAULT_GOAL := help
 .PHONY: help
 help: ## Show this help message and exit
-	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  homelab \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-19s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@printf "\033[1;34mUsage:\033[0m \033[1;32mhomelab\033[0m \033[1;33m[target]\033[0m \033[1;36m(APP=service-name)\033[0m\n"
+	@echo ""
+	@printf "* pass \033[1;36mAPP=service-name\033[0m to specify the service\n"
+	@awk 'BEGIN {FS = ":.*##"; printf ""} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-19s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)

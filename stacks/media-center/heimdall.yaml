@@ -6,6 +6,7 @@ services:
     heimdall:
         container_name: heimdall
         image: lscr.io/linuxserver/heimdall:latest
+        profiles: ["media-center", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/heimdall:/config
         environment:

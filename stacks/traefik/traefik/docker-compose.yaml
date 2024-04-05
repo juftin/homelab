@@ -10,6 +10,7 @@ services:
     traefik:
         container_name: traefik
         image: library/traefik:v2.11
+        profiles: ["traefik", "core", "all"]
         ports:
             - published: 80
               target: 80

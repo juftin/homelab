@@ -6,6 +6,7 @@ services:
     chat-gpt-next-web:
         container_name: chat-gpt-next-web
         image: yidadaa/chatgpt-next-web:latest
+        profiles: ["miscellaneous", "all"]
         networks:
             traefik:
         environment:

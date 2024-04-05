@@ -16,7 +16,8 @@ correct service. It is the first service that you should start with:
 > [Traefik 🚦](traefik.md) section to get started.
 >
 > Once you have all of the pre-requisites set up, you can use the
-> [up-traefik](cli.md#up-traefik) command to start just the Traefik services.
+> [core-upk](cli.md#core-up) command to start just the Traefik services.
+> See the [Command Line documentation](#cli.md) for more info.
 
 ## App Deployment
 

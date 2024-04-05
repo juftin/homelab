@@ -10,6 +10,7 @@ services:
     pihole:
         container_name: pihole
         image: pihole/pihole:latest
+        profiles: ["miscellaneous", "all"]
         environment:
             TZ: ${TZ}
             WEBPASSWORD: /run/secrets/admin_password

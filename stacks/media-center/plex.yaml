@@ -6,6 +6,7 @@ services:
     plex:
         container_name: plex
         image: lscr.io/linuxserver/plex:latest
+        profiles: ["media-center", "all"]
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/plex:/config

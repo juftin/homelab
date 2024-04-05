@@ -6,6 +6,7 @@ services:
     sonarr:
         container_name: sonarr
         image: lscr.io/linuxserver/sonarr:latest
+        profiles: ["media-center", "arrs", "all"]
         hostname: ${SONARR_SUBDOMAIN:-sonarr}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/sonarr:/config

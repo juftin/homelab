@@ -6,6 +6,7 @@ services:
     readarr:
         container_name: readarr
         image: lscr.io/linuxserver/readarr:develop
+        profiles: ["media-center", "arrs", "all"]
         hostname: ${READARR_SUBDOMAIN:-readarr}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/readarr:/config

@@ -6,6 +6,7 @@ services:
     portainer:
         container_name: portainer
         image: portainer/portainer-ce:latest
+        profiles: ["media-center", "all"]
         hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/portainer:/data

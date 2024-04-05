@@ -1,43 +1,65 @@
 # Command Line Usage
 
-This project includes a Makefile that provides a variety of
+This project includes a `Makefile` that provides a variety of
 commands to manage your deployment.
 
-As a convenience wrapper, I like to add an alias to accessing
-the Makefile as a `homelab` command:
+!!! info "**`homelab`** and **`homelab-compose`**"
 
-```shell
-alias homelab="make -s -C /path/to/this/repo"
-```
+    You will see the **`make`** command and **`homelab`** used interchangeably
+    in this documentation. The **`homelab`** command is a convenience wrapper
+    around **`make`** so you can easily run the Makefile from anywhere.
 
-If you prefer to use the `docker compose` command directly, you can
-do so with the following alias:
+    Add this to your `.bashrc` / `.zshrc` to use the **`homelab`** command:
 
-```shell
-alias homelab-compose="docker compose --project-directory /path/to/this/repo"
-```
+    ```shell
+    alias homelab="make --directory /path/to/this/repo"
+    ```
 
-```bash exec="on" result="text" title="homelab"
-make | sed 's/\x1b\[[0-9;]*m//g'
-```
+    If you'd like to use the **`docker compose`** command from anywhere, you can
+    do so with the following alias:
 
-### Commands
+    ```shell
+    alias homelab-compose="docker compose --project-directory /path/to/this/repo"
+    ```
+
+!!! quote "`homelab help`"
+
+    ```bash exec="1" result="text"
+    make help | sed 's/\x1b\[[0-9;]*m//g'
+    ```
+
+## Commands
+
+!!! tip "The `APP` flag"
+
+    Notice that some commands accept an `APP` flag. This flag is used to specify
+    which docker compose service to run on. If not specified these commands default
+    to **all** services.
+
+    === "Show logs for a specific service"
+
+        ```
+        homelab logs APP=sonarr
+        ```
+
+    === "Show logs for all services"
+
+        ```
+        homelab logs
+        ```
+
+### Homelab 🐳
 
 #### update
 
-Update the homelab services to the latest versions
+Update the homelab service(s) to the latest versions.
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab update
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose pull
-    docker compose up -d
     ```
 
 === "make"
@@ -46,27 +68,30 @@ Update the homelab services to the latest versions
     make update
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all pull
+    docker compose --profile all up -d
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose pull
-    homelab-compose up -d
+    homelab-compose --profile all pull
+    homelab-compose --profile all up -d
     ```
 
 #### pull
 
-Pull the latest images for the homelab services.
+Pull the latest images for the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab pull
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose pull
     ```
 
 === "make"
@@ -75,26 +100,28 @@ Pull the latest images for the homelab services.
     make pull
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all pull
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose pull
+    homelab-compose --profile all pull
     ```
 
 #### up
 
-Start the homelab services.
+Start the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab up
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose up -d
     ```
 
 === "make"
@@ -103,26 +130,28 @@ Start the homelab services.
     make up
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all up -d
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose up -d
+    homelab-compose --profile all up -d
     ```
 
 #### down
 
-Stop the homelab services.
+Stop the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab down
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose down
     ```
 
 === "make"
@@ -131,26 +160,28 @@ Stop the homelab services.
     make down
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all down
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose down
+    homelab-compose --profile all down
     ```
 
 #### stop
 
-Stop the homelab services.
+Stop the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab stop
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose stop
     ```
 
 === "make"
@@ -159,26 +190,28 @@ Stop the homelab services.
     make stop
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all stop
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose stop
+    homelab-compose --profile all stop
     ```
 
 #### logs
 
-Show the logs for the homelab services.
+Show the logs for the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab logs
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose logs -f
     ```
 
 === "make"
@@ -187,26 +220,28 @@ Show the logs for the homelab services.
     make logs
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all logs -ft
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose logs -f
+    homelab-compose --profile all logs -ft
     ```
 
 #### restart
 
-Restart the homelab services.
+Restart the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab restart
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose restart
     ```
 
 === "make"
@@ -215,26 +250,28 @@ Restart the homelab services.
     make restart
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all restart
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose restart
+    homelab-compose --profile all restart
     ```
 
 #### ps
 
-Show the status of the homelab services.
+Show the status of the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
     homelab ps
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
     ```
 
 === "make"
@@ -243,48 +280,236 @@ Show the status of the homelab services.
     make ps
     ```
 
+=== "docker"
+
+    ```shell
+    docker compose --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+    ```
+
 === "homelab-compose"
 
     ```shell
-    homelab-compose ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+    homelab-compose --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
     ```
 
-#### up-traefik
+#### config
 
-Start just the traefik services.
+Show the configuration of the homelab service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
-    homelab up-traefik
-    ```
-
-=== "docker"
-
-    ```shell
-    docker compose up -d traefik oauth socket-proxy duckdns
+    homelab config
     ```
 
 === "make"
 
     ```shell
-    make up-traefik
+    make config
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile all config
     ```
 
 === "homelab-compose"
 
     ```shell
-    homelab-compose up -d traefik oauth socket-proxy duckdns
+    homelab-compose --profile all config
     ```
 
-#### acme-init
+### Core Services 🧠
+
+#### core-up
+
+Start just the core services (traefik, oauth2, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab core-up
+    ```
+
+=== "make"
+
+    ```shell
+    make core-up
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile core up -d
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile core up -d
+    ```
+
+#### core-down
+
+Stop just the core services (traefik, oauth2, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab core-down
+    ```
+
+=== "make"
+
+    ```shell
+    make core-down
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile core down
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile core down
+    ```
+
+#### core-logs
+
+Show the logs for the core services (traefik, oauth2, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab core-logs
+    ```
+
+=== "make"
+
+    ```shell
+    make core-logs
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile core logs -ft
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile core logs -ft
+    ```
+
+### Media Services 📺
+
+#### media-up
+
+Start just the media services (plex, sonarr, radarr, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab media-up
+    ```
+
+=== "make"
+
+    ```shell
+    make media-up
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile media-center up -d
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile media-center up -d
+    ```
+
+#### media-down
+
+Stop just the media services (plex, sonarr, radarr, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab media-down
+    ```
+
+=== "make"
+
+    ```shell
+    make media-down
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile media-center down
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile media-center down
+    ```
+
+#### media-logs
+
+Show the logs for the media services (plex, sonarr, radarr, etc).
+
+=== "homelab"
+
+    ```shell
+    homelab media-logs
+    ```
+
+=== "make"
+
+    ```shell
+    make media-logs
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose --profile media-center logs -ft
+    ```
+
+=== "homelab-compose"
+
+    ```shell
+    homelab-compose --profile media-center logs -ft
+    ```
+
+### Configuration 🪛
+
+#### config-acme
 
 Initialize the `acme.json` file for traefik.
 
 === "homelab"
 
     ```shell
-    homelab acme-init
+    homelab config-acme
+    ```
+
+=== "make"
+
+    ```shell
+    make config-acme
     ```
 
 === "bash"
@@ -296,23 +521,26 @@ Initialize the `acme.json` file for traefik.
     chmod 600 appdata/traefik/traefik/acme/acme.json
     ```
 
-=== "make"
-
-    ```shell
-    make acme-init
-    ```
+### Backup 🗂️
 
 #### backup
 
-Backup the homelab services.
+Backup the `appdata` directory with a timestamp (`appdata_YYYYMMDDHHMM.tar.gz`).
+
+\* _You must provide the `BACKUP_DIR` variable_
 
 See the [backup script documentation](scripts.md#backupsh)
-for more information.
 
 === "homelab"
 
     ```shell
-    BACKUP_DIR=/backup/dir homelab backup
+    homelab backup BACKUP_DIR=/backup/dir
+    ```
+
+=== "make"
+
+    ```shell
+    make backup BACKUP_DIR=/backup/dir
     ```
 
 === "bash"
@@ -321,24 +549,25 @@ for more information.
     bash ./scripts/backup.sh appdata /backup/dir
     ```
 
-=== "make"
-
-    ```shell
-    BACKUP_DIR=/backup/dir make backup
-    ```
-
 #### backup-no-timestamp
 
-Backup the homelab services without a timestamp. This
-overwrites the previous backup.
+Backup the `appdata` directory without a timestamp. This
+overwrites the previous backup (`appdata.tar.gz`)
+
+\* _You must provide the `BACKUP_DIR` variable_
 
 See the [backup script documentation](scripts.md#backupsh)
-for more information.
 
 === "homelab"
 
     ```shell
-    BACKUP_DIR=/backup/dir homelab backup-no-timestamp
+    homelab backup-no-timestamp BACKUP_DIR=/backup/dir
+    ```
+
+=== "make"
+
+    ```shell
+    make backup-no-timestamp BACKUP_DIR=/backup/dir
     ```
 
 === "bash"
@@ -347,8 +576,90 @@ for more information.
     bash ./scripts/backup.sh appdata /backup/dir --no-timestamp
     ```
 
+### Development 🛠
+
+#### docs
+
+Build the documentation.
+
+=== "homelab"
+
+    ```shell
+    homelab docs
+    ```
+
 === "make"
 
     ```shell
-    BACKUP_DIR=/backup/dir make backup-no-timestamp
+    make docs
+    ```
+
+=== "bash"
+
+    ```shell
+    hatch run docs:serve --livereload --dev-addr localhost:8000
+    ```
+
+#### lint
+
+Lint the code with pre-commit.
+
+=== "homelab"
+
+    ```shell
+    homelab lint
+    ```
+
+=== "make"
+
+    ```shell
+    make lint
+    ```
+
+=== "bash"
+
+    ```shell
+    pre-commit run --all-files
+    ```
+
+### General 🌐
+
+#### version
+
+Show the version of the project.
+
+=== "homelab"
+
+    ```shell
+    homelab version
+    ```
+
+=== "make"
+
+    ```shell
+    make version
+    ```
+
+=== "bash"
+
+    ```shell
+    git fetch --unshallow 2>/dev/null || true
+    git fetch --tags 2>/dev/null || true
+    echo "homelab $$(git describe --tags --abbrev=0)"
+    ```
+
+#### help
+
+Show this help message and exit.
+
+=== "homelab"
+
+    ```shell
+    homelab help
+    ```
+
+=== "make"
+
+    ```shell
+    make help
     ```

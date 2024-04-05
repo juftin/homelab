@@ -6,6 +6,7 @@ services:
     duckdns:
         container_name: duckdns
         image: lscr.io/linuxserver/duckdns:latest
+        profiles: ["traefik", "core", "all"]
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

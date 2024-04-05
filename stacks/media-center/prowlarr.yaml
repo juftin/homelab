@@ -6,6 +6,7 @@ services:
     prowlarr:
         container_name: prowlarr
         image: lscr.io/linuxserver/prowlarr:develop
+        profiles: ["media-center", "arrs", "all"]
         hostname: ${PROWLARR_SUBDOMAIN:-prowlarr}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/prowlarr:/config

@@ -6,6 +6,7 @@ services:
     calibre-web:
         container_name: calibre-web
         image: lscr.io/linuxserver/calibre-web:latest
+        profiles: ["media-center", "all"]
         hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media-center/calibre-web:/config

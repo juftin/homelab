@@ -6,6 +6,7 @@ services:
     transmission:
         container_name: transmission
         image: haugene/transmission-openvpn:latest
+        profiles: ["media-center", "all"]
         hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
         volumes:
             - /etc/localtime:/etc/localtime:ro

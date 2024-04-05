@@ -6,6 +6,7 @@ services:
     ombi:
         container_name: ombi
         image: lscr.io/linuxserver/ombi:latest
+        profiles: ["media-center", "all"]
         hostname: ${OMBI_SUBDOMAIN:-ombi}
         environment:
             PUID: ${PUID}
