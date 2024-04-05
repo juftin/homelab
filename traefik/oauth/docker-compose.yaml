@@ -2,24 +2,28 @@
 # OAUTH (GOOGLE OAUTH FOR ADMIN)
 ####################################
 
+secrets:
+    google-oauth:
+        file: ${DOCKER_DIRECTORY}/secrets/google_oauth.secret
+
 services:
     oauth:
         container_name: oauth
         image: thomseddon/traefik-forward-auth:latest
         hostname: oauth
         environment:
-            PROVIDERS_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-            PROVIDERS_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-            SECRET: ${OAUTH_SECRET}
+            CONFIG: /config
             COOKIE_DOMAIN: ${DOMAIN_NAME}
             INSECURE_COOKIE: "false"
             AUTH_HOST: ${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}
             URL_PATH: /_oauth
-            WHITELIST: ${OAUTH_WHITELIST}
             LOG_LEVEL: DEBUG
             LIFETIME: 2592000
             DEFAULT_ACTION: auth
             DEFAULT_PROVIDER: google
+        secrets:
+            - source: google-oauth
+              target: /config
         networks:
             traefik:
         security_opt:

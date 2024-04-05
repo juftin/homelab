@@ -12,10 +12,10 @@ services:
             PGID: ${PGID}
             TZ: ${TZ}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/ombi/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/ombi/config:/config
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

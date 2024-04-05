@@ -7,14 +7,14 @@ services:
         container_name: heimdall
         image: lscr.io/linuxserver/heimdall:latest
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/heimdall/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/heimdall/config:/config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

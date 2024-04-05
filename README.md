@@ -46,8 +46,12 @@ everything.
 
 ```text
 .
+├── .env                                    # Environment Variables and Configuration
 ├── docker-compose.yaml                     # Main Docker Compose File
 ├── Makefile                                # Makefile for common tasks and docker compose wrappers
+├── secrets                                 # Secret Files
+│   ├── cloudflare_api_key.secret           # Cloudflare API Key
+│   └── google_oauth.secret                 # Google OAuth Credentials and Whitelist
 ├── media-center
 │   ├── docker-compose.yaml                 # Media-Center Stack Docker Compose File (Plex, Sonarr, etc.)
 │   ├── plex                                # Each individual service has its own subdirectory
@@ -65,18 +69,22 @@ everything.
 │           ├── middlewares-chains.yml      # Traefik Middlewares Chains
 │           ├── middlewares.yml             # Traefik Middlewares
 │           └── tls-opts.yml                # Traefik TLS Options
-├── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
-│   ├── chat-gpt-next-web
-│   │   └── docker-compose.yaml
-│   └── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
-└── README.md
+└── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
+    ├── chat-gpt-next-web
+    │   └── docker-compose.yaml
+    └── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
 ```
 
 ### Configuration
 
-All services are configured via a singular `.env` file at the root of the project.
-This file is used to define environment variables that are used in various `docker-compose.yaml`
-files - there is a template available at [example.env](docs/example.env).
+All services are configured via a `.env` file at the root of the project and a few secret
+files in the `secrets` directory. These files are used to define settings and credentials
+for all services that are deployed. You can copy the example files to get started:
+
+```shell
+cp docs/example.env .env
+cp -r docs/example-secrets/ secrets/
+```
 
 See the [docs](https://juftin.github.io/homelab/) for more information on configuration and
 getting started.

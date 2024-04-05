@@ -2,6 +2,10 @@
 # TRAEFIK (REVERSE PROXY)
 ####################################
 
+secrets:
+    cloudflare_api_key:
+        file: ${DOCKER_DIRECTORY}/secrets/cloudflare_api_key.secret
+
 services:
     traefik:
         container_name: traefik
@@ -17,12 +21,15 @@ services:
               mode: host
         environment:
             CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-            CF_API_KEY: ${CLOUDFLARE_API_KEY}
+            CF_API_KEY: /run/secrets/cloudflare_api_key
+        secrets:
+            - source: cloudflare_api_key
+              target: /run/secrets/cloudflare_api_key
         volumes:
-            - ${TRAEFIK_DIRECTORY}/traefik/rules:/rules
-            - ${TRAEFIK_DIRECTORY}/traefik/config/logs:/logs
-            - ${TRAEFIK_DIRECTORY}/traefik/config/traefik:/etc/traefik
-            - ${TRAEFIK_DIRECTORY}/traefik/config/acme/acme.json:/acme.json
+            - ${DOCKER_DIRECTORY}/traefik/traefik/rules:/rules
+            - ${DOCKER_DIRECTORY}/traefik/traefik/config/logs:/logs
+            - ${DOCKER_DIRECTORY}/traefik/traefik/config/traefik:/etc/traefik
+            - ${DOCKER_DIRECTORY}/traefik/traefik/config/acme/acme.json:/acme.json
         networks:
             traefik:
             docker:

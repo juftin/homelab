@@ -8,9 +8,9 @@ services:
         image: lscr.io/linuxserver/calibre-web:latest
         hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/calibre-web/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/calibre-web/config:/config
             - ${BOOKS_DIR}:/books
-            - ${MEDIA_CENTER_DIRECTORY}/calibre/config:/calibre-config
+            - ${DOCKER_DIRECTORY}/media-center/calibre/config:/calibre-config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -19,7 +19,7 @@ services:
             OAUTHLIB_RELAX_TOKEN_SCOPE: 1
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

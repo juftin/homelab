@@ -8,16 +8,16 @@ services:
         image: lscr.io/linuxserver/tautulli:latest
         hostname: ${TAUTULLI_SUBDOMAIN:-tautulli}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/tautulli/config:/config
-            - ${MEDIA_CENTER_DIRECTORY}/plex/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - ${DOCKER_DIRECTORY}/media-center/tautulli/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/plex/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

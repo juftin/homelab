@@ -1,5 +1,7 @@
 # Secrets
 .env
+secrets/
+
 # Media Center
 media-center/heimdall/config/
 media-center/jackett/config/

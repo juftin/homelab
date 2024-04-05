@@ -49,15 +49,54 @@ in the `media-center/docker-compose.yaml` file.
 
 ## App Configuration
 
-All services are configured via a singular `.env` file at the root of the project.
-This file is used to define environment variables that are used in various `docker-compose.yaml`
-files - there is a template available at [example.env](example.env).
+These project makes use of a few configuration files to make it easier to manage:
+
+```shell
+cp docs/example.env .env
+cp -r docs/example-secrets/ secrets/
+```
+
+-   `.env` - Environment variables that are used by the `docker-compose.yaml` files
+-   `secrets/google_oauth.secret` - The Google OAuth API credentials and user whitelist
+-   `secrets/cloudflare_api_key.secret` - The CloudFlare API key (singular, plaintext key)
+-   `secrets/admin_password.secret` - The password for the `admin` user in the `pi-hole` service (singular, plaintext key)
 
 <details><summary>📄 .env</summary>
 <p>
 
 ```shell
 --8<-- "docs/example.env"
+```
+
+</p>
+</details>
+
+<details><summary>📄 secrets/google_oauth.secret</summary>
+<p>
+
+```shell
+--8<-- "docs/example-secrets/google_oauth.secret"
+```
+
+</p>
+
+</details>
+
+<details><summary>📄 secrets/cloudflare_api_key.secret</summary>
+<p>
+
+```shell
+--8<-- "docs/example-secrets/cloudflare_api_key.secret"
+```
+
+</p>
+</details>
+
+<details><summary>📄 secrets/admin_password.secret</summary>
+<p>
+
+```shell
+--8<-- "docs/example-secrets/admin_password.secret"
 ```
 
 </p>

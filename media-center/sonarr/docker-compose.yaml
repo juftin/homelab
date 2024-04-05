@@ -8,17 +8,17 @@ services:
         image: lscr.io/linuxserver/sonarr:latest
         hostname: ${SONARR_SUBDOMAIN:-sonarr}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/sonarr/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/sonarr/config:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${TV_DIR}:/tv
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

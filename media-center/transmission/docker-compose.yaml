@@ -9,10 +9,10 @@ services:
         hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ${MEDIA_CENTER_DIRECTORY}/transmission/config:/config/transmission-home
+            - ${DOCKER_DIRECTORY}/media-center/transmission/config:/config/transmission-home
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -38,7 +38,7 @@ services:
             - /dev/net/tun
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

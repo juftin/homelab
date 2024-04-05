@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/calibre:latest
         hostname: ${CALIBRE_SUBDOMAIN:-calibre}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/calibre/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/calibre/config:/config
             - ${BOOKS_DIR}:/books
             - ${COMPLETED_DOWNLOADS}:/downloads
         environment:
@@ -17,7 +17,7 @@ services:
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

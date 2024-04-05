@@ -8,11 +8,11 @@ services:
         image: lscr.io/linuxserver/plex:latest
         network_mode: host
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/plex/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/plex/config:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
-            - /tmp:/transcode
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
+            - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
             - ${BOOKS_DIR}:/books
         devices:
             - /dev/dri:/dev/dri
@@ -23,4 +23,4 @@ services:
             TZ: ${TZ}
             VERSION: docker
             PLEX_CLAIM: ${PLEX_CLAIM}
-        restart: ${UNIVERSAL_RESTART_POLICY}
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

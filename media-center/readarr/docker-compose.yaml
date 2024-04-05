@@ -8,17 +8,17 @@ services:
         image: lscr.io/linuxserver/readarr:develop
         hostname: ${READARR_SUBDOMAIN:-readarr}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/readarr/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/readarr/config:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${BOOKS_DIR}:/books
-            - ${MEDIA_CENTER_DIRECTORY}/calibre/config:/calibre
+            - ${DOCKER_DIRECTORY}/media-center/calibre/config:/calibre
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

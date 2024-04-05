@@ -8,14 +8,14 @@ services:
         image: lscr.io/linuxserver/prowlarr:develop
         hostname: ${PROWLARR_SUBDOMAIN:-prowlarr}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/prowlarr/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/prowlarr/config:/config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

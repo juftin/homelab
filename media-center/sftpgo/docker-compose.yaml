@@ -12,15 +12,15 @@ services:
             - ${MOVIE_DIR}:/srv/sftpgo/data/juftin/movies
             - ${TV_DIR}:/srv/sftpgo/data/juftin/tv
             - ${BOOKS_DIR}:/srv/sftpgo/data/juftin/books
-            - ${MEDIA_CENTER_DIRECTORY}/sftpgo/data/:/srv/sftpgo/data/juftin/upload
-            - ${MEDIA_CENTER_DIRECTORY}/sftpgo/config/:/var/lib/sftpgo/
+            - ${DOCKER_DIRECTORY}/media-center/sftpgo/data/:/srv/sftpgo/data/juftin/upload
+            - ${DOCKER_DIRECTORY}/media-center/sftpgo/config/:/var/lib/sftpgo/
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

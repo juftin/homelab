@@ -8,17 +8,17 @@ services:
         image: lscr.io/linuxserver/radarr:latest
         hostname: ${RADARR_SUBDOMAIN:-radarr}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/radarr/config:/config
+            - ${DOCKER_DIRECTORY}/media-center/radarr/config:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MOVIE_DIR}:/movies
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
             - no-new-privileges:true
-        restart: unless-stopped
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:

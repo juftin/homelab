@@ -8,8 +8,8 @@ services:
         image: portainer/portainer-ce:latest
         hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         volumes:
-            - ${MEDIA_CENTER_DIRECTORY}/portainer/config:/data
-            - ${MEDIA_CENTER_DIRECTORY}/shared:/shared
+            - ${DOCKER_DIRECTORY}/media-center/portainer/config:/data
+            - ${DOCKER_DIRECTORY}/media-center/shared:/shared
         command: -H tcp://socket-proxy:2375
         environment:
             TZ: ${TZ}
@@ -17,7 +17,7 @@ services:
         networks:
             traefik:
             docker:
-        restart: ${UNIVERSAL_RESTART_POLICY}
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         labels:
             traefik.enable: true
             traefik.http.routers.portainer-rtr.rule: Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)

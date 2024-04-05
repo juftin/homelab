@@ -61,13 +61,9 @@ provide CloudFlare with the DuckDNS subdomain to point to your server.
 
 #### .env
 
-The [`example.env`](example.env) file can be modified and renamed `.env` in order
-for the containers to be build properly. This is the entire configuration file for
-all applications. All relevant hints can be found within.
-
-```shell
-cp docs/example.env .env
-```
+The `.env` needs to be modified in order for the containers to be build
+properly. This is the entire configuration file for all applications.
+All relevant hints can be found within.
 
 <details><summary>📄 .env</summary>
 <p>
