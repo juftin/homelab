@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/sonarr:latest
         hostname: ${SONARR_SUBDOMAIN:-sonarr}
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/sonarr/config:/config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/sonarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${TV_DIR}:/tv
             - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared

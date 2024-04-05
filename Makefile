@@ -45,10 +45,10 @@ up-traefik: ## Start just the traefik services
 
 .PHONY: acme-init
 acme-init: ## Initialize the acme.json file.
-	mkdir -p traefik/traefik/config/acme/
-	rm -f traefik/traefik/config/acme/acme.json
-	touch traefik/traefik/config/acme/acme.json
-	chmod 600 traefik/traefik/config/acme/acme.json
+	mkdir -p appdata/traefik/traefik/acme/
+	rm -f appdata/traefik/traefik/acme/acme.json
+	touch appdata/traefik/traefik/acme/acme.json
+	chmod 600 appdata/traefik/traefik/acme/acme.json
 
 ##@ Backup 🗂️
 

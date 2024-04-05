@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/radarr:latest
         hostname: ${RADARR_SUBDOMAIN:-radarr}
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/radarr/config:/config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MOVIE_DIR}:/movies
             - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared

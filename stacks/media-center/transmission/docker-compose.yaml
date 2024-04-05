@@ -9,7 +9,7 @@ services:
         hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ${DOCKER_DIRECTORY}/stacks/media-center/transmission/config:/config/transmission-home
+            - ${DOCKER_DIRECTORY}/appdata/media-center/transmission:/config/transmission-home
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
             - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared

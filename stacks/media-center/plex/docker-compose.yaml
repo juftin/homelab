@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/plex:latest
         network_mode: host
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/plex/config:/config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/plex:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
             - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared

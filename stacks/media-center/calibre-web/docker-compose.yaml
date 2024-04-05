@@ -8,9 +8,9 @@ services:
         image: lscr.io/linuxserver/calibre-web:latest
         hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/calibre-web/config:/config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre-web:/config
             - ${BOOKS_DIR}:/books
-            - ${DOCKER_DIRECTORY}/stacks/media-center/calibre/config:/calibre-config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre:/calibre-config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

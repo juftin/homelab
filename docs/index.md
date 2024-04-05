@@ -49,28 +49,36 @@ everything.
 ├── secrets                                     # Secret Files
 │   ├── cloudflare_api_key.secret               # Cloudflare API Key
 │   └── google_oauth.secret                     # Google OAuth Credentials and Whitelist
-└── stacks
+├── stacks
+│   ├── media-center
+│   │   ├── docker-compose.yaml                 # Media-Center Stack Docker Compose File (Plex, Sonarr, etc.)
+│   │   ├── plex                                # Each individual service has its own subdirectory
+│   │   │   └── docker-compose.yaml             # Each service has its own docker-compose.yaml file
+│   │   └── sonarr
+│   │       └── docker-compose.yaml
+│   ├── traefik                                 # Traefik Reverse Proxy and OAuth
+│   │   ├── docker-compose.yaml                 # Traefik Stack Docker Compose File (Traefik, OAuth, etc.)
+│   │   ├── oauth                               # OAuth Configuration
+│   │   │   └── docker-compose.yaml
+│   │   └── traefik                             # Traefik Configuration
+│   │       ├── docker-compose.yaml             # Traefik Docker Compose File (Traefik Only)
+│   │       └── rules
+│   │           ├── middlewares-chains.yml      # Traefik Middlewares Chains
+│   │           ├── middlewares.yml             # Traefik Middlewares
+│   │           └── tls-opts.yml                # Traefik TLS Options
+│   └── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
+│       ├── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
+│       └── chat-gpt-next-web
+│           └── docker-compose.yaml
+└── appdata                                     # Application Data Persistent Volumes
     ├── media-center
-    │   ├── docker-compose.yaml                 # Media-Center Stack Docker Compose File (Plex, Sonarr, etc.)
     │   ├── plex                                # Each individual service has its own subdirectory
-    │   │   ├── docker-compose.yaml             # Each service has its own docker-compose.yaml file
-    │   │   └── config                          # Each service has its own config directory where data is persisted
     │   └── sonarr
-    │       └── docker-compose.yaml
-    ├── traefik                                 # Traefik Reverse Proxy and OAuth
-    │   ├── docker-compose.yaml                 # Traefik Stack Docker Compose File (Traefik, OAuth, etc.)
-    │   ├── oauth                               # OAuth Configuration
-    │   │   └── docker-compose.yaml
-    │   └── traefik                             # Traefik Configuration
-    │       ├── docker-compose.yaml             # Traefik Docker Compose File (Traefik Only)
-    │       └── rules
-    │           ├── middlewares-chains.yml      # Traefik Middlewares Chains
-    │           ├── middlewares.yml             # Traefik Middlewares
-    │           └── tls-opts.yml                # Traefik TLS Options
-    └── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
-        ├── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
+    ├── traefik
+    │   ├── oauth
+    │   └── traefik
+    └── miscellaneous
         └── chat-gpt-next-web
-            └── docker-compose.yaml
 ```
 
 [traefik]: https://github.com/traefik/traefik

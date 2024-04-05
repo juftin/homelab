@@ -8,7 +8,7 @@ services:
         image: portainer/portainer-ce:latest
         hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/portainer/config:/data
+            - ${DOCKER_DIRECTORY}/appdata/media-center/portainer:/data
             - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
         command: -H tcp://socket-proxy:2375
         environment:

@@ -4,6 +4,46 @@ When larger changes are made this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
 
+## 1.6.0
+
+The 1.6.0 release moves all of the `config` directories where docker
+settings and data is persisted locally and moves them to a top level `appdata`
+directory.
+
+<details><summary>1.5.0 to 1.6.0 Migration</summary>
+<p>
+
+```shell
+#!/usr/bin/env bash
+
+mkdir -p appdata/traefik
+mkdir -p appdata/media-center
+mkdir -p appdata/miscellaneous
+
+mv stacks/traefik/traefik/config appdata/traefik/traefik
+
+mv stacks/media-center/calibre/config appdata/media-center/calibre
+mv stacks/media-center/calibre-web/config appdata/media-center/calibre-web
+mv stacks/media-center/heimdall/config appdata/media-center/heimdall
+mv stacks/media-center/nzbget/config appdata/media-center/nzbget
+mv stacks/media-center/ombi/config appdata/media-center/ombi
+mv stacks/media-center/plex/config appdata/media-center/plex
+mv stacks/media-center/prowlarr/config appdata/media-center/prowlarr
+mv stacks/media-center/radarr/config appdata/media-center/radarr
+mv stacks/media-center/readarr/config appdata/media-center/readarr
+mv stacks/media-center/sftpgo/config appdata/media-center/sftpgo
+mv stacks/media-center/sonarr/config appdata/media-center/sonarr
+mv stacks/media-center/tautulli/config appdata/media-center/tautulli
+mv stacks/media-center/transmission/config appdata/media-center/transmission
+
+mv stacks/miscellaneous/pihole/config appdata/miscellaneous/pihole
+
+sudo mv stacks/media-center/portainer/config appdata/media-center/portainer
+```
+
+</p>
+</details>
+
 ## 1.5.0
 
 The 1.5.0 release moves all docker compose stacks under a `stacks` directory.

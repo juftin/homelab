@@ -290,10 +290,10 @@ Initialize the `acme.json` file for traefik.
 === "bash"
 
     ```shell
-    mkdir -p traefik/traefik/config/acme/ && \
-    rm -f traefik/traefik/config/acme/acme.json && \
-    touch traefik/traefik/config/acme/acme.json && \
-    chmod 600 traefik/traefik/config/acme/acme.json
+    mkdir -p appdata/traefik/traefik/acme/ && \
+    rm -f appdata/traefik/traefik/acme/acme.json && \
+    touch appdata/traefik/traefik/acme/acme.json && \
+    chmod 600 appdata/traefik/traefik/acme/acme.json
     ```
 
 === "make"

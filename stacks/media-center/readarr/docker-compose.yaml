@@ -8,10 +8,10 @@ services:
         image: lscr.io/linuxserver/readarr:develop
         hostname: ${READARR_SUBDOMAIN:-readarr}
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/media-center/readarr/config:/config
+            - ${DOCKER_DIRECTORY}/appdata/media-center/readarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${BOOKS_DIR}:/books
-            - ${DOCKER_DIRECTORY}/stacks/media-center/calibre/config:/calibre
+            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre:/calibre
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

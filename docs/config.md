@@ -35,7 +35,7 @@ in the root `docker-compose.yaml` file.
 </details>
 
 To disable specific apps in the `media-center` stack, you would comment out the `include` directive
-in the `media-center/docker-compose.yaml` file.
+in the `stacks/media-center/docker-compose.yaml` file.
 
 <details><summary>📄 stacks/media-center/docker-compose.yaml</summary>
 <p>
