@@ -9,16 +9,19 @@ anywhere in the world.
 
 > [!WARNING]
 >
-> You must set up your router, Google OAuth, CloudFlare, DuckDNS, and Traefik
-> before you can start any other services. Setting up Traefik with everything
-> requires a bit of time. Please follow the instructions in this section carefully
-> to get started.
+> You must set up your router, custom domain, Google OAuth, CloudFlare, 
+> DuckDNS, and Traefik before you can start any other services. Setting 
+> up Traefik with everything requires a bit of time. Please follow the
+> instructions in this section carefully to get started.
 >
-> Once you have all of the pre-requisites set up, you can use the
-> [core-upk](cli.md#core-upk) command to start just the Traefik services
-> and confirm that everything is working as at https://traefik.yourdomain.com.
+> Once you have each of the pre-requisites set up, you can use the
+> [core-up](cli.md#core-up) command to start just the Traefik services
+> and confirm that everything is working at https://traefik.yourdomain.com.
 > Initial DNS propagation and certificate generation can take some time, so
 > be patient on the first run.
+> 
+> See the [Command Line](cli.md) documentation for more information on how to 
+> operate the stack
 
 > [!INFO] "Acknowledgements"
 > This configuration was inspired by, and
