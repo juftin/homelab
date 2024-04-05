@@ -2,18 +2,42 @@
 # HOMELAB
 ################################################################################
 
-####################################
-# INCLUDED STACKS
-####################################
-
 include:
-    - stacks/traefik/docker-compose.yaml
-    - stacks/media-center/docker-compose.yaml
-    - stacks/miscellaneous/docker-compose.yaml
+    #############################################################################
+    # TRAEFIK (CORE)
+    #############################################################################
+    - stacks/traefik/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
+    - stacks/traefik/duckdns.yaml # DuckDNS (Dynamic DNS)
+    - stacks/traefik/oauth.yaml # OAuth (Authentication)
+    - stacks/traefik/socket-proxy.yaml # Docker Socket Proxy (Security)
+    #############################################################################
+    # MEDIA CENTER
+    #############################################################################
+    - stacks/media-center/watchtower.yaml #  Watchtower (Container Updating)
+    - stacks/media-center/heimdall.yaml # Heimdall (Landing Page)
+    - stacks/media-center/ombi.yaml # Ombi (Download Requests)
+    - stacks/media-center/plex.yaml # Plex (Media Server)
+    - stacks/media-center/tautulli.yaml # Tautulli (Plex Analytics)
+    - stacks/media-center/sonarr.yaml # Sonarr (TV Show Downloads)
+    - stacks/media-center/radarr.yaml # Radarr (Movie Downloads)
+    - stacks/media-center/prowlarr.yaml # Prowlarr (Indexer)
+    - stacks/media-center/readarr.yaml # Readarr (Ebook Downloads)
+    - stacks/media-center/calibre.yaml # Calibre (Books Management)
+    - stacks/media-center/calibre-web.yaml # Calibre Web-UI
+    - stacks/media-center/transmission.yaml # Transmission (Torrents Behind VPN)
+    - stacks/media-center/nzbget.yaml # NZBGet (Usenet Downloading)
+    - stacks/media-center/portainer.yaml # Portainer (Container Management)
+    - stacks/media-center/sftpgo.yaml # SFTPGo (File Management)
+    #############################################################################
+    # MISCELLANEOUS
+    #############################################################################
+    - stacks/miscellaneous/pihole.yaml # Pi-hole (DNS Ad-Blocking)
+    - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
+    - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
 
-####################################
-# CONFIGURATION
-####################################
+################################################################################
+# NETWORK CONFIGURATION
+################################################################################
 
 networks:
     traefik:

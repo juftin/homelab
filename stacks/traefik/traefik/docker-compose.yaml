@@ -77,6 +77,7 @@ services:
             - --entryPoints.websecure.http.tls=true
             - --entryPoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS
+            - --certificatesResolvers.dns-cloudflare.acme.caServer=${LETS_ENCRYPT_ENV:-https://acme-v02.api.letsencrypt.org/directory}
             - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
             - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare

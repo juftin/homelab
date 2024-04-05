@@ -34,12 +34,9 @@ This repository is a large [docker compose](https://docs.docker.com/compose/)
 project that allows you to deploy a variety of services to your homelab.
 
 At the root of this repository is a `docker-compose.yaml` file that defines
-the entire homelab project - collections of services are broken out into their
-own subdirectories inside of the `stacks` directory. Under each stack,
-every service gets its own subdirectory and a singular `docker-compose.yaml` file
-(`stacks/media-center/plex/docker-compose.yaml`). Using the `include` directive in the
-docker compose files, we create a single stack from the top level that deploys
-everything.
+the entire homelab project - it uses the `include` directive to pull in
+individual service docker compose files from the `stacks` directory.
+Ultimately a single docker compose stack is created that deploys everything.
 
 ```text
 .
@@ -51,25 +48,20 @@ everything.
 │   └── google_oauth.secret                     # Google OAuth Credentials and Whitelist
 ├── stacks
 │   ├── media-center
-│   │   ├── docker-compose.yaml                 # Media-Center Stack Docker Compose File (Plex, Sonarr, etc.)
-│   │   ├── plex                                # Each individual service has its own subdirectory
-│   │   │   └── docker-compose.yaml             # Each service has its own docker-compose.yaml file
-│   │   └── sonarr
-│   │       └── docker-compose.yaml
+│   │   ├── plex.yaml                           # Each individual service has its own docker compose file
+│   │   ├── radarr.yaml
+│   |   ├── ombi.yaml
+│   │   └── sonarr.yaml
 │   ├── traefik                                 # Traefik Reverse Proxy and OAuth
-│   │   ├── docker-compose.yaml                 # Traefik Stack Docker Compose File (Traefik, OAuth, etc.)
-│   │   ├── oauth                               # OAuth Configuration
-│   │   │   └── docker-compose.yaml
-│   │   └── traefik                             # Traefik Configuration
+│   │   ├── oauth                               # OAuth Service
+│   │   └── traefik                             # Traefik Reverse Proxy
 │   │       ├── docker-compose.yaml             # Traefik Docker Compose File (Traefik Only)
-│   │       └── rules
-│   │           ├── middlewares-chains.yml      # Traefik Middlewares Chains
-│   │           ├── middlewares.yml             # Traefik Middlewares
-│   │           └── tls-opts.yml                # Traefik TLS Options
+│   │       └── rules                           # Traefik Middlewares and Rules
+│   │           ├── middlewares-chains.yml
+│   │           ├── middlewares.yml
+│   │           └── tls-opts.yml
 │   └── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
-│       ├── docker-compose.yaml                 # Miscellaneous Stack Docker Compose File
-│       └── chat-gpt-next-web
-│           └── docker-compose.yaml
+│       └── chat-gpt-next-web.yaml
 └── appdata                                     # Application Data Persistent Volumes
     ├── media-center
     │   ├── plex                                # Each individual service has its own subdirectory

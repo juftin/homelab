@@ -18,10 +18,10 @@ correct service. It is the first service that you should start with:
 > Once you have all of the pre-requisites set up, you can use the
 > [up-traefik](cli.md#up-traefik) command to start just the Traefik services.
 
-## Apps
+## App Deployment
 
 Which apps to deploy are defined in the `docker-compose.yaml` files. For example,
-to disable all apps from the `miscellaneous` stack, you would comment out the `include` directive
+To disable specific apps in the `media-center` stack, you would comment out the `include` directive
 in the root `docker-compose.yaml` file.
 
 <details><summary>📄 docker-compose.yaml</summary>
@@ -34,22 +34,11 @@ in the root `docker-compose.yaml` file.
 </p>
 </details>
 
-To disable specific apps in the `media-center` stack, you would comment out the `include` directive
-in the `stacks/media-center/docker-compose.yaml` file.
+## Infrastructure Configuration
 
-<details><summary>📄 stacks/media-center/docker-compose.yaml</summary>
-<p>
-
-```yaml
---8<-- "stacks/media-center/docker-compose.yaml"
-```
-
-</p>
-</details>
-
-## App Configuration
-
-These project makes use of a few configuration files to make it easier to manage:
+All services are configured via a `.env` file at the root of the project and a few secret
+files in the `secrets` directory. These files are used to define settings and credentials
+for all services that are deployed. You can copy the example files to get started:
 
 ```shell
 cp docs/example.env .env
@@ -101,3 +90,14 @@ cp -r docs/example-secrets/ secrets/
 
 </p>
 </details>
+
+## App Configuration
+
+Each app has its own configuration process - see the `Applications` documentation
+for more information about a specific app.
+
+When connecting these applications together, it is important to note that they
+all share a common docker network. This means that when you're trying to connect
+to a service you can simply use a service name as the hostname. For example,
+if you're trying to connect to the sonarr service from the ombi service
+you can simply use http://sonarr:8989 as the hostname.

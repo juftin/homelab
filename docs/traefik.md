@@ -15,18 +15,25 @@ anywhere in the world.
 > to get started.
 >
 > Once you have all of the pre-requisites set up, you can use the
-> [up-traefik](cli.md#up-traefik) command to start just the Traefik services.
+> [up-traefik](cli.md#up-traefik) command to start just the Traefik services
+> and confirm that everything is working as at https://traefik.yourdomain.com.
+> Initial DNS propagation and certificate generation can take some time, so
+> be patient on the first run.
 
-## Special Thank You
-
-This configuration was inspired by, and
-immensely helped by the article at
-[smarthomebeginner.com](https://smarthomebeginner.com/traefik-2-docker-tutorial).
-
-[Here](https://github.com/htpcBeginner/docker-traefik)
-is their massive home server setup on GitHub which this project is based on.
+> [!INFO] "Acknowledgements"
+> This configuration was inspired by, and
+> immensely helped by the article at
+> [smarthomebeginner.com](https://www.smarthomebeginner.com/traefik-docker-compose-guide-2024/).
+> Their massive [home server setup on GitHub](https://github.com/htpcBeginner/docker-traefik)
+> and amazing blog series inspired much of this project.
 
 ## Prerequisites
+
+### Personal Domain
+
+This guide assumes you have a personal domain name that you can use to
+access your services. You can purchase a domain name from a registrar
+like [Cloudflare](https://www.cloudflare.com/products/registrar/).
 
 ### Port Forwarding
 
@@ -43,7 +50,7 @@ DNS services. SmartHomeBeginner has a great guide on setting up CloudFlare
 
 ### Google OAuth 2.0
 
-The Google Oauth 2.0 configuration can be
+A helpful blog post on the Google Oauth 2.0 configuration can be
 found [here](https://www.smarthomebeginner.com/traefik-forward-auth-google-oauth-2022/).
 Essentially you must create a project in the Google Developer Console to enable
 the Google OAuth 2.0 service. You will share credentials with the `oauth` service
@@ -58,6 +65,15 @@ every 5 minutes which makes it possible to reach your server from anywhere. You 
 provide CloudFlare with the DuckDNS subdomain to point to your server.
 
 ### File Configuration
+
+All services are configured via a `.env` file at the root of the project and a few secret
+files in the `secrets` directory. These files are used to define settings and credentials
+for all services that are deployed. You can copy the example files to get started:
+
+```shell
+cp docs/example.env .env
+cp -r docs/example-secrets/ secrets/
+```
 
 #### .env
 
@@ -81,15 +97,28 @@ fields filled out in the `.env` file:
 ```text
 DUCKDNS_TOKEN=XXXXXX-XXX-XXXXX-XXXXX
 DUCKDNS_SUBDOMAIN=example
-
-GOOGLE_CLIENT_ID=XXXXXXXXXXXXX-XXXXXXXXXXXXXXXXX.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXX
-OAUTH_SECRET=RANDOM_STRING_OF_CHARACTERS
-OAUTH_WHITELIST=example@gmail.com,user_1@gmail.com,user_2@gmail.com
-
 CLOUDFLARE_EMAIL=example@gmail.com
-CLOUDFLARE_API_KEY=XXXXXXXXXXXXX
 ```
+
+And you should also update the secrets files:
+
+=== "secrets/google_oauth.secret"
+
+    ```text
+    --8<-- "docs/example-secrets/google_oauth.secret"
+    ```
+
+=== "secrets/cloudflare_api_key.secret"
+
+    ```text
+    --8<-- "docs/example-secrets/cloudflare_api_key.secret"
+    ```
+
+=== "secrets/admin_password"
+
+    ```text
+    --8<-- "docs/example-secrets/admin_password.secret"
+    ```
 
 #### acme.json
 
@@ -127,7 +156,7 @@ The below example shows you how to create a new service in the docker compose
 stack and make it accessible via Traefik. In this example, we are creating a
 Jupyter notebook service that can be accessed at `jupyter.example.com`.
 
-=== "stacks/miscellaneous/jupyter/docker-compose.yaml"
+=== "stacks/miscellaneous/jupyter.yaml"
 
     ```yaml
     ####################################
@@ -150,21 +179,6 @@ Jupyter notebook service that can be accessed at `jupyter.example.com`.
                 traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
                 traefik.http.routers.jupyter-rtr.entrypoints: websecure
                 traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
-    ```
-
-=== "stacks/miscellaneous/docker-compose.yaml"
-
-    ```yaml
-    ################################################################################
-    # DOCKER COMPOSE - MISCELLANEOUS
-    ################################################################################
-
-    ####################################
-    # INCLUDED APPLICATIONS
-    ####################################
-
-    include:
-    - jupyter/docker-compose.yaml # Jupyter Lab
     ```
 
 === "docker-compose.yaml"

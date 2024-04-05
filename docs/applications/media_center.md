@@ -1,10 +1,5 @@
 # Media Center Stack
 
-When connecting these applications together, it is important to note that they all share a common
-docker network. This means that when you're trying to connect to a service you can simply use
-a service name as the hostname. For example, if you're trying to connect to the `sonarr` service
-from the `ombi` service, you can simply use `http://sonarr:8989` as the hostname.
-
 ## Table of Contents
 
 -   [plex](#plex)

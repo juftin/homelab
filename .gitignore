@@ -1,19 +1,4 @@
 # Secrets
 .env*
 secrets/
-
-# Application Persistence
 appdata/
-
-# Python Files
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-site/
-
-# Mac Files
-.DS_Store
-
-# IDE Files
-.idea/
