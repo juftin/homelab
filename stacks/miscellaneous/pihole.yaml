@@ -21,8 +21,8 @@ services:
             - source: admin_password
               target: /run/secrets/admin_password
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/miscellaneous/pihole/config/pihole/:/etc/pihole/
-            - ${DOCKER_DIRECTORY}/stacks/miscellaneous/pihole/config/dnsmasq.d/:/etc/dnsmasq.d/
+            - ${DOCKER_DIRECTORY}/appdata/miscellaneous/pihole/pihole/:/etc/pihole/
+            - ${DOCKER_DIRECTORY}/appdata/miscellaneous/pihole/dnsmasq.d/:/etc/dnsmasq.d/
         networks:
             traefik:
         platform: ${DOCKER_PLATFORM:-linux/amd64}

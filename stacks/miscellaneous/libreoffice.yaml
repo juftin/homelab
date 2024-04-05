@@ -12,7 +12,7 @@ services:
             - PGID=${PGID}
             - TZ=${TZ}
         volumes:
-            - ${USERDIR}/appdata/miscellaneous/libreoffice:/config
+            - ${DOCKER_DIRECTORY}/appdata/miscellaneous/libreoffice:/config
         security_opt:
             - no-new-privileges:true
         networks:
