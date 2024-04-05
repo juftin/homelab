@@ -22,7 +22,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.prowlarr-rtr.rule: Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.prowlarr-rtr.entrypoints: https
+            traefik.http.routers.prowlarr-rtr.entrypoints: websecure
             traefik.http.routers.prowlarr-rtr.service: prowlarr-svc
             traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696
             traefik.http.routers.prowlarr-rtr.middlewares: chain-oauth-google@file

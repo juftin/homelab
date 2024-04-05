@@ -24,7 +24,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.calibre-rtr.rule: Host(`${CALIBRE_SUBDOMAIN:-calibre}.${DOMAIN_NAME}`)
-            traefik.http.routers.calibre-rtr.entrypoints: https
+            traefik.http.routers.calibre-rtr.entrypoints: websecure
             traefik.http.routers.calibre-rtr.service: calibre-svc
             traefik.http.services.calibre-svc.loadbalancer.server.port: 8080
             traefik.http.routers.calibre-rtr.middlewares: chain-oauth-google@file

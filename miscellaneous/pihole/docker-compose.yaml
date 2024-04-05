@@ -30,5 +30,5 @@ services:
             traefik.http.routers.pihole-rtr.rule: Host(`${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}`)
             traefik.http.routers.pihole-rtr.service: pihole-svc
             traefik.http.services.pihole-svc.loadbalancer.server.port: 80
-            traefik.http.routers.pihole-rtr.entrypoints: https
+            traefik.http.routers.pihole-rtr.entrypoints: websecure
             traefik.http.routers.pihole-rtr.middlewares: chain-oauth-google@file

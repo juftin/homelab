@@ -45,7 +45,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.transmission-rtr.rule: Host(`${TRANSMISSION_SUBDOMAIN:-transmission}.${DOMAIN_NAME}`)
-            traefik.http.routers.transmission-rtr.entrypoints: https
+            traefik.http.routers.transmission-rtr.entrypoints: websecure
             traefik.http.routers.transmission-rtr.service: transmission-svc
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
             traefik.http.routers.transmission-rtr.middlewares: chain-oauth-google@file

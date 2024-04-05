@@ -27,7 +27,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.sftpgo-rtr.rule: Host(`${SFTPGO_SUBDOMAIN:-sftpgo}.${DOMAIN_NAME}`)
-            traefik.http.routers.sftpgo-rtr.entrypoints: https
+            traefik.http.routers.sftpgo-rtr.entrypoints: websecure
             traefik.http.routers.sftpgo-rtr.service: sftpgo-svc
             traefik.http.services.sftpgo-svc.loadbalancer.server.port: 8080
             traefik.http.routers.sftpgo-rtr.middlewares: chain-oauth-google@file

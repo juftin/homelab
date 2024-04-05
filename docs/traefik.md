@@ -152,7 +152,7 @@ Jupyter notebook service that can be accessed at `jupyter.example.com`.
                 traefik.http.routers.jupyter-rtr.rule: Host(`jupyter.${DOMAIN_NAME}`)
                 traefik.http.routers.jupyter-rtr.service: jupyter-svc
                 traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
-                traefik.http.routers.jupyter-rtr.entrypoints: https
+                traefik.http.routers.jupyter-rtr.entrypoints: websecure
                 traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
     ```
 
@@ -186,7 +186,7 @@ Jupyter notebook service that can be accessed at `jupyter.example.com`.
 -   `traefik.http.services.jupyter-svc.loadbalancer.server.port`
     -   Instructs the load balancer to operate on port 8888 (the exposed port of the application)
 -   `traefik.http.routers.jupyter-rtr.entrypoints`
-    -   Instructs the router to use the "https" entrypoint (https://jupyter.example.com)
+    -   Instructs the router to use the "websecure" entrypoint (https://jupyter.example.com)
 -   `traefik.http.routers.jupyter-rtr.middlewares:`
     -   Instructs the router to use the middleware service, `chain-oauth-google@file`
         which requires Google OAuth for access

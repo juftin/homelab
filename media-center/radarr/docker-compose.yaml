@@ -25,7 +25,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.radarr-rtr.rule: Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.radarr-rtr.entrypoints: https
+            traefik.http.routers.radarr-rtr.entrypoints: websecure
             traefik.http.routers.radarr-rtr.service: radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
             traefik.http.routers.radarr-rtr.middlewares: chain-oauth-google@file

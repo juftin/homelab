@@ -25,7 +25,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.sonarr-rtr.rule: Host(`${SONARR_SUBDOMAIN:-sonarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.sonarr-rtr.entrypoints: https
+            traefik.http.routers.sonarr-rtr.entrypoints: websecure
             traefik.http.routers.sonarr-rtr.service: sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
             traefik.http.routers.sonarr-rtr.middlewares: chain-oauth-google@file

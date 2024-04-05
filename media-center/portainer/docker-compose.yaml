@@ -21,7 +21,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.portainer-rtr.rule: Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
-            traefik.http.routers.portainer-rtr.entrypoints: https
+            traefik.http.routers.portainer-rtr.entrypoints: websecure
             traefik.http.routers.portainer-rtr.service: portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000
             traefik.http.routers.portainer-rtr.middlewares: chain-oauth-google@file
