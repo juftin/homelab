@@ -4,7 +4,7 @@
 
 secrets:
     cloudflare_api_key:
-        file: ${DOCKER_DIRECTORY}`/secrets/cloudflare_api_key.secret
+        file: ${DOCKER_DIRECTORY}/secrets/cloudflare_api_key.secret
 
 services:
     traefik:
