@@ -49,7 +49,6 @@ cp -r docs/example-secrets/ secrets/
 -   `.env` - Environment variables that are used by the `docker-compose.yaml` files
 -   `secrets/google_oauth.secret` - The Google OAuth API credentials and user whitelist
 -   `secrets/cloudflare_api_key.secret` - The CloudFlare API key (singular, plaintext key)
--   `secrets/admin_password.secret` - The password for the `admin` user in the `pi-hole` service (singular, plaintext key)
 
 <details><summary>📄 .env</summary>
 <p>
@@ -77,16 +76,6 @@ cp -r docs/example-secrets/ secrets/
 
 ```shell
 --8<-- "docs/example-secrets/cloudflare_api_key.secret"
-```
-
-</p>
-</details>
-
-<details><summary>📄 secrets/admin_password.secret</summary>
-<p>
-
-```shell
---8<-- "docs/example-secrets/admin_password.secret"
 ```
 
 </p>

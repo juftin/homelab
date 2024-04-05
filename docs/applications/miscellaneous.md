@@ -11,6 +11,14 @@
 The Pi-hole is a DNS sinkhole that protects your devices from unwanted content without
 installing any client-side software.
 
+!!! info "Admin Password"
+
+    The default admin password for pi-hole must be set manually:
+
+    ```shell
+    docker compose exec pihole /bin/bash -c "sudo pihole -a -p YourNewPassword"
+    ```
+
 ## chat-gtp-next-web
 
 [![](https://img.shields.io/static/v1?message=yidadaa/chatgpt-next-web&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/yidadaa/chatgpt-next-web)

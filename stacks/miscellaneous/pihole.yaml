@@ -2,10 +2,6 @@
 # HOSTED PI-HOLE DNS
 ####################################
 
-secrets:
-    admin_password:
-        file: ${DOCKER_DIRECTORY}/secrets/admin_password.secret
-
 services:
     pihole:
         container_name: pihole
@@ -13,13 +9,9 @@ services:
         profiles: ["miscellaneous", "all"]
         environment:
             TZ: ${TZ}
-            WEBPASSWORD: /run/secrets/admin_password
             DNS1: 8.8.8.8
             DNS2: 8.8.4.4
             VIRTUAL_HOST: ${PIHOLE_SUBDOMAIN:-pihole}.${DOMAIN_NAME}
-        secrets:
-            - source: admin_password
-              target: /run/secrets/admin_password
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/miscellaneous/pihole/pihole/:/etc/pihole/
             - ${DOCKER_DIRECTORY}/appdata/miscellaneous/pihole/dnsmasq.d/:/etc/dnsmasq.d/

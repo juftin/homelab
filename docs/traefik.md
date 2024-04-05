@@ -9,8 +9,8 @@ anywhere in the world.
 
 > [!WARNING]
 >
-> You must set up your router, custom domain, Google OAuth, CloudFlare, 
-> DuckDNS, and Traefik before you can start any other services. Setting 
+> You must set up your router, custom domain, Google OAuth, CloudFlare,
+> DuckDNS, and Traefik before you can start any other services. Setting
 > up Traefik with everything requires a bit of time. Please follow the
 > instructions in this section carefully to get started.
 >
@@ -19,8 +19,8 @@ anywhere in the world.
 > and confirm that everything is working at https://traefik.yourdomain.com.
 > Initial DNS propagation and certificate generation can take some time, so
 > be patient on the first run.
-> 
-> See the [Command Line](cli.md) documentation for more information on how to 
+>
+> See the [Command Line](cli.md) documentation for more information on how to
 > operate the stack
 
 > [!INFO] "Acknowledgements"
@@ -115,12 +115,6 @@ And you should also update the secrets files:
 
     ```text
     --8<-- "docs/example-secrets/cloudflare_api_key.secret"
-    ```
-
-=== "secrets/admin_password"
-
-    ```text
-    --8<-- "docs/example-secrets/admin_password.secret"
     ```
 
 #### acme.json
