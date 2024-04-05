@@ -318,7 +318,7 @@ for more information.
 === "bash"
 
     ```shell
-    bash ./scripts/backup.sh . /backup/dir
+    bash ./scripts/backup.sh appdata /backup/dir
     ```
 
 === "make"
@@ -344,7 +344,7 @@ for more information.
 === "bash"
 
     ```shell
-    bash ./scripts/backup.sh . /backup/dir --no-timestamp
+    bash ./scripts/backup.sh appdata /backup/dir --no-timestamp
     ```
 
 === "make"

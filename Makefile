@@ -54,11 +54,11 @@ acme-init: ## Initialize the acme.json file.
 
 .PHONY: backup
 backup: ## Backup the homelab repo to the ${BACKUP_DIR}.
-	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR) $(BACKUP_DIR)
+	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR)/appdata $(BACKUP_DIR)
 
 .PHONY: backup-no-timestamp
 backup-no-timestamp: ## Backup the homelab repo to the ${BACKUP_DIR} without a timestamp.
-	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR) $(BACKUP_DIR) --no-timestamp
+	bash $(ROOT_DIR)/scripts/backup.sh $(ROOT_DIR)/appdata $(BACKUP_DIR) --no-timestamp
 
 ##@ development 🛠
 

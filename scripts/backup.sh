@@ -46,10 +46,8 @@ echo -e "Target: ${BACKUP_PATH} 📦"
 
 tar -czf \
   "${BACKUP_PATH}" \
-  --exclude=".venv" \
-  --exclude=".git" \
   --exclude "acme.json" \
-  --exclude "portainer/config" \
+  --exclude "portainer" \
   -C "$(dirname "${SOURCE_DIR}")" \
   "$(basename "${SOURCE_DIR}")"
 
