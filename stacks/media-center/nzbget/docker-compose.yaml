@@ -1,0 +1,29 @@
+#######################################
+# NZBGET (USENET DOWNLOADING)
+#######################################
+
+services:
+    nzbget:
+        container_name: nzbget
+        image: lscr.io/linuxserver/nzbget:latest
+        hostname: ${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/media-center/nzbget/config:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads/completed
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.nzbget-rtr.rule: Host(`${NZGGET_DOMAIN:-nzbget}.${DOMAIN_NAME}`)
+            traefik.http.routers.nzbget-rtr.entrypoints: websecure
+            traefik.http.routers.nzbget-rtr.service: nzbget-svc
+            traefik.http.services.nzbget-svc.loadbalancer.server.port: 6789
+            traefik.http.routers.nzbget-rtr.middlewares: chain-oauth-google@file

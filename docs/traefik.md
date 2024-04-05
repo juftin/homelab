@@ -127,7 +127,7 @@ The below example shows you how to create a new service in the docker compose
 stack and make it accessible via Traefik. In this example, we are creating a
 Jupyter notebook service that can be accessed at `jupyter.example.com`.
 
-=== "miscellaneous/jupyter/docker-compose.yaml"
+=== "stacks/miscellaneous/jupyter/docker-compose.yaml"
 
     ```yaml
     ####################################
@@ -152,7 +152,7 @@ Jupyter notebook service that can be accessed at `jupyter.example.com`.
                 traefik.http.routers.jupyter-rtr.middlewares: chain-oauth-google@file
     ```
 
-=== "miscellaneous/docker-compose.yaml"
+=== "stacks/miscellaneous/docker-compose.yaml"
 
     ```yaml
     ################################################################################

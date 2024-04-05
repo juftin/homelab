@@ -4,6 +4,25 @@ When larger changes are made this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
 
+## 1.5.0
+
+The 1.5.0 release moves all docker compose stacks under a `stacks` directory.
+
+<details><summary>1.4.0 to 1.5.0 Migration</summary>
+<p>
+
+```shell
+#!/usr/bin/env bash
+
+mkdir -p stacks
+mv traefik stacks/traefik
+mv media-center stacks/media-center
+mv miscellaneous stacks/miscellaneous
+```
+
+</p>
+</details>
+
 ## 1.0.0
 
 The `1.0.0` release introduces a pivotal update for existing users of the homelab project.
@@ -11,7 +30,7 @@ This update mandates the creation of a new config directory within each service 
 deviating from the previous approach of directly mounting the service directory into the container.
 This change is designed to enhance organization and management of service configurations.
 
-<details><summary>1.0.0 Migration</summary>
+<details><summary>0.5.2 to 1.0.0 Migration</summary>
 <p>
 
 ```shell

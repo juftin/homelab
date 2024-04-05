@@ -1,0 +1,90 @@
+####################################
+# TRAEFIK (REVERSE PROXY)
+####################################
+
+secrets:
+    cloudflare_api_key:
+        file: ${DOCKER_DIRECTORY}`/secrets/cloudflare_api_key.secret
+
+services:
+    traefik:
+        container_name: traefik
+        image: library/traefik:v2.11
+        ports:
+            - published: 80
+              target: 80
+              protocol: tcp
+              mode: host
+            - published: 443
+              target: 443
+              protocol: tcp
+              mode: host
+        environment:
+            CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+            CF_API_KEY: /run/secrets/cloudflare_api_key
+        secrets:
+            - source: cloudflare_api_key
+              target: /run/secrets/cloudflare_api_key
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/traefik/traefik/rules:/rules
+            - ${DOCKER_DIRECTORY}/stacks/traefik/traefik/config/logs:/logs
+            - ${DOCKER_DIRECTORY}/stacks/traefik/traefik/config/traefik:/etc/traefik
+            - ${DOCKER_DIRECTORY}/stacks/traefik/traefik/config/acme/acme.json:/acme.json
+        networks:
+            traefik:
+            docker:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        depends_on:
+            - socket-proxy
+            - duckdns
+            - oauth
+        command:
+            # GLOBAL SETTINGS
+            - --global.checkNewVersion=true
+            - --global.sendAnonymousUsage=false
+            # API SETTINGS
+            - --api=true
+            - --api.dashboard=true
+            # LOGGING SETTINGS
+            - --log=true
+            - --log.level=INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --accessLog=true
+            - --accessLog.filePath=/logs/access.log
+            - --accessLog.bufferingSize=100
+            - --accessLog.filters.statusCodes=204-299,400-499,500-599
+            # PROVIDERS
+            - --providers.docker=true
+            - --providers.docker.endpoint=tcp://socket-proxy:2375
+            - --providers.docker.exposedByDefault=false
+            - --providers.docker.network=homelab_traefik
+            - --providers.docker.swarmMode=false
+            - --providers.file.directory=/rules
+            - --providers.file.watch=true
+            # ENTRYPOINTS
+            - --entryPoints.web.address=:80
+            - --entryPoints.websecure.address=:443
+            - --entryPoints.traefik.address=:8080
+            - --entryPoints.web.http.redirections.entrypoint.to=websecure
+            - --entryPoints.web.http.redirections.entrypoint.scheme=https
+            - --entryPoints.web.http.redirections.entrypoint.permanent=true
+            - --entryPoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22
+            - --entryPoints.websecure.http.tls.certresolver=dns-cloudflare
+            - --entryPoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
+            - --entryPoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
+            - --entryPoints.websecure.http.tls=true
+            - --entryPoints.websecure.http.tls.options=tls-opts@file
+            # CERTIFICATE RESOLVERS
+            - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
+            - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
+        labels:
+            traefik.enable: true
+            traefik.http.routers.traefik-rtr.rule: Host(`${TRAEFIK_SUBDOMAIN:-traefik}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik-rtr.entrypoints: websecure
+            traefik.http.routers.traefik-rtr.service: api@internal
+            traefik.http.routers.traefik-rtr.middlewares: chain-oauth-google@file

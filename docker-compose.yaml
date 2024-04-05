@@ -7,9 +7,9 @@
 ####################################
 
 include:
-    - traefik/docker-compose.yaml
-    - media-center/docker-compose.yaml
-    - miscellaneous/docker-compose.yaml
+    - stacks/traefik/docker-compose.yaml
+    - stacks/media-center/docker-compose.yaml
+    - stacks/miscellaneous/docker-compose.yaml
 
 ####################################
 # CONFIGURATION

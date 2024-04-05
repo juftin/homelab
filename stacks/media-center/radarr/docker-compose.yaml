@@ -1,0 +1,31 @@
+#######################################
+# RADARR (MOVIE DOWNLOADS)
+#######################################
+
+services:
+    radarr:
+        container_name: radarr
+        image: lscr.io/linuxserver/radarr:latest
+        hostname: ${RADARR_SUBDOMAIN:-radarr}
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/media-center/radarr/config:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${MOVIE_DIR}:/movies
+            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.radarr-rtr.rule: Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.entrypoints: websecure
+            traefik.http.routers.radarr-rtr.service: radarr-svc
+            traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
+            traefik.http.routers.radarr-rtr.middlewares: chain-oauth-google@file

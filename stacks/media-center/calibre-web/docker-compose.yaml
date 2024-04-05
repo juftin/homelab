@@ -1,0 +1,32 @@
+#######################################
+# CALIBRE-WEB (CALIBRE WEB-UI)
+#######################################
+
+services:
+    calibre-web:
+        container_name: calibre-web
+        image: lscr.io/linuxserver/calibre-web:latest
+        hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/media-center/calibre-web/config:/config
+            - ${BOOKS_DIR}:/books
+            - ${DOCKER_DIRECTORY}/stacks/media-center/calibre/config:/calibre-config
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            DOCKER_MODS: linuxserver/calibre-web:calibre
+            OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.calibre-web-rtr.rule: Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-web-rtr.entrypoints: websecure
+            traefik.http.routers.calibre-web-rtr.service: calibre-web-svc
+            traefik.http.services.calibre-web-svc.loadbalancer.server.port: 8083
+            traefik.http.routers.calibre-web-rtr.middlewares: chain-oauth-google@file

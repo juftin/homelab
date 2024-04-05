@@ -1,0 +1,27 @@
+#######################################
+# PORTAINER (GUI CONTAINER MANAGEMENT)
+#######################################
+
+services:
+    portainer:
+        container_name: portainer
+        image: portainer/portainer-ce:latest
+        hostname: ${PORTAINER_SUBDOMAIN:-portainer}
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/media-center/portainer/config:/data
+            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+        command: -H tcp://socket-proxy:2375
+        environment:
+            TZ: ${TZ}
+            DOCKER_HOST: tcp://socket-proxy:2375
+        networks:
+            traefik:
+            docker:
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        labels:
+            traefik.enable: true
+            traefik.http.routers.portainer-rtr.rule: Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
+            traefik.http.routers.portainer-rtr.entrypoints: websecure
+            traefik.http.routers.portainer-rtr.service: portainer-svc
+            traefik.http.services.portainer-svc.loadbalancer.server.port: 9000
+            traefik.http.routers.portainer-rtr.middlewares: chain-oauth-google@file
