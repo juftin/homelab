@@ -1,0 +1,29 @@
+#######################################
+# SABNZBD (USENET DOWNLOADING)
+#######################################
+
+services:
+    sabnzbd:
+        container_name: sabnzbd
+        image: lscr.io/linuxserver/sabnzbd:latest
+        profiles: ["media", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/media/sabnzbd:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.sabnzbd-rtr.rule: Host(`${SABNZBD_DOMAIN:-sabnzbd}.${DOMAIN_NAME}`)
+            traefik.http.routers.sabnzbd-rtr.entrypoints: websecure
+            traefik.http.routers.sabnzbd-rtr.service: sabnzbd-svc
+            traefik.http.services.sabnzbd-svc.loadbalancer.server.port: 8080
+            traefik.http.routers.sabnzbd-rtr.middlewares: chain-oauth-google@file
