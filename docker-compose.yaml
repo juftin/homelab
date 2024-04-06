@@ -25,6 +25,7 @@ include:
     - stacks/media/tautulli.yaml # Tautulli (Plex Analytics)
     - stacks/media/transmission.yaml # Transmission (Torrents Behind VPN)
     - stacks/media/sabnzbd.yaml # SABnzbd (Usenet Downloading)
+    - stacks/media/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
     # - stacks/media/readarr.yaml # Readarr (Ebook Downloads)
     # - stacks/media/calibre.yaml # Calibre (Books Management)
     # - stacks/media/calibre-web.yaml # Calibre Web-UI

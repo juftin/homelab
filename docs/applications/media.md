@@ -159,6 +159,18 @@ based on information given in nzb-files.
 
 <img src="https://i.imgur.com/rt7Pbj9.png" width="220" alt="SABnzbd Logo">
 
+## nzbhydra
+
+[![](https://img.shields.io/static/v1?message=linuxserver/nzbhydra2&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/nzbhydra2)
+[![](https://img.shields.io/static/v1?message=theotherp/nzbhydra2&logo=github&label=github)](https://github.com/theotherp/nzbhydra2)
+
+<img src="https://i.imgur.com/1OGtKxA.png" width="300" alt="SABnzbd Logo">
+
+NZBHydra 2 is a meta search for newznab indexers and torznab trackers. 
+It provides easy access to newznab indexers and many torznab trackers via Jackett. 
+You can search all your indexers and trackers from one place and use it as an indexer 
+source for tools like Sonarr, Radarr, Lidarr or CouchPotato.
+
 ### Configuration
 
 The files at `appdata/media/sabnzbd/sabnzbd.ini` needs to be modified

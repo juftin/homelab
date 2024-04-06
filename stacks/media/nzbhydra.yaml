@@ -1,0 +1,28 @@
+#######################################
+# nzbhydra (USENET DOWNLOADING)
+#######################################
+
+services:
+    nzbhydra:
+        container_name: nzbhydra
+        image: lscr.io/linuxserver/nzbhydra2:latest
+        profiles: ["media", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/media/nzbhydra:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.nzbhydra-rtr.rule: Host(`${NZBHYDRA_DOMAIN:-nzbhydra}.${DOMAIN_NAME}`)
+            traefik.http.routers.nzbhydra-rtr.entrypoints: websecure
+            traefik.http.routers.nzbhydra-rtr.service: nzbhydra-svc
+            traefik.http.services.nzbhydra-svc.loadbalancer.server.port: 5076
+            traefik.http.routers.nzbhydra-rtr.middlewares: chain-oauth-google@file
