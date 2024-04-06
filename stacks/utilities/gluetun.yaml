@@ -16,6 +16,7 @@ services:
             VPN_TYPE: openvpn
             OPENVPN_USER: ${OPENVPN_USERNAME}
             OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+            SERVER_CITIES: ${OPENVPN_SERVER_CITIES:-Denver}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
@@ -26,12 +27,12 @@ services:
         devices:
             - /dev/net/tun
         labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.gluetun-qbittorrent-rtr.entrypoints=websecure"
-            - "traefik.http.routers.gluetun-qbittorrent-rtr.rule=Host(`qbittorrent.${DOMAIN_NAME}`)"
-            - "traefik.http.routers.gluetun-qbittorrent-rtr.middlewares=chain-oauth@file"
-            - "traefik.http.routers.gluetun-qbittorrent-rtr.service=gluetun-svc"
-            - "traefik.http.services.gluetun-svc.loadbalancer.server.port=8080"
+            traefik.enable: true
+            traefik.http.routers.gluetun-qbittorrent-rtr.entrypoints: websecure
+            traefik.http.routers.gluetun-qbittorrent-rtr.rule: Host(`qbittorrent.${DOMAIN_NAME}`)
+            traefik.http.routers.gluetun-qbittorrent-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.gluetun-qbittorrent-rtr.service: gluetun-svc
+            traefik.http.services.gluetun-svc.loadbalancer.server.port: 8080
 
     #######################################
     # QBITTORRENT - TORRENT CLIENT
