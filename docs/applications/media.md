@@ -9,7 +9,7 @@
 -   [ombi](#ombi)
 -   [tautulli](#tautulli)
 -   [transmission](#transmission)
--   [nzbget](#nzbget)
+-   [sabnzbd](#sabnzbd)
 -   [heimdall](#heimdall)
 -   [readarr](#readarr)
 -   [calibre](#calibre)
@@ -148,15 +148,29 @@ server to everyone else.
 where Transmission is running only when OpenVPN has an active tunnel. It has built-in support
 for many popular VPN providers to make the setup easier.
 
-## nzbget
+## sabnzbd
 
-[![](https://img.shields.io/static/v1?message=linuxserver/nzbget&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/nzbget)
-[![](https://img.shields.io/static/v1?message=nzbget/nzbget&logo=github&label=github)](https://github.com/nzbget/nzbget)
-[![](https://img.shields.io/static/v1?message=nzbget.net&logo=google+chrome&label=website&color=teal)](https://nzbget.net)
+[![](https://img.shields.io/static/v1?message=linuxserver/sabnzbd&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/sabnzbd)
+[![](https://img.shields.io/static/v1?message=sabnzbd/sabnzbd&logo=github&label=github)](https://github.com/sabnzbd/sabnzbd)
+[![](https://img.shields.io/static/v1?message=sabnzbd.org&logo=google+chrome&label=website&color=teal)](https://sabnzbd.org)
 
-<img src="https://i.imgur.com/lJO2vYg.png" width="250" alt="NZBGet Logo">
+SABnzbd is an Open Source Binary Newsreader written in Python, it downloads files from Usenet
+based on information given in nzb-files.
 
-NZBGet is a binary downloader, which downloads files from Usenet based on information given in nzb-files.
+<img src="https://i.imgur.com/rt7Pbj9.png" width="220" alt="SABnzbd Logo">
+
+### Configuration
+
+The files at `appdata/media/sabnzbd/sabnzbd.ini` needs to be modified
+to allow access from the internet and internally.
+
+```text
+host_whitelist = sabnzbd, sabnzbd.example.com
+```
+
+Once you're done, restart the container and in the UI see that the
+completed downloads are mapped to `/downloads` and imcomplete downloads
+are mapped to `/incomplete-downloads`
 
 ## heimdall
 

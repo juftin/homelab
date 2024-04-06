@@ -24,7 +24,7 @@ include:
     - stacks/media/ombi.yaml # Ombi (Download Requests)
     - stacks/media/tautulli.yaml # Tautulli (Plex Analytics)
     - stacks/media/transmission.yaml # Transmission (Torrents Behind VPN)
-    - stacks/media/nzbget.yaml # NZBGet (Usenet Downloading)
+    - stacks/media/sabnzbd.yaml # SABnzbd (Usenet Downloading)
     # - stacks/media/readarr.yaml # Readarr (Ebook Downloads)
     # - stacks/media/calibre.yaml # Calibre (Books Management)
     # - stacks/media/calibre-web.yaml # Calibre Web-UI
