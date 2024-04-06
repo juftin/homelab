@@ -1,8 +1,9 @@
-services:
-    ####################################
-    # SOCKET-PROXY (DOCKER.SOCK)
-    ####################################
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# SOCKET-PROXY (DOCKER.SOCK)
+#######################################
 
+services:
     socket-proxy:
         container_name: socket-proxy
         image: tecnativa/docker-socket-proxy:latest
@@ -17,7 +18,7 @@ services:
         restart: always
         platform: ${DOCKER_PLATFORM:-linux/amd64}
         environment:
-            - LOG_LEVEL=info # debug, info, notice, warning, err, crit, alert, emerg
+            - LOG_LEVEL=notice # debug, info, notice, warning, err, crit, alert, emerg
             - EVENTS=1
             - PING=1
             - VERSION=1

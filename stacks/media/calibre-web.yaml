@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 #######################################
 # CALIBRE-WEB (CALIBRE WEB-UI)
 #######################################
@@ -20,7 +21,7 @@ services:
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        platform: linux/amd64
         networks:
             traefik:
         labels:
