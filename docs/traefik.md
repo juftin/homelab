@@ -117,6 +117,12 @@ And you should also update the secrets files:
     --8<-- "docs/example-secrets/cloudflare_api_key.secret"
     ```
 
+=== "secrets/database_password.secret"
+
+    ```text
+    --8<-- "docs/example-secrets/database_password.secret"
+    ```
+
 #### acme.json
 
 You will need to create an empty `acme.json` file for the

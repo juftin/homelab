@@ -34,6 +34,7 @@ include:
     #############################################################################
 
     - stacks/utilities/watchtower.yaml #  Watchtower (Container Updating)
+    # - stacks/utilities/postgres.yaml # PostgreSQL (Shared Database)
     # - stacks/utilities/sftpgo.yaml # SFTPGo (File Management)
     # - stacks/utilities/pihole.yaml # Pi-hole (DNS Ad-Blocking)
     # - stacks/utilities/portainer.yaml # Portainer (Container Management)

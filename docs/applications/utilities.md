@@ -14,6 +14,19 @@ For each service with the `latest` tag, Watchtower will check if the
 image has been updated on the Docker Hub, and if it has, Watchtower will
 pull the new image and restart the container.
 
+## homelab-postgres
+
+[![](https://img.shields.io/static/v1?message=postgres&logo=docker&label=docker&color=blue)](https://hub.docker.com/_/postgres)
+[![](https://img.shields.io/static/v1?message=postgres&logo=github&label=github)](https://github.com/postgres/postgres)
+[![](https://img.shields.io/static/v1?message=postgresql.org&logo=google+chrome&label=website&color=teal)](https://www.postgresql.org)
+
+The `homelab-postgres` service is a PostgreSQL database that
+is used by other services in the stack.
+
+<img src="https://i.imgur.com/dbjb2w2.png" width="220" alt="PostgreSQL Logo">
+
+> [!NOTE] homelab-postgres is not enabled by default
+
 ## pi-hole
 
 [![](https://img.shields.io/static/v1?message=pi-hole/pi-hole&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/pihole/pihole)

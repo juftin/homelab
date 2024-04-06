@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# POSTGRESQL (DATABASE)
+#######################################
+
+services:
+    homelab-postgres:
+        container_name: homelab-postgres
+        image: postgres:16.2
+        profiles: ["utilities", "all"]
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-postgres}
+            POSTGRES_DB: ${POSTGRES_DB:-postgres}
+            POSTGRES_PASSWORD_FILE: /run/secrets/homelab-postgres-password
+        secrets:
+            - homelab-postgres-password
+        networks:
+            internal:
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/utilities/homelab-postgres:/var/lib/postgresql/data
+        restart: always
+        healthcheck:
+            test:
+                [
+                    CMD-SHELL,
+                    "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres}",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+secrets:
+    homelab-postgres-password:
+        file: ${DOCKER_DIRECTORY}/secrets/database_password.secret
