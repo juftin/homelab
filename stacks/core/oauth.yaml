@@ -11,7 +11,6 @@ services:
         container_name: oauth
         image: thomseddon/traefik-forward-auth:latest
         profiles: ["traefik", "core", "all"]
-        hostname: oauth
         environment:
             CONFIG: /config
             COOKIE_DOMAIN: ${DOMAIN_NAME}

@@ -7,7 +7,6 @@ services:
         container_name: sftpgo
         image: drakkan/sftpgo:latest
         profiles: ["utilities", "all"]
-        hostname: ${SFTPGO_SUBDOMAIN:-sftpgo}
         volumes:
             - ${COMPLETED_DOWNLOADS}:/srv/sftpgo/data/juftin/downloads
             - ${MOVIE_DIR}:/srv/sftpgo/data/juftin/movies

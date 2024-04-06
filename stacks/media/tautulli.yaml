@@ -7,7 +7,6 @@ services:
         container_name: tautulli
         image: lscr.io/linuxserver/tautulli:latest
         profiles: ["media", "all"]
-        hostname: ${TAUTULLI_SUBDOMAIN:-tautulli}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media/tautulli:/config
             - ${DOCKER_DIRECTORY}/appdata/media/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro

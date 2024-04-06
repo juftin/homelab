@@ -7,7 +7,6 @@ services:
         container_name: radarr
         image: lscr.io/linuxserver/radarr:latest
         profiles: ["media", "arrs", "all"]
-        hostname: ${RADARR_SUBDOMAIN:-radarr}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads

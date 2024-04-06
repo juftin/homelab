@@ -7,7 +7,6 @@ services:
         container_name: ombi
         image: lscr.io/linuxserver/ombi:latest
         profiles: ["media", "all"]
-        hostname: ${OMBI_SUBDOMAIN:-ombi}
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

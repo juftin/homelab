@@ -7,7 +7,6 @@ services:
         container_name: portainer
         image: portainer/portainer-ce:latest
         profiles: ["utilities", "all"]
-        hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/utilities/portainer:/data
             - ${DOCKER_DIRECTORY}/stacks/utilities/shared:/shared

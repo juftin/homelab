@@ -7,7 +7,6 @@ services:
         container_name: transmission
         image: haugene/transmission-openvpn:latest
         profiles: ["media", "all"]
-        hostname: ${TRANSMISSION_SUBDOMAIN:-transmission}
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ${DOCKER_DIRECTORY}/appdata/media/transmission:/config/transmission-home

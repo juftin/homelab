@@ -7,7 +7,6 @@ services:
         container_name: calibre-web
         image: lscr.io/linuxserver/calibre-web:latest
         profiles: ["media", "all"]
-        hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/media/calibre-web:/config
             - ${BOOKS_DIR}:/books
@@ -16,7 +15,7 @@ services:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
-            DOCKER_MODS: linuxserver/calibre-web:calibre
+            DOCKER_MODS: linuxserver/mods:universal-calibre
             OAUTHLIB_RELAX_TOKEN_SCOPE: 1
         security_opt:
             - no-new-privileges:true
