@@ -1,5 +1,19 @@
 # Utilities Stack
 
+## watchtower
+
+[![](https://img.shields.io/static/v1?message=containrrr/watchtower&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/containrrr/watchtower)
+[![](https://img.shields.io/static/v1?message=containrrr/watchtower&logo=github&label=github)](https://github.com/containrrr/watchtower)
+[![](https://img.shields.io/static/v1?message=containrrr.dev&logo=google+chrome&label=website&color=teal)](https://containrrr.dev/watchtower)
+
+<img src="https://i.imgur.com/rQDP17g.png" width="220" alt="Watchtower Logo">
+
+Watchtower is a container-based solution for automating Docker container base image updates.
+
+For each service with the `latest` tag, Watchtower will check if the
+image has been updated on the Docker Hub, and if it has, Watchtower will
+pull the new image and restart the container.
+
 ## pi-hole
 
 [![](https://img.shields.io/static/v1?message=pi-hole/pi-hole&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/pihole/pihole)
@@ -7,6 +21,8 @@
 [![](https://img.shields.io/static/v1?message=pi-hole.net&logo=google+chrome&label=website&color=teal)](https://pi-hole.net)
 
 <img src="https://i.imgur.com/br5HOpz.png" width="150" alt="Pi-hole Logo">
+
+> [!NOTE] pi-hole is not enabled by default
 
 The Pi-hole is a DNS sinkhole that protects your devices from unwanted content without
 installing any client-side software.
@@ -27,6 +43,8 @@ installing any client-side software.
 
 <img src="https://i.imgur.com/wgtgGWr.png" width="250" alt="SFTPGo Logo">
 
+> [!NOTE] sftpgo is not enabled by default
+
 SFTPGo is a fully featured and highly configurable SFTP server with optional HTTP/S, FTP/S and WebDAV support.
 It's a fast and reliable solution to access your files with a WebUI, SFTP, and more.
 
@@ -37,6 +55,8 @@ It's a fast and reliable solution to access your files with a WebUI, SFTP, and m
 [![](https://img.shields.io/static/v1?message=portainer.io&logo=google+chrome&label=website&color=teal)](https://www.portainer.io)
 
 <img src="https://i.imgur.com/CybNVn6.png" width="350" alt="Portainer Logo">
+
+> [!NOTE] portainer is not enabled by default
 
 Portainer Community Edition is a lightweight service delivery platform for containerized applications
 that can be used to manage Docker, Swarm, Kubernetes and ACI environments. It is designed to be as

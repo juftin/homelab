@@ -13,7 +13,7 @@
 
 ## What is homelab?
 
-`homelab` is a collection of services that can be deployed from your home server and accessed
+**`homelab`** is a collection of services that can be deployed from your home server and accessed
 securely from anywhere in the world. This project deploys multiple "stacks" of services:
 
 -   **`core`**: The `core` stack is the base of this project, it includes a [traefik] reverse proxy
@@ -25,7 +25,7 @@ securely from anywhere in the world. This project deploys multiple "stacks" of s
 -   **`utilities`**: The `utilities` stack includes services like [Watchtower] and [Portainer] that
     are designed to help you manage your homelab, monitor your services,
     and keep your containers up-to-date.
--   **`miscellaneous`**: The `miscellaneous` stack is **disabled by default**.
+-   **`miscellaneous`**: The `miscellaneous` stack is disabled by default.
     It includes services like [ChatGPT Next Web] and [LibreOffice Online]
     that don't fit into the other stacks. These services are great for improving your
     productivity and adding some fun to your homelab.

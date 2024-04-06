@@ -7,13 +7,13 @@
 -   [radarr](#radarr)
 -   [prowlarr](#prowlarr)
 -   [ombi](#ombi)
--   [readarr](#readarr)
 -   [tautulli](#tautulli)
--   [calibre](#calibre)
--   [calibre-web](#calibre-web)
 -   [transmission](#transmission)
 -   [nzbget](#nzbget)
 -   [heimdall](#heimdall)
+-   [readarr](#readarr)
+-   [calibre](#calibre)
+-   [calibre-web](#calibre-web)
 
 ## plex
 
@@ -124,17 +124,6 @@ Please refer to the documentation link for further details.
 
 <img src="https://i.imgur.com/fdr3HK4.png" width="600" alt="ombi_radarr_config">
 
-## readarr
-
-[![](https://img.shields.io/static/v1?message=linuxserver/readarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/readarr)
-[![](https://img.shields.io/static/v1?message=Readarr/Readarr&logo=github&label=github)](https://github.com/Readarr/Readarr)
-[![](https://img.shields.io/static/v1?message=readarr.com&logo=google+chrome&label=website&color=teal)](https://readarr.com)
-
-Readarr is an ebook and audiobook collection manager for Usenet and BitTorrent users. It can monitor multiple
-RSS feeds for new books from your favorite authors and will grab, sort, and rename them.
-
-<img src="https://i.imgur.com/C711M59.png" width="250" alt="Readarr Logo">
-
 ## tautulli
 
 [![](https://img.shields.io/static/v1?message=linuxserver/tautulli&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/tautulli)
@@ -149,29 +138,6 @@ who watched it, when and where they watched it, and how it was watched. The only
 "why they watched it", but who am I to question your 42 plays of Frozen. All statistics are presented in
 a nice and clean interface with many tables and graphs, which makes it easy to brag about your
 server to everyone else.
-
-## calibre
-
-[![](https://img.shields.io/static/v1?message=linuxserver/calibre&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/calibre)
-[![](https://img.shields.io/static/v1?message=kovidgoyal/calibre&logo=github&label=github)](https://github.com/kovidgoyal/calibre)
-[![](https://img.shields.io/static/v1?message=calibre-ebook.com&logo=google+chrome&label=website&color=teal)](https://calibre-ebook.com)
-
-<img src="https://i.imgur.com/OLnWJN5.png" width="250" alt="Calibre Logo">
-
-calibre is an e-book manager. It can view, convert, edit and catalog e-books in
-all of the major e-book formats. It can also talk to e-book reader devices.
-It can go out to the internet and fetch metadata for your books. It can download
-newspapers and convert them into e-books for convenient reading.
-
-## calibre-web
-
-[![](https://img.shields.io/static/v1?message=linuxserver/calibre-web&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/calibre-web)
-[![](https://img.shields.io/static/v1?message=janeczku/calibre-web&logo=github&label=github)](https://github.com/janeczku/calibre-web)
-
-<img src="https://i.imgur.com/LVnUuXK.png" width="250" alt="Calibre Logo">
-
-Calibre-Web is a web app that offers a clean and intuitive interface for browsing, reading, and
-downloading eBooks using a valid Calibre database.
 
 ## transmission
 
@@ -210,3 +176,43 @@ include a search bar using either Google, Bing or DuckDuckGo.
 > [!NOTE]
 > enter the full url path of the domain in new tabs
 > for a redirect. (ie. `https://app.example.com`)
+
+## readarr
+
+[![](https://img.shields.io/static/v1?message=linuxserver/readarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/readarr)
+[![](https://img.shields.io/static/v1?message=Readarr/Readarr&logo=github&label=github)](https://github.com/Readarr/Readarr)
+[![](https://img.shields.io/static/v1?message=readarr.com&logo=google+chrome&label=website&color=teal)](https://readarr.com)
+
+Readarr is an ebook and audiobook collection manager for Usenet and BitTorrent users. It can monitor multiple
+RSS feeds for new books from your favorite authors and will grab, sort, and rename them.
+
+<img src="https://i.imgur.com/C711M59.png" width="250" alt="Readarr Logo">
+
+> [!NOTE] readarr is not enabled by default
+
+## calibre
+
+[![](https://img.shields.io/static/v1?message=linuxserver/calibre&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/calibre)
+[![](https://img.shields.io/static/v1?message=kovidgoyal/calibre&logo=github&label=github)](https://github.com/kovidgoyal/calibre)
+[![](https://img.shields.io/static/v1?message=calibre-ebook.com&logo=google+chrome&label=website&color=teal)](https://calibre-ebook.com)
+
+<img src="https://i.imgur.com/OLnWJN5.png" width="250" alt="Calibre Logo">
+
+> [!NOTE] calibre is not enabled by default
+
+calibre is an e-book manager. It can view, convert, edit and catalog e-books in
+all of the major e-book formats. It can also talk to e-book reader devices.
+It can go out to the internet and fetch metadata for your books. It can download
+newspapers and convert them into e-books for convenient reading.
+
+## calibre-web
+
+[![](https://img.shields.io/static/v1?message=linuxserver/calibre-web&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/calibre-web)
+[![](https://img.shields.io/static/v1?message=janeczku/calibre-web&logo=github&label=github)](https://github.com/janeczku/calibre-web)
+
+<img src="https://i.imgur.com/LVnUuXK.png" width="250" alt="Calibre Logo">
+
+> [!NOTE] calibre-web is not enabled by default
+
+Calibre-Web is a web app that offers a clean and intuitive interface for browsing, reading, and
+downloading eBooks using a valid Calibre database.

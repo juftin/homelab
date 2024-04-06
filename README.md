@@ -15,7 +15,7 @@
 
 ## What is homelab?
 
-`homelab` is a collection of services that can be deployed from your home server and accessed
+**`homelab`** is a collection of services that can be deployed from your home server and accessed
 securely from anywhere in the world. This project deploys multiple "stacks" of services:
 
 -   **`core`**: The `core` stack is the base of this project, it includes a [traefik] reverse proxy
