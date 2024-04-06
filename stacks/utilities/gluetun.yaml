@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+services:
+    #######################################
+    # GLUETUN - VPN CLIENT
+    #######################################
+    gluetun:
+        container_name: gluetun
+        image: qmcgaw/gluetun:latest
+        profiles: ["utilities", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/utilities/gluetun:/gluetun
+        environment:
+            TZ: ${TZ}
+            VPN_SERVICE_PROVIDER: ${OPENVPN_PROVIDER}
+            VPN_TYPE: openvpn
+            OPENVPN_USER: ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.gluetun-qbittorrent-rtr.entrypoints=websecure"
+            - "traefik.http.routers.gluetun-qbittorrent-rtr.rule=Host(`qbittorrent.${DOMAIN_NAME}`)"
+            - "traefik.http.routers.gluetun-qbittorrent-rtr.middlewares=chain-oauth@file"
+            - "traefik.http.routers.gluetun-qbittorrent-rtr.service=gluetun-svc"
+            - "traefik.http.services.gluetun-svc.loadbalancer.server.port=8080"
+
+    #######################################
+    # QBITTORRENT - TORRENT CLIENT
+    #######################################
+
+    qbittorrent:
+        image: lscr.io/linuxserver/qbittorrent:latest
+        container_name: qbittorrent
+        security_opt:
+            - no-new-privileges:true
+        restart: unless-stopped
+        profiles: ["utilities", "all"]
+        depends_on:
+            - gluetun
+        network_mode: "service:gluetun"
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/utilities/qbittorrent:/config
+            - ${COMPLETED_DOWNLOADS}:/data/downloads # Ensure that downloads folder is set to /data/downloads in qBittorrent
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            UMASK_SET: 002
+        healthcheck:
+            test: "curl -sf https://example.com  || exit 1"
+            interval: 1m
+            timeout: 10s
+            retries: 1
+        labels:
+            - "deunhealth.restart.on.unhealthy=true"
