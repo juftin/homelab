@@ -4,6 +4,37 @@ When larger changes are made this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
 
+## 1.9.0
+
+The 1.9.0 release renames the `media-center`stack to `media`,
+renames `traefik` stack to `core`,
+and creates a new `utilities` stack for services like
+`sftpgo`, `portainer`, and `pihole`.
+
+<details><summary>1.8.0 to 1.9.0 Migration</summary>
+<p>
+
+During the upgrade the stack should be shut down,
+the below commands should be run, and then the
+git commands should be run to pull in the
+latest changes.
+
+```shell
+#!/usr/bin/env bash
+
+mv appdata/media-center appdata/media
+mv appdata/traefik appdata/core
+
+mkdir -p appdata/utilities
+
+mv appdata/miscellaneous/pihole/ appdata/utilities/
+sudo mv appdata/media/portainer/ appdata/utilities/
+mv appdata/media/sftpgo/ appdata/utilities/
+```
+
+</p>
+</details>
+
 ## 1.6.0
 
 The 1.6.0 release moves all of the `config` directories where docker
@@ -20,7 +51,7 @@ mkdir -p appdata/traefik
 mkdir -p appdata/media-center
 mkdir -p appdata/miscellaneous
 
-mv stacks/traefik/traefik/config appdata/traefik/traefik
+mv stacks/core/traefik/config appdata/traefik/traefik
 
 mv stacks/media-center/calibre/config appdata/media-center/calibre
 mv stacks/media-center/calibre-web/config appdata/media-center/calibre-web

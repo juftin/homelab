@@ -22,7 +22,7 @@ correct service. It is the first service that you should start with:
 ## App Deployment
 
 Which apps to deploy are defined in the `docker-compose.yaml` files. For example,
-To disable specific apps in the `media-center` stack, you would comment out the `include` directive
+To disable specific apps in the `media` stack, you would comment out the `include` directive
 in the root `docker-compose.yaml` file.
 
 <details><summary>📄 docker-compose.yaml</summary>

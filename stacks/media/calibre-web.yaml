@@ -6,12 +6,12 @@ services:
     calibre-web:
         container_name: calibre-web
         image: lscr.io/linuxserver/calibre-web:latest
-        profiles: ["media-center", "all"]
+        profiles: ["media", "all"]
         hostname: ${CALIBRE_WEB_SUBDOMAIN:-calibre-web}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre-web:/config
+            - ${DOCKER_DIRECTORY}/appdata/media/calibre-web:/config
             - ${BOOKS_DIR}:/books
-            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre:/calibre-config
+            - ${DOCKER_DIRECTORY}/appdata/media/calibre:/calibre-config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

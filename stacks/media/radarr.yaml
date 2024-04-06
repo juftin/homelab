@@ -6,13 +6,13 @@ services:
     radarr:
         container_name: radarr
         image: lscr.io/linuxserver/radarr:latest
-        profiles: ["media-center", "arrs", "all"]
+        profiles: ["media", "arrs", "all"]
         hostname: ${RADARR_SUBDOMAIN:-radarr}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/radarr:/config
+            - ${DOCKER_DIRECTORY}/appdata/media/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MOVIE_DIR}:/movies
-            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

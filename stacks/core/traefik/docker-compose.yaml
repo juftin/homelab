@@ -27,10 +27,10 @@ services:
             - source: cloudflare_api_key
               target: /run/secrets/cloudflare_api_key
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/traefik/traefik/rules:/rules
-            - ${DOCKER_DIRECTORY}/appdata/traefik/traefik/logs:/logs
-            - ${DOCKER_DIRECTORY}/appdata/traefik/traefik/traefik:/etc/traefik
-            - ${DOCKER_DIRECTORY}/appdata/traefik/traefik/acme/acme.json:/acme.json
+            - ${DOCKER_DIRECTORY}/stacks/core/traefik/rules:/rules
+            - ${DOCKER_DIRECTORY}/appdata/core/traefik/logs:/logs
+            - ${DOCKER_DIRECTORY}/appdata/core/traefik/traefik:/etc/traefik
+            - ${DOCKER_DIRECTORY}/appdata/core/traefik/acme/acme.json:/acme.json
         networks:
             traefik:
             docker:

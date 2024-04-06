@@ -1,4 +1,4 @@
-# Traefik Stack
+# Core Stack
 
 ## traefik
 

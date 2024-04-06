@@ -6,10 +6,10 @@ services:
     calibre:
         container_name: calibre
         image: lscr.io/linuxserver/calibre:latest
-        profiles: ["media-center", "all"]
+        profiles: ["media", "all"]
         hostname: ${CALIBRE_SUBDOMAIN:-calibre}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/calibre:/config
+            - ${DOCKER_DIRECTORY}/appdata/media/calibre:/config
             - ${BOOKS_DIR}:/books
             - ${COMPLETED_DOWNLOADS}:/downloads
         environment:

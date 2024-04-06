@@ -429,13 +429,13 @@ Start just the media services (plex, sonarr, radarr, etc).
 === "docker"
 
     ```shell
-    docker compose --profile media-center up -d
+    docker compose --profile media up -d
     ```
 
 === "homelab-compose"
 
     ```shell
-    homelab-compose --profile media-center up -d
+    homelab-compose --profile media up -d
     ```
 
 #### media-down
@@ -457,13 +457,13 @@ Stop just the media services (plex, sonarr, radarr, etc).
 === "docker"
 
     ```shell
-    docker compose --profile media-center down
+    docker compose --profile media down
     ```
 
 === "homelab-compose"
 
     ```shell
-    homelab-compose --profile media-center down
+    homelab-compose --profile media down
     ```
 
 #### media-logs
@@ -485,13 +485,13 @@ Show the logs for the media services (plex, sonarr, radarr, etc).
 === "docker"
 
     ```shell
-    docker compose --profile media-center logs -ft
+    docker compose --profile media logs -ft
     ```
 
 === "homelab-compose"
 
     ```shell
-    homelab-compose --profile media-center logs -ft
+    homelab-compose --profile media logs -ft
     ```
 
 ### Configuration 🪛
@@ -515,10 +515,10 @@ Initialize the `acme.json` file for traefik.
 === "bash"
 
     ```shell
-    mkdir -p appdata/traefik/traefik/acme/ && \
-    rm -f appdata/traefik/traefik/acme/acme.json && \
-    touch appdata/traefik/traefik/acme/acme.json && \
-    chmod 600 appdata/traefik/traefik/acme/acme.json
+    mkdir -p appdata/core/traefik/acme/ && \
+    rm -f appdata/core/traefik/acme/acme.json && \
+    touch appdata/core/traefik/acme/acme.json && \
+    chmod 600 appdata/core/traefik/acme/acme.json
     ```
 
 ### Backup 🗂️

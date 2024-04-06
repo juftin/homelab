@@ -6,36 +6,46 @@ include:
     #############################################################################
     # TRAEFIK (CORE)
     #############################################################################
-    - stacks/traefik/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
-    - stacks/traefik/duckdns.yaml # DuckDNS (Dynamic DNS)
-    - stacks/traefik/oauth.yaml # OAuth (Authentication)
-    - stacks/traefik/socket-proxy.yaml # Docker Socket Proxy (Security)
+
+    - stacks/core/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
+    - stacks/core/duckdns.yaml # DuckDNS (Dynamic DNS)
+    - stacks/core/oauth.yaml # OAuth (Authentication)
+    - stacks/core/socket-proxy.yaml # Docker Socket Proxy (Security)
+
     #############################################################################
-    # MEDIA CENTER
+    # MEDIA
     #############################################################################
-    - stacks/media-center/watchtower.yaml #  Watchtower (Container Updating)
-    - stacks/media-center/heimdall.yaml # Heimdall (Landing Page)
-    - stacks/media-center/ombi.yaml # Ombi (Download Requests)
-    - stacks/media-center/plex.yaml # Plex (Media Server)
-    - stacks/media-center/tautulli.yaml # Tautulli (Plex Analytics)
-    - stacks/media-center/sonarr.yaml # Sonarr (TV Show Downloads)
-    - stacks/media-center/radarr.yaml # Radarr (Movie Downloads)
-    - stacks/media-center/prowlarr.yaml # Prowlarr (Indexer)
-    - stacks/media-center/readarr.yaml # Readarr (Ebook Downloads)
-    - stacks/media-center/calibre.yaml # Calibre (Books Management)
-    - stacks/media-center/calibre-web.yaml # Calibre Web-UI
-    - stacks/media-center/transmission.yaml # Transmission (Torrents Behind VPN)
-    - stacks/media-center/nzbget.yaml # NZBGet (Usenet Downloading)
-    - stacks/media-center/portainer.yaml # Portainer (Container Management)
-    - stacks/media-center/sftpgo.yaml # SFTPGo (File Management)
+
+    - stacks/media/heimdall.yaml # Heimdall (Landing Page)
+    - stacks/media/plex.yaml # Plex (Media Server)
+    - stacks/media/sonarr.yaml # Sonarr (TV Show Downloads)
+    - stacks/media/radarr.yaml # Radarr (Movie Downloads)
+    - stacks/media/prowlarr.yaml # Prowlarr (Indexer)
+    - stacks/media/ombi.yaml # Ombi (Download Requests)
+    - stacks/media/tautulli.yaml # Tautulli (Plex Analytics)
+    - stacks/media/transmission.yaml # Transmission (Torrents Behind VPN)
+    - stacks/media/nzbget.yaml # NZBGet (Usenet Downloading)
+    # - stacks/media/readarr.yaml # Readarr (Ebook Downloads)
+    # - stacks/media/calibre.yaml # Calibre (Books Management)
+    # - stacks/media/calibre-web.yaml # Calibre Web-UI
+
+    #############################################################################
+    # UTILITIES
+    #############################################################################
+
+    - stacks/utilities/watchtower.yaml #  Watchtower (Container Updating)
+    # - stacks/utilities/sftpgo.yaml # SFTPGo (File Management)
+    # - stacks/utilities/pihole.yaml # Pi-hole (DNS Ad-Blocking)
+    # - stacks/utilities/portainer.yaml # Portainer (Container Management)
+
     #############################################################################
     # MISCELLANEOUS
     #
     # * Note the existing services that are disabled by default.
     #############################################################################
-    - stacks/miscellaneous/pihole.yaml # Pi-hole (DNS Ad-Blocking)
-    - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
-    - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+
+    # - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
+    # - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
     # - stacks/miscellaneous/libreoffice.yaml # LibreOffice (Office Suite)
 
 ################################################################################

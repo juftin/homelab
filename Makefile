@@ -59,15 +59,15 @@ core-logs: ## Show the logs for the core services (traefik, oauth2, etc).
 
 .PHONY: media-up
 media-up: ## Start just the media services (plex, sonarr, radarr, etc).
-	docker compose --project-directory "$(ROOT_DIR)" --profile media-center up -d
+	docker compose --project-directory "$(ROOT_DIR)" --profile media up -d
 
 .PHONY: media-down
 media-down: ## Stop just the media services (plex, sonarr, radarr, etc).
-	docker compose --project-directory "$(ROOT_DIR)" --profile media-center down
+	docker compose --project-directory "$(ROOT_DIR)" --profile media down
 
 .PHONY: media-logs
 media-logs: ## Show the logs for the media services (plex, sonarr, radarr, etc).
-	docker compose --project-directory "$(ROOT_DIR)" --profile media-center logs -ft
+	docker compose --project-directory "$(ROOT_DIR)" --profile media logs -ft
 
 .PHONY: Misc Services 🧰
 
@@ -75,10 +75,10 @@ media-logs: ## Show the logs for the media services (plex, sonarr, radarr, etc).
 
 .PHONY: config-acme
 config-acme: ## Initialize the acme.json file.
-	mkdir -p appdata/traefik/traefik/acme/
-	rm -f appdata/traefik/traefik/acme/acme.json
-	touch appdata/traefik/traefik/acme/acme.json
-	chmod 600 appdata/traefik/traefik/acme/acme.json
+	mkdir -p appdata/core/traefik/acme/
+	rm -f appdata/core/traefik/acme/acme.json
+	touch appdata/core/traefik/acme/acme.json
+	chmod 600 appdata/core/traefik/acme/acme.json
 
 ##@ Backup 🗂️
 

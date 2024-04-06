@@ -16,17 +16,19 @@
 `homelab` is a collection of services that can be deployed from your home server and accessed
 securely from anywhere in the world. This project deploys multiple "stacks" of services:
 
--   **`traefik`**: The [traefik] stack is the core of this project, it includes a reverse proxy
+-   **`core`**: The `core` stack is the base of this project, it includes a [traefik] reverse proxy
     and [OAuth] service that allows you to access all of your services via a single domain name
     securely behind HTTPS and protected with Google OAuth.
--   **`media-center`**: The `media-center` stack includes services like [Plex], [Sonarr], [Radarr], and
+-   **`media`**: The `media` stack includes services like [Plex], [Sonarr], [Radarr], and
     [Ombi] that allow you to request, download, organize, and stream media to your devices. This stack
     is perfect for those who want to have a media server in their homelab.
--   **`miscellaneous`**: The `miscellaneous` stack includes services like [pi-hole],
-    [ChatGPT Next Web], and others that don't fit into the `media-center` stack.
-    These services are great for improving your home network and adding some fun
-    to your homelab - they also give you an established pattern for easily adding
-    new services to your homelab.
+-   **`utilities`**: The `utilities` stack includes services like [Watchtower] and [Portainer] that
+    are designed to help you manage your homelab, monitor your services,
+    and keep your containers up-to-date.
+-   **`miscellaneous`**: The `miscellaneous` stack is **disabled by default**.
+    It includes services like [ChatGPT Next Web] and [LibreOffice Online]
+    that don't fit into the other stacks. These services are great for improving your
+    productivity and adding some fun to your homelab.
 
 ## How does it work?
 
@@ -47,12 +49,12 @@ Ultimately a single docker compose stack is created that deploys everything.
 │   ├── cloudflare_api_key.secret               # Cloudflare API Key
 │   └── google_oauth.secret                     # Google OAuth Credentials and Whitelist
 ├── stacks
-│   ├── media-center
+│   ├── media
 │   │   ├── plex.yaml                           # Each individual service has its own docker compose file
 │   │   ├── radarr.yaml
 │   |   ├── ombi.yaml
 │   │   └── sonarr.yaml
-│   ├── traefik                                 # Traefik Reverse Proxy and OAuth
+│   ├── core                                    # Traefik Reverse Proxy and OAuth
 │   │   ├── oauth                               # OAuth Service
 │   │   └── traefik                             # Traefik Reverse Proxy
 │   │       ├── docker-compose.yaml             # Traefik Docker Compose File (Traefik Only)
@@ -60,17 +62,21 @@ Ultimately a single docker compose stack is created that deploys everything.
 │   │           ├── middlewares-chains.yml
 │   │           ├── middlewares.yml
 │   │           └── tls-opts.yml
-│   └── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
-│       └── chat-gpt-next-web.yaml
+│   ├── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
+│   │    └── chat-gpt-next-web.yaml
+│   └── utilities                               # Utility Services
+│       └── watchtower.yaml
 └── appdata                                     # Application Data Persistent Volumes
-    ├── media-center
+    ├── media
     │   ├── plex                                # Each individual service has its own subdirectory
     │   └── sonarr
-    ├── traefik
+    ├── core
     │   ├── oauth
     │   └── traefik
-    └── miscellaneous
-        └── chat-gpt-next-web
+    ├── miscellaneous
+    │   └── chat-gpt-next-web
+    └── utilities
+        └── watchtower
 ```
 
 [traefik]: https://github.com/traefik/traefik
@@ -80,4 +86,6 @@ Ultimately a single docker compose stack is created that deploys everything.
 [Radarr]: https://github.com/Radarr/Radarr
 [Ombi]: https://github.com/Ombi-app/Ombi
 [ChatGPT Next Web]: https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
-[pi-hole]: https://github.com/pi-hole/pi-hole
+[Watchtower]: https://github.com/containrrr/watchtower
+[LibreOffice Online]: https://www.libreoffice.org/
+[Portainer]: https://github.com/portainer/portainer

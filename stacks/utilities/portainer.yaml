@@ -6,11 +6,11 @@ services:
     portainer:
         container_name: portainer
         image: portainer/portainer-ce:latest
-        profiles: ["media-center", "all"]
+        profiles: ["utilities", "all"]
         hostname: ${PORTAINER_SUBDOMAIN:-portainer}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/portainer:/data
-            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+            - ${DOCKER_DIRECTORY}/appdata/utilities/portainer:/data
+            - ${DOCKER_DIRECTORY}/stacks/utilities/shared:/shared
         command: -H tcp://socket-proxy:2375
         environment:
             TZ: ${TZ}

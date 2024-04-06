@@ -6,7 +6,7 @@ services:
     watchtower:
         container_name: watchtower
         image: containrrr/watchtower:latest
-        profiles: ["media-center", "all"]
+        profiles: ["utilities", "all"]
         networks:
             internal:
             docker:

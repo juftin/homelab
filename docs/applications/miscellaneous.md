@@ -1,24 +1,5 @@
 # Miscellaneous Stack
 
-## pi-hole
-
-[![](https://img.shields.io/static/v1?message=pi-hole/pi-hole&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/pihole/pihole)
-[![](https://img.shields.io/static/v1?message=pi-hole/pi-hole&logo=github&label=github)](https://github.com/pi-hole/pi-hole)
-[![](https://img.shields.io/static/v1?message=pi-hole.net&logo=google+chrome&label=website&color=teal)](https://pi-hole.net)
-
-<img src="https://i.imgur.com/br5HOpz.png" width="150" alt="Pi-hole Logo">
-
-The Pi-hole is a DNS sinkhole that protects your devices from unwanted content without
-installing any client-side software.
-
-!!! info "Admin Password"
-
-    The default admin password for pi-hole must be set manually:
-
-    ```shell
-    docker compose exec pihole /bin/bash -c "sudo pihole -a -p YourNewPassword"
-    ```
-
 ## chat-gtp-next-web
 
 [![](https://img.shields.io/static/v1?message=yidadaa/chatgpt-next-web&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/yidadaa/chatgpt-next-web)

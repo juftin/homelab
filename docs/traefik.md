@@ -126,26 +126,26 @@ certificate recreation. Keep in mind that certificate creation and registration 
 uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory`
 command on the traefik service in the `docker-compose` file while testing.
 
--   file location: `traefik/traefik/config/acme/acme.json`
+-   file location: `traefik/core/config/acme/acme.json`
 -   file permissions (chmod): `600`
 
 ```shell
-mkdir -p appdata/traefik/traefik/acme/ && \
-  rm -f appdata/traefik/traefik/acme/acme.json && \
-  touch appdata/traefik/traefik/acme/acme.json && \
-  chmod 600 appdata/traefik/traefik/acme/acme.json
+mkdir -p appdata/core/traefik/acme/ && \
+  rm -f appdata/core/traefik/acme/acme.json && \
+  touch appdata/core/traefik/acme/acme.json && \
+  chmod 600 appdata/core/traefik/acme/acme.json
 ```
 
 > [!NOTE]
 > If you're comfortable with the `Makefile` at the root of the project, you can run
 > `make config-acme` to create the `acme.json` as described above.
 
-## Containers in Traefik Stack
+## Containers in Core Stack
 
--   [traefik](applications/traefik.md#traefik)
--   [oauth](applications/traefik.md#oauth)
--   [duckdns](applications/traefik.md#duckdns)
--   [docker-socket-proxy](applications/traefik.md#docker-socket-proxy)
+-   [traefik](applications/core.md#traefik)
+-   [oauth](applications/core.md#oauth)
+-   [duckdns](applications/core.md#duckdns)
+-   [docker-socket-proxy](applications/core.md#docker-socket-proxy)
 
 ## Creating New Services
 

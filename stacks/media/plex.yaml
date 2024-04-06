@@ -6,13 +6,13 @@ services:
     plex:
         container_name: plex
         image: lscr.io/linuxserver/plex:latest
-        profiles: ["media-center", "all"]
+        profiles: ["media", "all"]
         network_mode: host
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/plex:/config
+            - ${DOCKER_DIRECTORY}/appdata/media/plex:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
-            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
             - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
             - ${BOOKS_DIR}:/books
         devices:

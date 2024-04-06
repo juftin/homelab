@@ -6,12 +6,12 @@ services:
     tautulli:
         container_name: tautulli
         image: lscr.io/linuxserver/tautulli:latest
-        profiles: ["media-center", "all"]
+        profiles: ["media", "all"]
         hostname: ${TAUTULLI_SUBDOMAIN:-tautulli}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media-center/tautulli:/config
-            - ${DOCKER_DIRECTORY}/appdata/media-center/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
-            - ${DOCKER_DIRECTORY}/stacks/media-center/shared:/shared
+            - ${DOCKER_DIRECTORY}/appdata/media/tautulli:/config
+            - ${DOCKER_DIRECTORY}/appdata/media/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
+            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

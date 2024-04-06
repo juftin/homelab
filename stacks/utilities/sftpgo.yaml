@@ -6,15 +6,15 @@ services:
     sftpgo:
         container_name: sftpgo
         image: drakkan/sftpgo:latest
-        profiles: ["media-center", "all"]
+        profiles: ["utilities", "all"]
         hostname: ${SFTPGO_SUBDOMAIN:-sftpgo}
         volumes:
             - ${COMPLETED_DOWNLOADS}:/srv/sftpgo/data/juftin/downloads
             - ${MOVIE_DIR}:/srv/sftpgo/data/juftin/movies
             - ${TV_DIR}:/srv/sftpgo/data/juftin/tv
             - ${BOOKS_DIR}:/srv/sftpgo/data/juftin/books
-            - ${DOCKER_DIRECTORY}/appdata/media-center/sftpgo/data/:/srv/sftpgo/data/juftin/upload
-            - ${DOCKER_DIRECTORY}/appdata/media-center/sftpgo/config/:/var/lib/sftpgo/
+            - ${DOCKER_DIRECTORY}/appdata/utilities/sftpgo/data/:/srv/sftpgo/data/juftin/upload
+            - ${DOCKER_DIRECTORY}/appdata/utilities/sftpgo/config/:/var/lib/sftpgo/
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

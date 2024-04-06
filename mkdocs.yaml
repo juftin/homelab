@@ -6,8 +6,9 @@ nav:
     - Configuration ⚙️: config.md
     - Traefik 🚦: traefik.md
     - Applications 📦:
-          - Traefik Stack 🚥: applications/traefik.md
-          - Media Center Stack 🎬: applications/media_center.md
+          - Core Stack 🧱: applications/core.md
+          - Media Stack 🎬: applications/media.md
+          - Utilities Stack 🔧: applications/utilities.md
           - Miscellaneous Stack 🥞: applications/miscellaneous.md
     - Command Line Usage 🖥️: cli.md
     - Scripts 📜: scripts.md
