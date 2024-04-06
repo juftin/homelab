@@ -37,7 +37,6 @@ services:
         security_opt:
             - no-new-privileges:true
         restart: always
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
         depends_on:
             - socket-proxy
             - duckdns

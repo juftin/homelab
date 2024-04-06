@@ -22,7 +22,6 @@ services:
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
         networks:
             traefik:
         labels:

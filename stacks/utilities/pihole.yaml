@@ -18,7 +18,6 @@ services:
             - ${DOCKER_DIRECTORY}/appdata/utilities/pihole/dnsmasq.d/:/etc/dnsmasq.d/
         networks:
             traefik:
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
         ports:
             - ${PHYSICAL_SERVER_IP}:53:53/tcp
             - ${PHYSICAL_SERVER_IP}:53:53/udp

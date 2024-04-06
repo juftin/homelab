@@ -13,7 +13,6 @@ services:
         environment:
             OPENAI_API_KEY: ${OPENAI_API_KEY}
             TZ: ${TZ}
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
         labels:
             traefik.enable: true
             traefik.http.routers.chat-rtr.rule: Host(`${CHAT_SUBDOMAIN:-chat}.${DOMAIN_NAME}`)

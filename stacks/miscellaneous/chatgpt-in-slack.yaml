@@ -10,12 +10,12 @@ services:
         profiles: ["miscellaneous", "all"]
         networks:
             internal:
-        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        platform: linux/amd64
         environment:
             SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
             SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
             OPENAI_API_KEY: ${OPENAI_API_KEY}
-            OPENAI_MODEL: ${OPENAI_MODEL:-gpt-3.5-turbo}
+            OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4-turbo-preview}
             TRANSLATE_MARKDOWN: ${TRANSLATE_MARKDOWN:-true}
             SLACK_APP_LOG_LEVEL: ${SLACK_APP_LOG_LEVEL:-INFO}
             TZ: ${TZ}
