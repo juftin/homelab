@@ -74,3 +74,15 @@ Umami is a simple, fast, privacy-focused alternative to Google Analytics.
 > the secondary domain, you must uncomment `SECONDARY_DOMAIN_NAME` settings in the
 > `stacks/core/traefik/docker-compose.yaml` file and uncomment the `SECONDARY_DOMAIN_NAME`
 > variable in your `.env` file before regenerating HTTPS certificates.
+
+## homeassistant
+
+[![](https://img.shields.io/static/v1?message=homeassistant/home-assistant&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/homeassistant/home-assistant)
+[![](https://img.shields.io/static/v1?message=home-assistant.io&logo=google+chrome&label=website&color=teal)](https://home-assistant.io)
+
+> [!NOTE] Home Assistant is not enabled by default
+
+<img src="https://i.imgur.com/Q6id8yF.png" width="250" alt="Home Assistant Logo">
+
+Home Assistant is an open-source home automation platform that focuses on privacy and local control.
+It's a great way to automate your home and make it smarter.

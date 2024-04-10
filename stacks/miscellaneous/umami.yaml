@@ -11,6 +11,7 @@ services:
         networks:
             traefik:
             internal:
+        profiles: ["miscellaneous", "all"]
         environment:
             DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@homelab-postgres:5432/umami
             DATABASE_TYPE: postgresql

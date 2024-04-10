@@ -1,0 +1,11 @@
+http:
+    ip_ban_enabled: true
+    login_attempts_threshold: 5
+    use_x_forwarded_for: true
+    trusted_proxies:
+        - 192.168.90.0/24
+        - 127.0.0.1
+        - ::1
+        - fe80::/64
+        - fe00::/64
+        - fd00::/64

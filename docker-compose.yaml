@@ -50,6 +50,7 @@ include:
     # - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
     # - stacks/miscellaneous/libreoffice.yaml # LibreOffice (Office Suite)
     # - stacks/miscellaneous/umami.yaml # Umami Analytics
+    # - stacks/miscellaneous/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
 
 ################################################################################
 # NETWORK CONFIGURATION
@@ -58,7 +59,16 @@ include:
 networks:
     traefik:
         driver: bridge
+        ipam:
+            config:
+                - subnet: 192.168.90.0/24
     docker:
         driver: bridge
+        ipam:
+            config:
+                - subnet: 192.168.91.0/24
     internal:
         driver: bridge
+        ipam:
+            config:
+                - subnet: 192.168.92.0/24

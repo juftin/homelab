@@ -1,0 +1,24 @@
+services:
+    homeassistant:
+        container_name: homeassistant
+        image: homeassistant/home-assistant:stable
+        profiles: ["miscellaneous", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/stacks/miscellaneous/homeassistant/configuration.yaml:/config/configuration.yaml
+            - ${DOCKER_DIRECTORY}/appdata/miscellaneous/homeassistant:/config
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        security_opt:
+            - no-new-privileges:true
+        labels:
+            traefik.enable: true
+            traefik.http.routers.homeassistant-rtr.rule: Host(`${HOMEASSISTANT_SUBDOMAIN:-homeassistant}.${DOMAIN_NAME}`)
+            traefik.http.routers.homeassistant-rtr.service: homeassistant-svc
+            traefik.http.services.homeassistant-svc.loadbalancer.server.port: 8123
+            traefik.http.routers.homeassistant-rtr.entrypoints: websecure
+            traefik.http.routers.homeassistant-rtr.middlewares: chain-oauth-google@file
