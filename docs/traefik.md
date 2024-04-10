@@ -23,7 +23,7 @@ anywhere in the world.
 > See the [Command Line](cli.md) documentation for more information on how to
 > operate the stack
 
-> [!INFO] "Acknowledgements"
+> [!INFO] Acknowledgements
 > This configuration was inspired by, and
 > immensely helped by the article at
 > [smarthomebeginner.com](https://www.smarthomebeginner.com/traefik-docker-compose-guide-2024/).

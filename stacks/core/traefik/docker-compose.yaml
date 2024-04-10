@@ -22,7 +22,7 @@ services:
               mode: host
         environment:
             CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-            CF_API_KEY: /run/secrets/cloudflare_api_key
+            CF_API_KEY_FILE: /run/secrets/cloudflare_api_key
         secrets:
             - source: cloudflare_api_key
               target: /run/secrets/cloudflare_api_key
