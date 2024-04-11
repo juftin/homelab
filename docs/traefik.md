@@ -38,6 +38,14 @@ This guide assumes you have a personal domain name that you can use to
 access your services. You can purchase a domain name from a registrar
 like [Cloudflare](https://www.cloudflare.com/products/registrar/).
 
+### DuckDNS
+
+A free DuckDNS dynamic DNS subdomain can be set up [here](https://www.duckdns.org).
+DuckDNS will provide you with a token that you will use in the `.env` file.
+Behind the scenes, the `duckdns` service will update your IP address with DuckDNS
+every 5 minutes which makes it possible to reach your server from anywhere. You will
+provide CloudFlare with the DuckDNS subdomain to point to your server.
+
 ### Port Forwarding
 
 In order to reach the outside world, you must forward ports `80` and `443`
@@ -45,11 +53,26 @@ from your server IP address through your router. See your router's manual
 for Instructions. See this [blog post](https://nordvpn.com/blog/open-ports-on-router/)
 for more information on port forwarding
 
+> [!NOTE]
+> If you're comfortable with SSH configuration I also port forward the SSH
+> service - this alongside your DuckDNS setup will allow you to access your
+> server from anywhere via your dynamic DNS URL instead of your IP address.
+
 ### CloudFlare
 
 This guide leverages [CloudFlare](https://cloudflare.com/) for free
 DNS services. SmartHomeBeginner has a great guide on setting up CloudFlare
 [here](https://www.smarthomebeginner.com/cloudflare-settings-for-traefik-docker/).
+
+Once you get CloudFlare and DuckDNS set up, you will need to add some basic DNS
+configuration. CloudFlare lets you use a dynamic DNS address as a CNAME record
+which makes it easy to point your domain to your server.
+
+| Type  | Name          | Content               | TTL  |
+| ----- | ------------- | --------------------- | ---- |
+| CNAME | `example.com` | `example.duckdns.org` | Auto |
+| CNAME | `www`         | `example.com`         | Auto |
+| CNAME | `*`           | `example.com`         | Auto |
 
 ### Google OAuth 2.0
 
@@ -58,14 +81,6 @@ found [here](https://www.smarthomebeginner.com/traefik-forward-auth-google-oauth
 Essentially you must create a project in the Google Developer Console to enable
 the Google OAuth 2.0 service. You will share credentials with the `oauth` service
 in the `.env` file and manually whitelist users per email address.
-
-### DuckDNS
-
-A free DuckDNS dynamic DNS subdomain can be set up [here](https://www.duckdns.org).
-DuckDNS will provide you with a token that you will use in the `.env` file.
-Behind the scenes, the `duckdns` service will update your IP address with DuckDNS
-every 5 minutes which makes it possible to reach your server from anywhere. You will
-provide CloudFlare with the DuckDNS subdomain to point to your server.
 
 ### File Configuration
 
@@ -123,8 +138,8 @@ You will need to create an empty `acme.json` file for the
 application to work and generate an SSL Certificate through LetsEncrypt.
 However, while initially setting up it will be useful to remove and recreate the file to force
 certificate recreation. Keep in mind that certificate creation and registration can take some tie.
-uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory`
-command on the traefik service in the `docker-compose` file while testing.
+uncomment the `LETS_ENCRYPT_ENV` setting on the `.env` file to test with the
+LetsEncrypt staging environment.
 
 -   file location: `traefik/core/config/acme/acme.json`
 -   file permissions (chmod): `600`
@@ -139,6 +154,8 @@ mkdir -p appdata/traefik/acme/ && \
 > [!NOTE]
 > If you're comfortable with the `Makefile` at the root of the project, you can run
 > `make config-acme` to create the `acme.json` as described above.
+>
+> See the [Command Line](cli.md) documentation for more information.
 
 ## Containers in Core Profile
 
@@ -157,7 +174,7 @@ at `https://libreoffice.example.com`. If possible, I recommend using a
 maintained and have a common configuration. Once the `libreoffice.yaml` file
 is created, you can reference it in the root `docker-compose.yaml` (by uncommenting
 the reference to `apps/libreoffice.yaml` line) and then run
-`docker-compose up -d`.
+`docker compose up --profile all -d`.
 
 === "apps/libreoffice.yaml"
 

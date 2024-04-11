@@ -86,3 +86,10 @@ Umami is a simple, fast, privacy-focused alternative to Google Analytics.
 
 Home Assistant is an open-source home automation platform that focuses on privacy and local control.
 It's a great way to automate your home and make it smarter.
+
+## healthchecks
+
+[![](https://img.shields.io/static/v1?message=linuxserver/healthchecks&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/healthchecks)
+[![](https://img.shields.io/static/v1?message=healthchecks/healthchecks&logo=github&label=github)](https://github.com/healthchecks/healthchecks)
+
+> [!NOTE] Healthchecks is not enabled by default

@@ -1,0 +1,27 @@
+#######################################
+# HEALTHCHECKS (STATUS MONITORING)
+#######################################
+
+services:
+    healthchecks:
+        container_name: healthchecks
+        image: lscr.io/linuxserver/healthchecks:latest
+        profiles: ["miscellaneous", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/healthchecks:/config
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.healthchecks-rtr.rule: Host(`${HEALTHCHECKS_SUBDOMAIN:-healthchecks}.${DOMAIN_NAME}`)
+            traefik.http.routers.healthchecks-rtr.entrypoints: websecure
+            traefik.http.routers.healthchecks-rtr.service: healthchecks-svc
+            traefik.http.services.healthchecks-svc.loadbalancer.server.port: 8989
+            traefik.http.routers.healthchecks-rtr.middlewares: chain-oauth-google@file
