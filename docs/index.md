@@ -14,20 +14,22 @@
 ## What is homelab?
 
 **`homelab`** is a collection of services that can be deployed from your home server and accessed
-securely from anywhere in the world. This project deploys multiple "stacks" of services:
+securely from anywhere in the world. Ultimately everything is deployed into a single
+docker compose application. Each service belongs to a [docker compose profile] - and the
+`Makefile` contains everything you need to get started and manage your homelab.
 
--   **`core`**: The `core` stack is the base of this project, it includes a [traefik] reverse proxy
+-   **`core`**: The `core` profile is the base of this project, it includes a [traefik] reverse proxy
     and [OAuth] service that allows you to access all of your services via a single domain name
     securely behind HTTPS and protected with Google OAuth.
--   **`media`**: The `media` stack includes services like [Plex], [Sonarr], [Radarr], and
-    [Ombi] that allow you to request, download, organize, and stream media to your devices. This stack
+-   **`media`**: The `media` profile includes services like [Plex], [Sonarr], [Radarr], and
+    [Ombi] that allow you to request, download, organize, and stream media to your devices. This profile
     is perfect for those who want to have a media server in their homelab.
--   **`utilities`**: The `utilities` stack includes services like [Watchtower] and [Portainer] that
+-   **`utilities`**: The `utilities` profile includes services like [Watchtower] and [Portainer] that
     are designed to help you manage your homelab, monitor your services,
     and keep your containers up-to-date.
--   **`miscellaneous`**: The `miscellaneous` stack is disabled by default.
+-   **`miscellaneous`**: The `miscellaneous` profile is disabled by default.
     It includes services like [ChatGPT Next Web] and [LibreOffice Online]
-    that don't fit into the other stacks. These services are great for improving your
+    that don't fit into the other profiles. These services are great for improving your
     productivity and adding some fun to your homelab.
 
 ## How does it work?
@@ -37,46 +39,38 @@ project that allows you to deploy a variety of services to your homelab.
 
 At the root of this repository is a `docker-compose.yaml` file that defines
 the entire homelab project - it uses the `include` directive to pull in
-individual service docker compose files from the `stacks` directory.
-Ultimately a single docker compose stack is created that deploys everything.
+individual service docker compose files from the `apps` directory.
 
 ```text
 .
-├── docker-compose.yaml                         # Main Docker Compose File
-├── .env                                        # Environment Variables and Configuration
-├── Makefile                                    # Makefile for common tasks and docker compose wrappers
-├── secrets                                     # Secret Files
-│   ├── cloudflare_api_key.secret               # Cloudflare API Key
-│   └── google_oauth.secret                     # Google OAuth Credentials and Whitelist
-├── stacks
-│   ├── media
-│   │   ├── plex.yaml                           # Each individual service has its own docker compose file
-│   │   ├── radarr.yaml
-│   |   ├── ombi.yaml
-│   │   └── sonarr.yaml
-│   ├── core                                    # Traefik Reverse Proxy and OAuth
-│   │   ├── oauth                               # OAuth Service
-│   │   └── traefik                             # Traefik Reverse Proxy
-│   │       ├── docker-compose.yaml             # Traefik Docker Compose File (Traefik Only)
-│   │       └── rules                           # Traefik Middlewares and Rules
-│   │           ├── middlewares-chains.yml
-│   │           ├── middlewares.yml
-│   │           └── tls-opts.yml
-│   ├── miscellaneous                           # Non Media Center Services (pihole, chat-gpt-next-web, etc.)
-│   │    └── chat-gpt-next-web.yaml
-│   └── utilities                               # Utility Services
-│       └── watchtower.yaml
-└── appdata                                     # Application Data Persistent Volumes
-    ├── media
-    │   ├── plex                                # Each individual service has its own subdirectory
-    │   └── sonarr
-    ├── core
-    │   ├── oauth
-    │   └── traefik
-    ├── miscellaneous
-    │   └── chat-gpt-next-web
-    └── utilities
-        └── watchtower
+├── docker-compose.yaml                     # Main Docker Compose File
+├── .env                                    # Environment Variables and Configuration
+├── Makefile                                # Makefile for common tasks and docker compose wrappers
+├── secrets                                 # Secret Files
+│   ├── cloudflare_api_key.secret           # Cloudflare API Key
+│   └── google_oauth.secret                 # Google OAuth Credentials and Whitelist
+├── apps                                    # Individual Service Docker Compose Files
+│   ├── plex.yaml
+│   ├── radarr.yaml
+│   ├── ombi.yaml
+│   ├── sonarr.yaml
+│   ├── oauth.yaml
+│   ├── chat-gpt-next-web.yaml
+│   ├── watchtower.yaml
+│   └── traefik                             # Traefik Reverse Proxy
+│       ├── docker-compose.yaml             # Traefik Docker Compose File
+│       └── rules                           # Traefik Middlewares and Rules
+│           ├── middlewares-chains.yml
+│           ├── middlewares.yml
+│           └── tls-opts.yml
+└── appdata                                 # Application Data Persistent Volumes
+    ├── plex                                # Each individual service has its own subdirectory
+    ├── sonarr
+    ├── oauth
+    ├── traefik
+    ├── chat-gpt-next-web
+    ├── utilities
+    └── watchtower
 ```
 
 [traefik]: https://github.com/traefik/traefik
@@ -89,3 +83,4 @@ Ultimately a single docker compose stack is created that deploys everything.
 [Watchtower]: https://github.com/containrrr/watchtower
 [LibreOffice Online]: https://www.libreoffice.org/
 [Portainer]: https://github.com/portainer/portainer
+[docker compose profile]: https://docs.docker.com/compose/profiles/

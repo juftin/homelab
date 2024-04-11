@@ -4,6 +4,34 @@ When larger changes are made this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
 
+## 1.11.0
+
+The 1.11.0 release moved everything under the `stacks` directory to the top level
+of a new `apps` directory. It also moved everything under the `appdata` directory
+to the top level.
+
+<details><summary>1.10.0 to 1.11.0 Migration</summary>
+<p>
+
+```shell
+#!/usr/bin/env bash
+
+sudo mv appdata/media/* appdata/
+rm -r appdata/media
+
+sudo mv appdata/core/* appdata/
+rm -r appdata/core
+
+sudo mv appdata/utilities/* appdata/
+rm -r appdata/utilities
+
+sudo mv appdata/miscellaneous/* appdata/
+rm -r appdata/miscellaneous
+```
+
+</p>
+</details>
+
 ## 1.9.0
 
 The 1.9.0 release renames the `media-center`stack to `media`,

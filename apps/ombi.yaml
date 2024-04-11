@@ -12,7 +12,7 @@ services:
             PGID: ${PGID}
             TZ: ${TZ}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/ombi:/config
+            - ${DOCKER_DIRECTORY}/appdata/ombi:/config
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

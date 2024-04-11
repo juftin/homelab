@@ -9,8 +9,7 @@ services:
         image: portainer/portainer-ce:latest
         profiles: ["utilities", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/utilities/portainer:/data
-            - ${DOCKER_DIRECTORY}/stacks/utilities/shared:/shared
+            - ${DOCKER_DIRECTORY}/appdata/portainer:/data
         command: -H tcp://socket-proxy:2375
         environment:
             TZ: ${TZ}

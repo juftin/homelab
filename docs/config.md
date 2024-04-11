@@ -2,7 +2,7 @@
 
 ## traefik
 
-[Traefik] (pronounced traffic) is a modern HTTP reverse proxy and load balancer that
+[Traefik](https://github.com/traefik/traefik) (pronounced traffic) is a modern HTTP reverse proxy and load balancer that
 makes deploying microservices easy.
 
 It is the core of the entire `homelab` stack as it routes all incoming traffic to the
@@ -65,7 +65,7 @@ cp -r docs/example-secrets/ secrets/
 ## App Deployment
 
 Which apps to deploy are defined in the `docker-compose.yaml` files. For example,
-To disable specific apps in the `media` stack, you would comment out the `include` directive
+To disable specific apps in the `media` profile, you would comment out the `include` directive
 in the root `docker-compose.yaml` file.
 
 <details><summary>📄 docker-compose.yaml</summary>
@@ -88,5 +88,3 @@ all share a common docker network. This means that when you're trying to connect
 to a service you can simply use a service name as the hostname. For example,
 if you're trying to connect to the sonarr service from the ombi service
 you can simply use http://sonarr:8989 as the hostname.
-
-[Traefik]: https://github.com/traefik/traefik

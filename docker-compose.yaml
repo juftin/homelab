@@ -7,38 +7,38 @@ include:
     # TRAEFIK (CORE)
     #############################################################################
 
-    - stacks/core/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
-    - stacks/core/duckdns.yaml # DuckDNS (Dynamic DNS)
-    - stacks/core/oauth.yaml # OAuth (Authentication)
-    - stacks/core/socket-proxy.yaml # Docker Socket Proxy (Security)
+    - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
+    - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
+    - apps/oauth.yaml # OAuth (Authentication)
+    - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
 
     #############################################################################
     # MEDIA
     #############################################################################
 
-    - stacks/media/heimdall.yaml # Heimdall (Landing Page)
-    - stacks/media/plex.yaml # Plex (Media Server)
-    - stacks/media/sonarr.yaml # Sonarr (TV Show Downloads)
-    - stacks/media/radarr.yaml # Radarr (Movie Downloads)
-    - stacks/media/prowlarr.yaml # Prowlarr (Indexer)
-    - stacks/media/ombi.yaml # Ombi (Download Requests)
-    - stacks/media/tautulli.yaml # Tautulli (Plex Analytics)
-    - stacks/media/transmission.yaml # Transmission (Torrents Behind VPN)
-    - stacks/media/sabnzbd.yaml # SABnzbd (Usenet Downloading)
-    - stacks/media/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
-    # - stacks/media/readarr.yaml # Readarr (Ebook Downloads)
-    # - stacks/media/calibre.yaml # Calibre (Books Management)
-    # - stacks/media/calibre-web.yaml # Calibre Web-UI
+    - apps/heimdall.yaml # Heimdall (Landing Page)
+    - apps/plex.yaml # Plex (Media Server)
+    - apps/sonarr.yaml # Sonarr (TV Show Downloads)
+    - apps/radarr.yaml # Radarr (Movie Downloads)
+    - apps/prowlarr.yaml # Prowlarr (Indexer)
+    - apps/ombi.yaml # Ombi (Download Requests)
+    - apps/tautulli.yaml # Tautulli (Plex Analytics)
+    - apps/transmission.yaml # Transmission (Torrents Behind VPN)
+    - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
+    - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
+    # - apps/readarr.yaml # Readarr (Ebook Downloads)
+    # - apps/calibre.yaml # Calibre (Books Management)
+    # - apps/calibre-web.yaml # Calibre Web-UI
 
     #############################################################################
     # UTILITIES
     #############################################################################
 
-    - stacks/utilities/watchtower.yaml #  Watchtower (Container Updating)
-    # - stacks/utilities/postgres.yaml # PostgreSQL (Shared Database)
-    # - stacks/utilities/sftpgo.yaml # SFTPGo (File Management)
-    # - stacks/utilities/pihole.yaml # Pi-hole (DNS Ad-Blocking)
-    # - stacks/utilities/portainer.yaml # Portainer (Container Management)
+    - apps/watchtower.yaml #  Watchtower (Container Updating)
+    # - apps/postgres.yaml # PostgreSQL (Shared Database)
+    # - apps/sftpgo.yaml # SFTPGo (File Management)
+    # - apps/pihole.yaml # Pi-hole (DNS Ad-Blocking)
+    # - apps/portainer.yaml # Portainer (Container Management)
 
     #############################################################################
     # MISCELLANEOUS
@@ -46,11 +46,11 @@ include:
     # * Note the existing services that are disabled by default.
     #############################################################################
 
-    # - stacks/miscellaneous/chat-gpt-next-web.yaml # ChatGPT Next Web
-    # - stacks/miscellaneous/chatgpt-in-slack.yaml # ChatGPT Slack Bot
-    # - stacks/miscellaneous/libreoffice.yaml # LibreOffice (Office Suite)
-    # - stacks/miscellaneous/umami.yaml # Umami Analytics
-    # - stacks/miscellaneous/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
+    # - apps/chat-gpt-next-web.yaml # ChatGPT Next Web
+    # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+    # - apps/libreoffice.yaml # LibreOffice (Office Suite)
+    # - apps/umami.yaml # Umami Analytics
+    # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
 
 ################################################################################
 # NETWORK CONFIGURATION

@@ -9,10 +9,9 @@ services:
         profiles: ["media", "all"]
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ${DOCKER_DIRECTORY}/appdata/media/transmission:/config/transmission-home
+            - ${DOCKER_DIRECTORY}/appdata/transmission:/config/transmission-home
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
-            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

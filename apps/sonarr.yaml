@@ -8,10 +8,9 @@ services:
         image: lscr.io/linuxserver/sonarr:latest
         profiles: ["media", "arrs", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/sonarr:/config
+            - ${DOCKER_DIRECTORY}/appdata/sonarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${TV_DIR}:/tv
-            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

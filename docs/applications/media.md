@@ -1,4 +1,4 @@
-# Media Stack
+# Media Profile
 
 ## Table of Contents
 
@@ -173,7 +173,7 @@ source for tools like Sonarr, Radarr, Lidarr or CouchPotato.
 
 ### Configuration
 
-The files at `appdata/media/sabnzbd/sabnzbd.ini` needs to be modified
+The files at `appdata/sabnzbd/sabnzbd.ini` needs to be modified
 to allow access from the internet and internally.
 
 ```text

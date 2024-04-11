@@ -8,10 +8,9 @@ services:
         image: lscr.io/linuxserver/radarr:latest
         profiles: ["media", "arrs", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/radarr:/config
+            - ${DOCKER_DIRECTORY}/appdata/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MOVIE_DIR}:/movies
-            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

@@ -4,8 +4,8 @@ services:
         image: homeassistant/home-assistant:stable
         profiles: ["miscellaneous", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/stacks/miscellaneous/homeassistant/configuration.yaml:/config/configuration.yaml
-            - ${DOCKER_DIRECTORY}/appdata/miscellaneous/homeassistant:/config
+            - ${DOCKER_DIRECTORY}/apps/homeassistant/configuration.yaml:/config/configuration.yaml
+            - ${DOCKER_DIRECTORY}/appdata/homeassistant:/config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

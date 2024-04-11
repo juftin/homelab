@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/sabnzbd:latest
         profiles: ["media", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/sabnzbd:/config
+            - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads
         environment:

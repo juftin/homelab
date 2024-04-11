@@ -1,4 +1,4 @@
-# Core Stack
+# Core Profile
 
 ## traefik
 

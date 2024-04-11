@@ -1,4 +1,4 @@
-# Miscellaneous Stack
+# Miscellaneous Profile
 
 ## chat-gtp-next-web
 
@@ -51,7 +51,7 @@ Umami is a simple, fast, privacy-focused alternative to Google Analytics.
 
 > [!WARNING] Important
 >
-> Umami needs a PostgreSQL database to work, the `stacks/utilities/postgres.yaml` service
+> Umami needs a PostgreSQL database to work, the `apps/postgres.yaml` service
 > is a dependency of Umami. You must also add "umami" to the `POSTGRES_MULTIPLE_DATABASES`
 > variable in your `.env` file or manually create the database yourself before starting:
 >
@@ -72,7 +72,7 @@ Umami is a simple, fast, privacy-focused alternative to Google Analytics.
 > The current setup of Umami uses a secondary domain for the ultimate
 > tracking URL. You can change this in the `umami.yaml` file. If you choose to use
 > the secondary domain, you must uncomment `SECONDARY_DOMAIN_NAME` settings in the
-> `stacks/core/traefik/docker-compose.yaml` file and uncomment the `SECONDARY_DOMAIN_NAME`
+> `apps/traefik/docker-compose.yaml` file and uncomment the `SECONDARY_DOMAIN_NAME`
 > variable in your `.env` file before regenerating HTTPS certificates.
 
 ## homeassistant

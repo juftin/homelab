@@ -9,9 +9,9 @@ services:
         image: lscr.io/linuxserver/calibre-web:latest
         profiles: ["media", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/calibre-web:/config
+            - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
             - ${BOOKS_DIR}:/books
-            - ${DOCKER_DIRECTORY}/appdata/media/calibre:/calibre-config
+            - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre-config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

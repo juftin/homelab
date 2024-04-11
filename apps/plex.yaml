@@ -9,10 +9,9 @@ services:
         profiles: ["media", "all"]
         network_mode: host
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/plex:/config
+            - ${DOCKER_DIRECTORY}/appdata/plex:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
-            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
             - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
             - ${BOOKS_DIR}:/books
         devices:

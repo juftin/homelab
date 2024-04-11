@@ -9,9 +9,8 @@ services:
         image: lscr.io/linuxserver/tautulli:latest
         profiles: ["media", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/tautulli:/config
-            - ${DOCKER_DIRECTORY}/appdata/media/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
-            - ${DOCKER_DIRECTORY}/stacks/media/shared:/shared
+            - ${DOCKER_DIRECTORY}/appdata/tautulli:/config
+            - ${DOCKER_DIRECTORY}/appdata/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

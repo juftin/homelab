@@ -9,10 +9,10 @@ services:
         image: lscr.io/linuxserver/readarr:develop
         profiles: ["media", "arrs", "all"]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/media/readarr:/config
+            - ${DOCKER_DIRECTORY}/appdata/readarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${BOOKS_DIR}:/books
-            - ${DOCKER_DIRECTORY}/appdata/media/calibre:/calibre
+            - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

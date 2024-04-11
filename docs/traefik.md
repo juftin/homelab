@@ -21,7 +21,7 @@ anywhere in the world.
 > be patient on the first run.
 >
 > See the [Command Line](cli.md) documentation for more information on how to
-> operate the stack
+> operate the application.
 
 > [!INFO] Acknowledgements
 > This configuration was inspired by, and
@@ -130,17 +130,17 @@ command on the traefik service in the `docker-compose` file while testing.
 -   file permissions (chmod): `600`
 
 ```shell
-mkdir -p appdata/core/traefik/acme/ && \
-  rm -f appdata/core/traefik/acme/acme.json && \
-  touch appdata/core/traefik/acme/acme.json && \
-  chmod 600 appdata/core/traefik/acme/acme.json
+mkdir -p appdata/traefik/acme/ && \
+  rm -f appdata/traefik/acme/acme.json && \
+  touch appdata/traefik/acme/acme.json && \
+  chmod 600 appdata/traefik/acme/acme.json
 ```
 
 > [!NOTE]
 > If you're comfortable with the `Makefile` at the root of the project, you can run
 > `make config-acme` to create the `acme.json` as described above.
 
-## Containers in Core Stack
+## Containers in Core Profile
 
 -   [traefik](applications/core.md#traefik)
 -   [oauth](applications/core.md#oauth)
@@ -156,13 +156,13 @@ at `https://libreoffice.example.com`. If possible, I recommend using a
 [LinuxServer](https://github.com/linuxserver) image as they are well
 maintained and have a common configuration. Once the `libreoffice.yaml` file
 is created, you can reference it in the root `docker-compose.yaml` (by uncommenting
-the reference to `stacks/miscellaneous/libreoffice.yaml` line) and then run
+the reference to `apps/libreoffice.yaml` line) and then run
 `docker-compose up -d`.
 
-=== "stacks/miscellaneous/libreoffice.yaml"
+=== "apps/libreoffice.yaml"
 
     ```yaml
-    --8<-- "stacks/miscellaneous/libreoffice.yaml"
+    --8<-- "apps/libreoffice.yaml"
     ```
 
 === "docker-compose.yaml"

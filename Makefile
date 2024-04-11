@@ -75,10 +75,10 @@ media-logs: ## Show the logs for the media services (plex, sonarr, radarr, etc).
 
 .PHONY: config-acme
 config-acme: ## Initialize the acme.json file.
-	mkdir -p appdata/core/traefik/acme/
-	rm -f appdata/core/traefik/acme/acme.json
-	touch appdata/core/traefik/acme/acme.json
-	chmod 600 appdata/core/traefik/acme/acme.json
+	mkdir -p appdata/traefik/acme/
+	rm -f appdata/traefik/acme/acme.json
+	touch appdata/traefik/acme/acme.json
+	chmod 600 appdata/traefik/acme/acme.json
 
 ##@ Backup 🗂️
 

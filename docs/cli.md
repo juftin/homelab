@@ -12,7 +12,7 @@ commands to manage your deployment.
     Add this to your `.bashrc` / `.zshrc` to use the **`homelab`** command:
 
     ```shell
-    alias homelab="make --directory /path/to/this/repo"
+    alias homelab="make --no-print-directory --directory /path/to/this/repo"
     ```
 
     If you'd like to use the **`docker compose`** command from anywhere, you can
@@ -515,10 +515,10 @@ Initialize the `acme.json` file for traefik.
 === "bash"
 
     ```shell
-    mkdir -p appdata/core/traefik/acme/ && \
-    rm -f appdata/core/traefik/acme/acme.json && \
-    touch appdata/core/traefik/acme/acme.json && \
-    chmod 600 appdata/core/traefik/acme/acme.json
+    mkdir -p appdata/traefik/acme/ && \
+    rm -f appdata/traefik/acme/acme.json && \
+    touch appdata/traefik/acme/acme.json && \
+    chmod 600 appdata/traefik/acme/acme.json
     ```
 
 ### Backup 🗂️
