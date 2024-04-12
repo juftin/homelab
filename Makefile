@@ -15,23 +15,23 @@ pull: ## Pull the latest image(s)*
 
 .PHONY: up
 up: ## Start the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP) $(ARGS)
 
 .PHONY: down
 down: ## Stop the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all down $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all down $(APP) $(ARGS)
 
 .PHONY: stop
 stop: ## Stop the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all stop $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all stop $(APP) $(ARGS)
 
 .PHONY: logs
 logs: ## Show the logs*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all logs $(APP) -ft
+	docker compose --project-directory "$(ROOT_DIR)" --profile all logs $(APP) -ft $(ARGS)
 
 .PHONY: restart
 restart: ## Restart the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all restart  $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all restart  $(APP) $(ARGS)
 
 .PHONY: ps
 ps: ## Show the status of the service(s)*
@@ -39,7 +39,7 @@ ps: ## Show the status of the service(s)*
 
 .PHONY: config
 config: ## Show the configuration of the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all config $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile all config $(APP) $(ARGS)
 
 ##@ Core Services 🧠
 
@@ -119,4 +119,5 @@ help: ## Show this help message and exit
 	@printf "\033[1;34mUsage:\033[0m \033[1;32mhomelab\033[0m \033[1;33m[target]\033[0m \033[1;36m(APP=service-name)\033[0m\n"
 	@echo ""
 	@printf "* pass \033[1;36mAPP=service-name\033[0m to specify the service\n"
+	@printf "* pass \033[1;36mARGS=arguments\033[0m to specify additional arguments\n"
 	@awk 'BEGIN {FS = ":.*##"; printf ""} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-19s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)

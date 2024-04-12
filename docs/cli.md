@@ -48,13 +48,24 @@ commands to manage your deployment.
         homelab logs
         ```
 
+!!! tip "The `ARGS` flag"
+
+    Some commands accept an `ARGS` flag to pass additional flags to docker compose.
+    If not specified these arguments default to **empty**.
+
+    === "Pruning Orphaned Containers"
+
+        ```
+        homelab up ARGS="--remove-orphans"
+        ```
+
 ### Homelab 🐳
 
 #### update
 
 Update the homelab service(s) to the latest versions.
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -86,7 +97,7 @@ Update the homelab service(s) to the latest versions.
 
 Pull the latest images for the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -116,7 +127,7 @@ Pull the latest images for the homelab service(s).
 
 Start the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -146,7 +157,7 @@ Start the homelab service(s).
 
 Stop the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -176,7 +187,7 @@ Stop the homelab service(s).
 
 Stop the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -206,7 +217,7 @@ Stop the homelab service(s).
 
 Show the logs for the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -236,7 +247,7 @@ Show the logs for the homelab service(s).
 
 Restart the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
@@ -266,8 +277,6 @@ Restart the homelab service(s).
 
 Show the status of the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
-
 === "homelab"
 
     ```shell
@@ -296,7 +305,7 @@ Show the status of the homelab service(s).
 
 Show the configuration of the homelab service(s).
 
-\* _Defaults to all, accepts the `APP` flag_
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
