@@ -10,6 +10,7 @@ nav:
           - Media Profile 🎬: applications/media.md
           - Utilities Profile 🔧: applications/utilities.md
           - Miscellaneous Profile 🥞: applications/miscellaneous.md
+          - Archived Apps 🗄️: applications/archived.md
     - Command Line Usage 🖥️: cli.md
     - Scripts 📜: scripts.md
     - Migrations 🚚: migrations.md

@@ -1,0 +1,27 @@
+#######################################
+# OVERSEERR (DOWNLOAD REQUESTS)
+#######################################
+
+services:
+  overseerr:
+    container_name: overseerr
+    image: lscr.io/linuxserver/overseerr:latest
+    profiles: ["media", "all"]
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ${DOCKER_DIRECTORY}/appdata/overseerr:/config
+    security_opt:
+      - no-new-privileges:true
+    restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.overseerr-rtr.rule: Host(`${OVERSEERR_SUBDOMAIN:-overseerr}.${DOMAIN_NAME}`)
+      traefik.http.routers.overseerr-rtr.entrypoints: websecure
+      traefik.http.routers.overseerr-rtr.service: overseerr-svc
+      traefik.http.services.overseerr-svc.loadbalancer.server.port: 5055
+      traefik.http.routers.overseerr-rtr.middlewares: chain-oauth-google@file

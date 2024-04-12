@@ -21,7 +21,7 @@ include:
     - apps/sonarr.yaml # Sonarr (TV Show Downloads)
     - apps/radarr.yaml # Radarr (Movie Downloads)
     - apps/prowlarr.yaml # Prowlarr (Indexer)
-    - apps/ombi.yaml # Ombi (Download Requests)
+    - apps/overseerr.yaml # Overseerr (Media Requests)
     - apps/tautulli.yaml # Tautulli (Plex Analytics)
     - apps/transmission.yaml # Transmission (Torrents Behind VPN)
     - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
@@ -51,6 +51,7 @@ include:
     # - apps/libreoffice.yaml # LibreOffice (Office Suite)
     # - apps/umami.yaml # Umami Analytics
     # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
+    # - apps/healthchecks.yaml # Healthchecks (Monitoring)
 
 ################################################################################
 # NETWORK CONFIGURATION
