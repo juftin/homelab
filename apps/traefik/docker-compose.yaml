@@ -64,20 +64,20 @@ services:
             - --providers.file.directory=/rules
             - --providers.file.watch=true
             # ENTRYPOINTS
-            - --entryPoints.web.address=:80
-            - --entryPoints.websecure.address=:443
-            - --entryPoints.traefik.address=:8080
-            - --entryPoints.web.http.redirections.entrypoint.to=websecure
-            - --entryPoints.web.http.redirections.entrypoint.scheme=https
-            - --entryPoints.web.http.redirections.entrypoint.permanent=true
-            - --entryPoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22
-            - --entryPoints.websecure.http.tls.certresolver=dns-cloudflare
-            - --entryPoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
-            - --entryPoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
+            - --entrypoints.web.address=:80
+            - --entrypoints.websecure.address=:443
+            - --entrypoints.traefik.address=:8080
+            - --entrypoints.web.http.redirections.entrypoint.to=websecure
+            - --entrypoints.web.http.redirections.entrypoint.scheme=https
+            - --entrypoints.web.http.redirections.entrypoint.permanent=true
+            - --entrypoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22
+            - --entrypoints.websecure.http.tls.certresolver=dns-cloudflare
+            - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
+            - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
             # - --entrypoints.websecure.http.tls.domains[1].main=${SECONDARY_DOMAIN_NAME}
             # - --entrypoints.websecure.http.tls.domains[1].sans=*.${SECONDARY_DOMAIN_NAME}
-            - --entryPoints.websecure.http.tls=true
-            - --entryPoints.websecure.http.tls.options=tls-opts@file
+            - --entrypoints.websecure.http.tls=true
+            - --entrypoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS
             - --certificatesResolvers.dns-cloudflare.acme.caServer=${LETS_ENCRYPT_ENV:-https://acme-v02.api.letsencrypt.org/directory}
             - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
