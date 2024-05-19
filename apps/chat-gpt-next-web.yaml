@@ -11,7 +11,9 @@ services:
         networks:
             traefik:
         environment:
-            OPENAI_API_KEY: ${OPENAI_API_KEY}
+            OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+            ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+            ENABLE_BALANCE_QUERY: ${ENABLE_BALANCE_QUERY:-1}
             TZ: ${TZ}
         labels:
             traefik.enable: true
