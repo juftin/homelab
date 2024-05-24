@@ -62,6 +62,9 @@ cp -r docs/example-secrets/ secrets/
 --8<-- "docs/example-secrets/cloudflare_api_key.secret"
 ```
 
+</p>
+</details>
+
 ## App Deployment
 
 Which apps to deploy are defined in the `docker-compose.yaml` files. For example,
