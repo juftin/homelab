@@ -9,7 +9,7 @@ secrets:
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v2.10
+        image: library/traefik:v3.0
         profiles: ["traefik", "core", "all"]
         ports:
             - published: 80
@@ -45,6 +45,7 @@ services:
             # GLOBAL SETTINGS
             - --global.checkNewVersion=true
             - --global.sendAnonymousUsage=false
+            - --core.defaultRuleSyntax=v3
             # API SETTINGS
             - --api=true
             - --api.dashboard=true
@@ -60,7 +61,6 @@ services:
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
             - --providers.docker.network=homelab_traefik
-            - --providers.docker.swarmMode=false
             - --providers.file.directory=/rules
             - --providers.file.watch=true
             # ENTRYPOINTS

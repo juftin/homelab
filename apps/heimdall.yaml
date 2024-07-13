@@ -20,7 +20,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.heimdall-rtr.rule: Host(`${DOMAIN_NAME}`,`www.${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.rule: Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
             traefik.http.routers.heimdall-rtr.entrypoints: websecure
             traefik.http.routers.heimdall-rtr.service: heimdall-svc
             traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
