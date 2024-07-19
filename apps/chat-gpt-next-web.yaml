@@ -14,8 +14,7 @@ services:
             TZ: ${TZ}
             OPENAI_API_KEY: ${OPENAI_API_KEY:-}
             ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-            CUSTOM_MODELS: -all,+gpt-4o@OpenAI,+gpt-4o-mini@OpenAI,+claude-3-5-sonnet-20240620@Anthropic=claude-3-5-sonnet,+claude-3-opus-20240229@Anthropic=claude-3-opus,+claude-3-haiku-20240307@Anthropic=claude-3-haiku
-            DEFAULT_MODEL: ${DEFAULT_MODEL:-gpt-4o@OpenAI}
+            CUSTOM_MODELS: -all,gpt-4o@OpenAI,gpt-4o-mini@OpenAI,claude-3-5-sonnet-20240620@Anthropic=claude-3-5-sonnet,claude-3-opus-20240229@Anthropic=claude-3-opus,claude-3-haiku-20240307@Anthropic=claude-3-haiku
             HIDE_USER_API_KEY: ${HIDE_USER_API_KEY:-1}
         labels:
             traefik.enable: true
