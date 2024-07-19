@@ -11,11 +11,11 @@ services:
         networks:
             traefik:
         environment:
-            DEFAULT_MODEL: ${DEFAULT_MODEL:-gpt-4o}
+            TZ: ${TZ}
             OPENAI_API_KEY: ${OPENAI_API_KEY:-}
             ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-            ENABLE_BALANCE_QUERY: ${ENABLE_BALANCE_QUERY:-1}
-            TZ: ${TZ}
+            CUSTOM_MODELS: -all,+gpt-4o@OpenAI,+gpt-4o-mini@OpenAI,+claude-3-5-sonnet-20240620@Anthropic=claude-3-5-sonnet,+claude-3-opus-20240229@Anthropic=claude-3-opus,+claude-3-haiku-20240307@Anthropic=claude-3-haiku
+            HIDE_USER_API_KEY: ${HIDE_USER_API_KEY:-1}
         labels:
             traefik.enable: true
             traefik.http.routers.chat-rtr.rule: Host(`${CHAT_SUBDOMAIN:-chat}.${DOMAIN_NAME}`)
