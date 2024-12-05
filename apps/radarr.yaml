@@ -9,8 +9,7 @@ services:
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/radarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${MOVIE_DIR}:/movies
+            - ${MEDIADIR}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -22,7 +21,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.radarr-rtr.rule: Host(`${RADARR_SUBDOMAIN:-radarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.rule: Host(`radarr.${DOMAIN_NAME}`)
             traefik.http.routers.radarr-rtr.entrypoints: websecure
             traefik.http.routers.radarr-rtr.service: radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878

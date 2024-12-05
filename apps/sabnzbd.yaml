@@ -9,8 +9,7 @@ services:
         profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads
+            - ${MEDIADIR}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

@@ -1,0 +1,37 @@
+services:
+  # https://rutracker.org/forum/viewtopic.php?t=5774678 - LOTR FOTR Colour restored
+  # qBittorrent - Torrent downloader
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    security_opt:
+      - no-new-privileges:true
+    restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+    profiles: ["media", "all"]
+    network_mode: "service:gluetun"
+      # Note: to access qBittorrent from other containers
+      # host: gluetun, port: 8080
+    volumes:
+      - ${DOCKER_DIRECTORY}/appdata/qbittorrent:/config
+
+      # qbittorrent needs to write to `/downloads/**` otherwise permissions will break
+      # (this is a qbittorrent thing)
+      # If this path differes from your radarr, sonarr path (as it does with my config) you will need
+      # to add Remote Path Mappings to remedy the path so radarr and sonarr can grab files
+      # in my case, Remote Path Mapping:
+      #   host: gluetun
+      #   remote-path: /downloads/downloads/torrent/ (configured as /downloads/torrents inside qBittorrent app settings)
+      #   local-path: /data/downloads/torrent/
+      - ${MEDIADIR}/data:/downloads
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      UMASK_SET: 002
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1
+    labels: # traefik labels are handled inside gluetun.yaml
+      - "deunhealth.restart.on.unhealthy=true"
