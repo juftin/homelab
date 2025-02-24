@@ -1,0 +1,33 @@
+services:
+  technitium-dns:
+    container_name: technitium-dns
+    image: technitium/dns-server:latest
+    hostname: technitium-dns
+    profiles: ["utilities", "all"]
+    environment:
+      - TZ=${TZ}
+      - DNS_SERVER_DOMAIN=${TECHNITIUM_SUBDOMAIN:-technitium}.${DOMAIN_NAME}
+      - DNS_SERVER_ADMIN_PASSWORD=${TECHNITIUM_PASS}
+      - DNS_SERVER_FORWARDERS=8.8.8.8,8.8.4.4
+
+    volumes:
+      - ${DOCKER_DIRECTORY}/appdata/technitium/dns:/etc/dns
+
+    networks:
+      - traefik
+
+    ports:
+      - "${PHYSICAL_SERVER_IP}:53:53/udp"
+      - "${PHYSICAL_SERVER_IP}:53:53/tcp"
+
+    restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+    
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.technitium-dns-rtr.rule: "Host(`${TECHNITIUM_SUBDOMAIN:-technitium}.${DOMAIN_NAME}`)"
+      traefik.http.routers.technitium-dns-rtr.entrypoints: "websecure"
+      traefik.http.routers.technitium-dns-rtr.tls: "true"
+      traefik.http.routers.technitium-dns-rtr.middlewares: "chain-oauth-google@file"
+
+      traefik.http.routers.technitium-dns-rtr.service: "technitium-dns-svc"
+      traefik.http.services.technitium-dns-svc.loadbalancer.server.port: "5380"

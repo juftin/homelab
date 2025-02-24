@@ -9,8 +9,7 @@ services:
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sonarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${TV_DIR}:/tv
+            - ${MEDIADIR}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

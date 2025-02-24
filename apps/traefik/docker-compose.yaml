@@ -21,8 +21,7 @@ services:
               protocol: tcp
               mode: host
         environment:
-            CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-            CF_API_KEY_FILE: /run/secrets/cloudflare_api_key
+            CF_DNS_API_TOKEN_FILE: /run/secrets/cloudflare_api_key
         secrets:
             - source: cloudflare_api_key
               target: /run/secrets/cloudflare_api_key
@@ -79,6 +78,7 @@ services:
             - --entrypoints.websecure.http.tls=true
             - --entrypoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS
+            # - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory 
             - --certificatesResolvers.dns-cloudflare.acme.caServer=${LETS_ENCRYPT_ENV:-https://acme-v02.api.letsencrypt.org/directory}
             - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
             - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json

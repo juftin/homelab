@@ -10,7 +10,7 @@ services:
         profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre:/config
-            - ${BOOKS_DIR}:/books
+            - ${EBOOKS_DIR}:/books
             - ${COMPLETED_DOWNLOADS}:/downloads
         environment:
             PUID: ${PUID}

@@ -10,13 +10,11 @@ services:
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
-            - ${TV_DIR}:/tv
-            - ${MOVIE_DIR}:/movies
+            - ${MEDIADIR}/data:/data
             - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
-            - ${BOOKS_DIR}:/books
         devices:
             - /dev/dri:/dev/dri
-            - /dev/dvb:/dev/dvb
+#            - /dev/dvb:/dev/dvb
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

@@ -10,8 +10,7 @@ services:
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/readarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${BOOKS_DIR}:/books
+            - ${MEDIADIR}/data:/data
             - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre
         environment:
             PUID: ${PUID}
@@ -29,3 +28,28 @@ services:
             traefik.http.routers.readarr-rtr.service: readarr-svc
             traefik.http.services.readarr-svc.loadbalancer.server.port: 8787
             traefik.http.routers.readarr-rtr.middlewares: chain-oauth-google@file
+
+    readarr-audio:
+        container_name: readarr-audio
+        image: lscr.io/linuxserver/readarr:develop
+        profiles: ["media", "arrs", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/readarr-audio:/config
+            - ${COMPLETED_DOWNLOADS_AUDIO}:/downloads
+            - ${AUDIOBOOKS_DIR}:/audiobooks
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.readarr-audio-rtr.rule: Host(`${READARR_AUDIO_SUBDOMAIN:-readarr-audio}.${DOMAIN_NAME}`)
+            traefik.http.routers.readarr-audio-rtr.entrypoints: websecure
+            traefik.http.routers.readarr-audio-rtr.service: readarr-audio-svc
+            traefik.http.services.readarr-audio-svc.loadbalancer.server.port: 8787
+            traefik.http.routers.readarr-audio-rtr.middlewares: chain-oauth-google@file

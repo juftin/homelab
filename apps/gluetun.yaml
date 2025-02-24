@@ -1,0 +1,48 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    security_opt:
+      - no-new-privileges:true
+    restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+    profiles: ["core", "all"]
+    networks:
+        traefik:
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    ports:
+      - "8081:8080" # expose qBittorrent through Docker Host LAN IP
+    # #   - 8888:8888/tcp # HTTP proxy
+    # #   - 8388:8388/tcp # Shadowsocks
+    # #   - 8388:8388/udp # Shadowsocks
+    volumes:
+      - $DOCKER_DIRECTORY/appdata/gluetun:/gluetun
+    environment:
+      TZ: $TZ
+      # Wireguard
+      VPN_SERVICE_PROVIDER: protonvpn
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: $PRIVATE_KEY__WIREGUARD
+      WIREGUARD_ADDRESSES: 10.2.0.2/32
+      # SERVER_COUNTRIES: Netherlands
+    labels:
+      - "traefik.enable=true"
+
+      # ===========
+      # qBittorrent
+      # ===========
+      # Note: to access qBittorrent from other containers
+      # host: gluetun, port: 8080
+      # HTTP Routers
+      - "traefik.http.routers.gluetun-qbittorrent-rtr.entrypoints=websecure"
+      - "traefik.http.routers.gluetun-qbittorrent-rtr.rule=Host(`${qbittorrent_SUBDOMAIN:-qbittorrent}.${DOMAIN_NAME}`)"
+      # Middlewares
+      - "traefik.http.routers.gluetun-qbittorrent-rtr.middlewares=chain-oauth-google@file"
+      # HTTP Services
+      - "traefik.http.routers.gluetun-qbittorrent-rtr.service=gluetun-svc"
+      - "traefik.http.services.gluetun-svc.loadbalancer.server.port=8080"
+      # ===========
+      # end qBittorrent
+      # ===========
