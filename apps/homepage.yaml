@@ -2,7 +2,7 @@ services:
   homepage:
     container_name: homepage
     image: ghcr.io/gethomepage/homepage:latest
-    profiles: ["media", "all"]
+    profiles: ["utilities", "all"]
     environment:
         PUID: ${PUID}
         PGID: ${PGID}
@@ -17,7 +17,7 @@ services:
         traefik:
     labels:
         traefik.enable: true
-        traefik.http.routers.homepage-rtr.rule: Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
+        traefik.http.routers.homepage-rtr.rule: Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`) || Host(`${SUBDOMAIN__HOMEPAGE}.${DOMAIN_NAME}`)
         traefik.http.routers.homepage-rtr.entrypoints: websecure
         traefik.http.routers.homepage-rtr.service: homepage-svc
         traefik.http.services.homepage-svc.loadbalancer.server.port: 3000

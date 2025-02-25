@@ -2,6 +2,7 @@ services:
   profilarr:
     container_name: profilarr
     image: santiagosayshey/profilarr:beta # we're still in beta!
+    profiles: ["utilities", "all"]
     volumes:
       - ${DOCKER_DIRECTORY}/appdata/profilarr:/config
     environment:
@@ -11,7 +12,7 @@ services:
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
     labels:
         traefik.enable: true
-        traefik.http.routers.profilarr-rtr.rule: Host(`${profilarr_SUBDOMAIN:-profilarr}.${DOMAIN_NAME}`)
+        traefik.http.routers.profilarr-rtr.rule: Host(`${SUBDOMAIN__PROFILARR}.${DOMAIN_NAME}`)
         traefik.http.routers.profilarr-rtr.entrypoints: websecure
         traefik.http.routers.profilarr-rtr.service: profilarr-svc
         traefik.http.services.profilarr-svc.loadbalancer.server.port: 6868

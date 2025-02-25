@@ -22,7 +22,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.tautulli-rtr.rule: Host(`${TAUTULLI_SUBDOMAIN:-tautulli}.${DOMAIN_NAME}`)
+            traefik.http.routers.tautulli-rtr.rule: Host(`${SUBDOMAIN__TAUTULLI}.${DOMAIN_NAME}`)
             traefik.http.routers.tautulli-rtr.entrypoints: websecure
             traefik.http.routers.tautulli-rtr.service: tautulli-svc
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181

@@ -1,4 +1,4 @@
 # Secrets
-.env*
+.env
 secrets/
 appdata/

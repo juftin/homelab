@@ -1,16 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 #######################################
 # READARR (BOOKS AND AUDIOBOOKS)
+# Not working / not setup
 #######################################
 
 services:
     readarr:
         container_name: readarr
         image: lscr.io/linuxserver/readarr:develop
-        profiles: ["media", "arrs", "all"]
+        profiles: ["books", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/readarr:/config
-            - ${MEDIADIR}/data:/data
+            - ${MEDIA_DIRECTORY}/data:/data
             - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre
         environment:
             PUID: ${PUID}
@@ -23,7 +24,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.readarr-rtr.rule: Host(`${READARR_SUBDOMAIN:-readarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.readarr-rtr.rule: Host(`${SUBDOMAIN__READARR}.${DOMAIN_NAME}`)
             traefik.http.routers.readarr-rtr.entrypoints: websecure
             traefik.http.routers.readarr-rtr.service: readarr-svc
             traefik.http.services.readarr-svc.loadbalancer.server.port: 8787
@@ -35,8 +36,7 @@ services:
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/readarr-audio:/config
-            - ${COMPLETED_DOWNLOADS_AUDIO}:/downloads
-            - ${AUDIOBOOKS_DIR}:/audiobooks
+            - ${MEDIA_DIRECTORY}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -48,7 +48,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.readarr-audio-rtr.rule: Host(`${READARR_AUDIO_SUBDOMAIN:-readarr-audio}.${DOMAIN_NAME}`)
+            traefik.http.routers.readarr-audio-rtr.rule: Host(`${SUBDOMAIN__READARR_AUDIO}.${DOMAIN_NAME}`)
             traefik.http.routers.readarr-audio-rtr.entrypoints: websecure
             traefik.http.routers.readarr-audio-rtr.service: readarr-audio-svc
             traefik.http.services.readarr-audio-svc.loadbalancer.server.port: 8787

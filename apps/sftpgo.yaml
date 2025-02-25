@@ -9,7 +9,7 @@ services:
         image: drakkan/sftpgo:latest
         profiles: ["utilities", "all"]
         volumes:
-            - ${MEDIADIR}/data:/data
+            - ${MEDIA_DIRECTORY}/data:/data
             - ${DOCKER_DIRECTORY}/appdata/sftpgo/data/:/srv/sftpgo/data/upload
             - ${DOCKER_DIRECTORY}/appdata/sftpgo/config/:/var/lib/sftpgo/
         environment:
@@ -23,7 +23,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.sftpgo-rtr.rule: Host(`${SFTPGO_SUBDOMAIN:-sftpgo}.${DOMAIN_NAME}`)
+            traefik.http.routers.sftpgo-rtr.rule: Host(`${SUBDOMAIN__SFTPGO}.${DOMAIN_NAME}`)
             traefik.http.routers.sftpgo-rtr.entrypoints: websecure
             traefik.http.routers.sftpgo-rtr.service: sftpgo-svc
             traefik.http.services.sftpgo-svc.loadbalancer.server.port: 8080

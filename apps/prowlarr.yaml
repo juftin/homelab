@@ -6,7 +6,7 @@ services:
     prowlarr:
         container_name: prowlarr
         image: lscr.io/linuxserver/prowlarr:develop
-        profiles: ["media", "arrs", "all"]
+        profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/prowlarr:/config
         environment:
@@ -20,7 +20,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.prowlarr-rtr.rule: Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.prowlarr-rtr.rule: Host(`${SUBDOMAIN__PROWLARR}.${DOMAIN_NAME}`)
             traefik.http.routers.prowlarr-rtr.entrypoints: websecure
             traefik.http.routers.prowlarr-rtr.service: prowlarr-svc
             traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696

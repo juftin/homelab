@@ -20,7 +20,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.libreoffice-rtr.rule: Host(`libreoffice.${DOMAIN_NAME}`)
+            traefik.http.routers.libreoffice-rtr.rule: Host(`${SUBDOMAIN__LIBREOFFICE}.${DOMAIN_NAME}`)
             traefik.http.routers.libreoffice-rtr.service: libreoffice-svc
             traefik.http.services.libreoffice-svc.loadbalancer.server.port: 8888
             traefik.http.routers.libreoffice-rtr.entrypoints: websecure

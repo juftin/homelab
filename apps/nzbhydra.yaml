@@ -6,10 +6,10 @@ services:
     nzbhydra:
         container_name: nzbhydra
         image: lscr.io/linuxserver/nzbhydra2:latest
-        profiles: ["media", "all"]
+        profiles: ["utilities", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/nzbhydra:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${MEDIA_DIRECTORY}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -21,7 +21,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.nzbhydra-rtr.rule: Host(`${NZBHYDRA_DOMAIN:-nzbhydra}.${DOMAIN_NAME}`)
+            traefik.http.routers.nzbhydra-rtr.rule: Host(`${SUBDOMAIN__NZBHYDRA}.${DOMAIN_NAME}`)
             traefik.http.routers.nzbhydra-rtr.entrypoints: websecure
             traefik.http.routers.nzbhydra-rtr.service: nzbhydra-svc
             traefik.http.services.nzbhydra-svc.loadbalancer.server.port: 5076

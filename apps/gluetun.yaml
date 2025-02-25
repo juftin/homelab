@@ -5,7 +5,7 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-    profiles: ["core", "all"]
+    profiles: ["downloaders", "all"] # Note: change profile to match routed services
     networks:
         traefik:
     cap_add:
@@ -37,7 +37,7 @@ services:
       # host: gluetun, port: 8080
       # HTTP Routers
       - "traefik.http.routers.gluetun-qbittorrent-rtr.entrypoints=websecure"
-      - "traefik.http.routers.gluetun-qbittorrent-rtr.rule=Host(`${qbittorrent_SUBDOMAIN:-qbittorrent}.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.gluetun-qbittorrent-rtr.rule=Host(`${SUBDOMAIN__QBITTORRENT}.${DOMAIN_NAME}`)"
       # Middlewares
       - "traefik.http.routers.gluetun-qbittorrent-rtr.middlewares=chain-oauth-google@file"
       # HTTP Services

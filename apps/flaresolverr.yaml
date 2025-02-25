@@ -13,7 +13,7 @@ services:
         traefik:
     labels:
         traefik.enable: true
-        traefik.http.routers.overseerr-rtr.rule: Host(`${FLARESOLVERR_SUBDOMAIN:-flaresolverr}.${DOMAIN_NAME}`)
+        traefik.http.routers.overseerr-rtr.rule: Host(`${SUBDOMAIN__FLARESOLVERR}.${DOMAIN_NAME}`)
         traefik.http.routers.flaresolverr-rtr.entrypoints: websecure
         traefik.http.routers.flaresolverr-rtr.service: flaresolverr-svc
         traefik.http.services.flaresolverr-svc.loadbalancer.server.port: 8191

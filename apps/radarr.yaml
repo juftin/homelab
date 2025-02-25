@@ -6,10 +6,10 @@ services:
     radarr:
         container_name: radarr
         image: lscr.io/linuxserver/radarr:latest
-        profiles: ["media", "arrs", "all"]
+        profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/radarr:/config
-            - ${MEDIADIR}/data:/data
+            - ${MEDIA_DIRECTORY}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -21,7 +21,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.radarr-rtr.rule: Host(`radarr.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.rule: Host(`${SUBDOMAIN__RADARR}.${DOMAIN_NAME}`)
             traefik.http.routers.radarr-rtr.entrypoints: websecure
             traefik.http.routers.radarr-rtr.service: radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878

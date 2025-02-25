@@ -20,7 +20,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.overseerr-rtr.rule: Host(`${OVERSEERR_SUBDOMAIN:-overseerr}.${DOMAIN_NAME}`)
+            traefik.http.routers.overseerr-rtr.rule: Host(`${SUBDOMAIN__OVERSEERR}.${DOMAIN_NAME}`)
             traefik.http.routers.overseerr-rtr.entrypoints: websecure
             traefik.http.routers.overseerr-rtr.service: overseerr-svc
             traefik.http.services.overseerr-svc.loadbalancer.server.port: 5055

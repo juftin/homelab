@@ -10,15 +10,15 @@ services:
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
-            - ${MEDIADIR}/data:/data
-            - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
-        devices:
-            - /dev/dri:/dev/dri
+            - ${MEDIA_DIRECTORY}/data:/data
+            - ${PLEX_TRANSCODE_DIRECTORY:-/tmp}:/transcode
+        devices: # For transcoding
+            - /dev/dri:/dev/dri 
 #            - /dev/dvb:/dev/dvb
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
             VERSION: docker
-            PLEX_CLAIM: ${PLEX_CLAIM}
+            PLEX_CLAIM: ${TOKEN__PLEX_CLAIM}
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

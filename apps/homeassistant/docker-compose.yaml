@@ -17,7 +17,7 @@ services:
             - no-new-privileges:true
         labels:
             traefik.enable: true
-            traefik.http.routers.homeassistant-rtr.rule: Host(`${HOMEASSISTANT_SUBDOMAIN:-homeassistant}.${DOMAIN_NAME}`)
+            traefik.http.routers.homeassistant-rtr.rule: Host(`${SUBDOMAIN__HOMEASSISTANT}.${DOMAIN_NAME}`)
             traefik.http.routers.homeassistant-rtr.service: homeassistant-svc
             traefik.http.services.homeassistant-svc.loadbalancer.server.port: 8123
             traefik.http.routers.homeassistant-rtr.entrypoints: websecure

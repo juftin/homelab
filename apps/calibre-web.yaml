@@ -1,16 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 #######################################
 # CALIBRE-WEB (CALIBRE WEB-UI)
+# Not working / not setup
 #######################################
 
 services:
     calibre-web:
         container_name: calibre-web
         image: lscr.io/linuxserver/calibre-web:latest
-        profiles: ["media", "all"]
+        profiles: ["books", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
-            - ${EBOOKS_DIR}:/books
+            - ${MEDIA_DIRECTORY}/data:/data
             - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre-config
         environment:
             PUID: ${PUID}
@@ -26,7 +27,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.calibre-web-rtr.rule: Host(`${CALIBRE_WEB_SUBDOMAIN:-calibre-web}.${DOMAIN_NAME}`)
+            traefik.http.routers.calibre-web-rtr.rule: Host(`${SUBDOMAIN__CALIBRE_WEB}.${DOMAIN_NAME}`)
             traefik.http.routers.calibre-web-rtr.entrypoints: websecure
             traefik.http.routers.calibre-web-rtr.service: calibre-web-svc
             traefik.http.services.calibre-web-svc.loadbalancer.server.port: 8083

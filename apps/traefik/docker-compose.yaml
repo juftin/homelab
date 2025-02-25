@@ -73,8 +73,8 @@ services:
             - --entrypoints.websecure.http.tls.certresolver=dns-cloudflare
             - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
             - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
-            # - --entrypoints.websecure.http.tls.domains[1].main=${SECONDARY_DOMAIN_NAME}
-            # - --entrypoints.websecure.http.tls.domains[1].sans=*.${SECONDARY_DOMAIN_NAME}
+            # - --entrypoints.websecure.http.tls.domains[1].main=${DOMAIN_NAME__SECONDARY}
+            # - --entrypoints.websecure.http.tls.domains[1].sans=*.${DOMAIN_NAME__SECONDARY}
             - --entrypoints.websecure.http.tls=true
             - --entrypoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS
@@ -87,7 +87,7 @@ services:
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
         labels:
             traefik.enable: true
-            traefik.http.routers.traefik-rtr.rule: Host(`${TRAEFIK_SUBDOMAIN:-traefik}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik-rtr.rule: Host(`${SUBDOMAIN__TRAEFIK}.${DOMAIN_NAME}`)
             traefik.http.routers.traefik-rtr.entrypoints: websecure
             traefik.http.routers.traefik-rtr.service: api@internal
             traefik.http.routers.traefik-rtr.middlewares: chain-oauth-google@file

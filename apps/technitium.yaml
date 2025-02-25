@@ -6,8 +6,8 @@ services:
     profiles: ["utilities", "all"]
     environment:
       - TZ=${TZ}
-      - DNS_SERVER_DOMAIN=${TECHNITIUM_SUBDOMAIN:-technitium}.${DOMAIN_NAME}
-      - DNS_SERVER_ADMIN_PASSWORD=${TECHNITIUM_PASS}
+      - DNS_SERVER_DOMAIN=${SUBDOMAIN__TECHNITIUM}.${DOMAIN_NAME}
+      - DNS_SERVER_ADMIN_PASSWORD=${PASSWORD__TECHNITIUM}
       - DNS_SERVER_FORWARDERS=8.8.8.8,8.8.4.4
 
     volumes:
@@ -24,7 +24,7 @@ services:
     
     labels:
       traefik.enable: "true"
-      traefik.http.routers.technitium-dns-rtr.rule: "Host(`${TECHNITIUM_SUBDOMAIN:-technitium}.${DOMAIN_NAME}`)"
+      traefik.http.routers.technitium-dns-rtr.rule: "Host(`${SUBDOMAIN__TECHNITIUM}.${DOMAIN_NAME}`)"
       traefik.http.routers.technitium-dns-rtr.entrypoints: "websecure"
       traefik.http.routers.technitium-dns-rtr.tls: "true"
       traefik.http.routers.technitium-dns-rtr.middlewares: "chain-oauth-google@file"

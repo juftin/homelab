@@ -4,7 +4,7 @@
 
 include:
     #############################################################################
-    # TRAEFIK (CORE)
+    # TRAEFIK (profile=core)
     #############################################################################
 
     - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
@@ -13,36 +13,41 @@ include:
     - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
 
     #############################################################################
-    # MEDIA
+    # MEDIA (profile=media)
     #############################################################################
 
-    - apps/homepage.yaml # Homepage (Landing Page)
     - apps/plex.yaml # Plex (Media Server)
-    # - apps/jellyfin.yaml # Jellyfin (Media Server)
+    # - apps/jellyfin.yaml # Jellyfin (Media Server) # Note - not properly working
     - apps/sonarr.yaml # Sonarr (TV Show Downloads)
     - apps/radarr.yaml # Radarr (Movie Downloads)
-    - apps/unpackerr.yaml # Unpackerr (unzips rars post download)
     - apps/prowlarr.yaml # Prowlarr (Indexer)
     - apps/overseerr.yaml # Overseerr (Media Requests)
     - apps/tautulli.yaml # Tautulli (Plex Analytics)
-    - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
+
+    #############################################################################
+    # READING (profile=books)
+    #############################################################################
+
     # - apps/readarr.yaml # Readarr (Ebook Downloads)
     # - apps/calibre.yaml # Calibre (Books Management)
     # - apps/calibre-web.yaml # Calibre Web-UI
 
     #############################################################################
-    # DOWNLOAD CLIENTS
+    # DOWNLOADERS (profile=downloaders)
     #############################################################################
 
     - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
-    - apps/gluetun.yaml # VPN
+    - apps/gluetun.yaml # VPN client for torrent
     - apps/qbittorrent.yaml # qbittorrent (torrent downloading)
+    - apps/unpackerr.yaml # Unpackerr (unzips rars post download)
     # - apps/flaresolverr.yaml # flaresolverr (Indexer Proxies for prowlarr) Runs but doesn't seem to solve.
 
     #############################################################################
     # UTILITIES
     #############################################################################
 
+    - apps/homepage.yaml # Homepage (Landing Page)
+    - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
     # - apps/watchtower.yaml #  Watchtower (Container Updating)
     # - apps/postgres.yaml # PostgreSQL (Shared Database)
     # - apps/sftpgo.yaml # SFTPGo (File Management)
@@ -52,8 +57,6 @@ include:
 
     #############################################################################
     # MISCELLANEOUS
-    #
-    # * Note the existing services that are disabled by default.
     #############################################################################
 
     # - apps/chat-gpt-next-web.yaml # ChatGPT Next Web

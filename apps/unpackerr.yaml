@@ -2,20 +2,21 @@ services:
   unpackerr:
     image: golift/unpackerr:latest
     container_name: unpackerr
+    profiles: ["downloaders", "all"]
     volumes:
-      - ${MEDIADIR}/data:/data
+      - ${MEDIA_DIRECTORY}/data:/data
       - ${DOCKER_DIRECTORY}/appdata/unpackerr:/config
     restart: always
     user: ${PUID}:${PGID}
     environment:
       - TZ=${TZ}
-      - UN_SONARR_0_URL=http://sonarr:8989
+      - UN_SONARR_0_URL=http://${SUBDOMAIN__SONARR}:8989
       - UN_SONARR_0_API_KEY=${API_KEY__SONARR}
-      - UN_RADARR_0_URL=http://radarr:7878
+      - UN_RADARR_0_URL=http://${SUBDOMAIN__RADARR}:7878
       - UN_RADARR_0_API_KEY=${API_KEY__RADARR}
       - UN_FILE_MODE=0644
       - UN_DIR_MODE=0755
-      - UN_FOLDER_0_PATH=/data/downloads/torrent # download path configured inside qbittorrent app
+      - UN_FOLDER_0_PATH=/data/downloads/torrent # the download path configured inside qbittorrent app
     networks:
       traefik:
     labels:

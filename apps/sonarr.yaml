@@ -6,10 +6,10 @@ services:
     sonarr:
         container_name: sonarr
         image: lscr.io/linuxserver/sonarr:latest
-        profiles: ["media", "arrs", "all"]
+        profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sonarr:/config
-            - ${MEDIADIR}/data:/data
+            - ${MEDIA_DIRECTORY}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -21,7 +21,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.sonarr-rtr.rule: Host(`${SONARR_SUBDOMAIN:-sonarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.sonarr-rtr.rule: Host(`${SUBDOMAIN__SONARR}.${DOMAIN_NAME}`)
             traefik.http.routers.sonarr-rtr.entrypoints: websecure
             traefik.http.routers.sonarr-rtr.service: sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989

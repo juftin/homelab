@@ -16,7 +16,7 @@ services:
             CONFIG: /config
             COOKIE_DOMAIN: ${DOMAIN_NAME}
             INSECURE_COOKIE: "false"
-            AUTH_HOST: ${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}
+            AUTH_HOST: ${SUBDOMAIN__OAUTH}.${DOMAIN_NAME}
             URL_PATH: /_oauth
             LOG_LEVEL: DEBUG
             LIFETIME: 2592000
@@ -35,7 +35,7 @@ services:
             - duckdns
         labels:
             traefik.enable: true
-            traefik.http.routers.oauth-rtr.rule: Host(`${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}`)
+            traefik.http.routers.oauth-rtr.rule: Host(`${SUBDOMAIN__OAUTH}.${DOMAIN_NAME}`)
             traefik.http.routers.oauth-rtr.entrypoints: websecure
             traefik.http.routers.oauth-rtr.service: oauth-svc
             traefik.http.services.oauth-svc.loadbalancer.server.port: 4181

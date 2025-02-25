@@ -18,7 +18,7 @@ services:
             HIDE_USER_API_KEY: ${HIDE_USER_API_KEY:-1}
         labels:
             traefik.enable: true
-            traefik.http.routers.chat-rtr.rule: Host(`${CHAT_SUBDOMAIN:-chat}.${DOMAIN_NAME}`)
+            traefik.http.routers.chat-rtr.rule: Host(`${SUBDOMAIN__CHAT_GPT}.${DOMAIN_NAME}`)
             traefik.http.routers.chat-rtr.service: chat-svc
             traefik.http.services.chat-svc.loadbalancer.server.port: 3000
             traefik.http.routers.chat-rtr.entrypoints: websecure

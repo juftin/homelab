@@ -1,5 +1,8 @@
 #######################################
 # JELLYFIN (MEDIA SERVER)
+# * Currently working, but unable to bypass oauth for local
+# * domains. This is because everything passes through
+# * cloudflare, so IP inspection doesn't work.
 #######################################
 services:
   jellyfin:
@@ -14,16 +17,12 @@ services:
       - "${DOCKER_DIRECTORY}/appdata/jellyfin/config:/config"
       - "${DOCKER_DIRECTORY}/appdata/jellyfin/cache:/cache"
 
-      - "${TV_DIR}:/media/tv"
-      - "${ANIME_DIR}:/media/anime"
-      - "${MOVIE_DIR}:/media/movies"
-      - "${EBOOKS_DIR}:/media/books"
-
-      - "${JELLYFIN_TRANSCODE_DIR:-/tmp}:/transcode"
+      - "${MEDIA_DIRECTORY}/data:/data"
+      - "${JELLYFIN_TRANSCODE_DIRECTORY:-/tmp}:/transcode"
 
     environment:
       - TZ=${TZ}
-      - JELLYFIN_PublishedServerUrl=https://${JELLYFIN_SUBDOMAIN:-jellyfin}.${DOMAIN_NAME}
+      - JELLYFIN_PublishedServerUrl=https://${SUBDOMAIN__JELLYFIN}.${DOMAIN_NAME}
 
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
     labels:
@@ -33,8 +32,7 @@ services:
           ##################################################################
           # 1) LAN Router (No OAuth)
           ##################################################################
-          traefik.http.routers.jellyfin-lan.rule: >
-            Host(`jellyfin.domain.com`) && RemoteIP(`192.168.1.0/24`)
+          traefik.http.routers.jellyfin-lan.rule: Host(`${SUBDOMAIN__JELLYFIN}.${DOMAIN_NAME}`) && RemoteIP(`192.168.1.0/24`)
           traefik.http.routers.jellyfin-lan.priority: "100"
           traefik.http.routers.jellyfin-lan.middlewares: "chain-no-auth"
           traefik.http.routers.jellyfin-lan.service: "jellyfin-svc"
@@ -42,8 +40,7 @@ services:
           ##################################################################
           # 2) WAN Router (With Google OAuth)
           ##################################################################
-          traefik.http.routers.jellyfin-wan.rule: >
-            Host(`${JELLYFIN_SUBDOMAIN:-jellyfin}.${DOMAIN_NAME}`)
+          traefik.http.routers.jellyfin-wan.rule: Host(`${JELLYFIN_SUBDOMAIN}.${DOMAIN_NAME}`)
           traefik.http.routers.jellyfin-wan.entrypoints: "websecure"
           traefik.http.routers.jellyfin-wan.tls: "true"
 

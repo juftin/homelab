@@ -6,10 +6,10 @@ services:
     sabnzbd:
         container_name: sabnzbd
         image: lscr.io/linuxserver/sabnzbd:latest
-        profiles: ["media", "all"]
+        profiles: ["downloaders", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
-            - ${MEDIADIR}/data:/data
+            - ${MEDIA_DIRECTORY}/data:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -21,7 +21,7 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.sabnzbd-rtr.rule: Host(`${SABNZBD_DOMAIN:-sabnzbd}.${DOMAIN_NAME}`)
+            traefik.http.routers.sabnzbd-rtr.rule: Host(`${SUBDOMAIN__SABNZBD}.${DOMAIN_NAME}`)
             traefik.http.routers.sabnzbd-rtr.entrypoints: websecure
             traefik.http.routers.sabnzbd-rtr.service: sabnzbd-svc
             traefik.http.services.sabnzbd-svc.loadbalancer.server.port: 8080

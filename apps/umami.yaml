@@ -15,7 +15,7 @@ services:
         environment:
             DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@homelab-postgres:5432/umami
             DATABASE_TYPE: postgresql
-            APP_SECRET: ${UMAMI_APP_SECRET:-umami}
+            APP_SECRET: ${UMAMI_APP_SECRET}
         depends_on:
             homelab-postgres:
                 condition: service_healthy
@@ -27,7 +27,7 @@ services:
             retries: 5
         labels:
             traefik.enable: true
-            traefik.http.routers.umami-rtr.rule: Host(`${UMAMI_SUBDOMAIN:-umami}.${SECONDARY_DOMAIN_NAME}`)
+            traefik.http.routers.umami-rtr.rule: Host(`${SUBDOMAIN__UMAMI}.${SECONDARY_DOMAIN_NAME}`)
             traefik.http.routers.umami-rtr.service: umami-svc
             traefik.http.services.umami-svc.loadbalancer.server.port: 3000
             traefik.http.routers.umami-rtr.entrypoints: websecure

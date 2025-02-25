@@ -20,7 +20,7 @@ services:
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         labels:
             traefik.enable: true
-            traefik.http.routers.portainer-rtr.rule: Host(`${PORTAINER_SUBDOMAIN:-portainer}.${DOMAIN_NAME}`)
+            traefik.http.routers.portainer-rtr.rule: Host(`${SUBDOMAIN__PORTAINER}.${DOMAIN_NAME}`)
             traefik.http.routers.portainer-rtr.entrypoints: websecure
             traefik.http.routers.portainer-rtr.service: portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000

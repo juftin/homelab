@@ -7,7 +7,7 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-    profiles: ["media", "all"]
+    profiles: ["downloaders", "all"]
     network_mode: "service:gluetun"
       # Note: to access qBittorrent from other containers
       # host: gluetun, port: 8080
@@ -22,7 +22,7 @@ services:
       #   host: gluetun
       #   remote-path: /downloads/downloads/torrent/ (configured as /downloads/torrents inside qBittorrent app settings)
       #   local-path: /data/downloads/torrent/
-      - ${MEDIADIR}/data:/downloads
+      - ${MEDIA_DIRECTORY}/data:/downloads
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
