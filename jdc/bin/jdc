@@ -1,0 +1,309 @@
+#!/usr/bin/env bash
+#
+# jdc - A command-line tool to manage homelab Docker Compose services.
+#
+# Usage:
+#   jdc <command> [options] [service1 service2 ...]
+#
+# Commands:
+#   up         - Start (or update) the service(s)
+#   down       - Stop/remove the service(s)
+#   logs       - Show logs of the service(s)
+#   stop       - Stop the service(s)
+#   restart    - Restart the service(s)
+#   ps         - Show the status of the service(s)
+#   config     - Show the configuration of the service(s)
+#   pull       - Pull the latest images for the service(s)
+#   update     - Pull the latest images and restart the service(s)
+#   remove     - Remove containers (force-remove even if not in the compose file)
+#   get-ip     - Show the external IP for the specified container(s)
+#   containers - List the services available in the Docker Compose configuration
+#   profiles   - List the profiles available in the Docker Compose configuration
+#
+# Options:
+#   -p, --profile <profile_name>   Docker Compose profile to use (default: all)
+#   --args "<extra arguments>"  Additional Docker Compose arguments
+#   -h, --help                 Show usage information
+#
+# Note:
+#   For commands up, down, logs, stop, restart, config, pull, update, remove, and get-ip,
+#   you must provide either one or more container names or a profile name.
+#
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Global Constants & Logging
+# ------------------------------------------------------------------------------
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+info() {
+  echo "$(date '+[%H:%M:%S]') INFO: $*"
+}
+
+error() {
+  echo "$(date '+[%H:%M:%S]') ERROR: $*" >&2
+  exit 1
+}
+
+# ------------------------------------------------------------------------------
+# Helper Functions
+# ------------------------------------------------------------------------------
+
+list_commands() {
+  local commands=(
+    "up"
+    "down"
+    "logs"
+    "stop"
+    "restart"
+    "ps"
+    "config"
+    "pull"
+    "update"
+    "remove"
+    "get-ip"
+    "containers"
+    "profiles"
+  )
+  echo "${commands[*]}"
+  exit 0
+}
+
+# ------------------------------------------------------------------------------
+# Usage Function
+# ------------------------------------------------------------------------------
+
+usage() {
+  cat <<EOF
+Usage:
+  jdc <command> [options] [service1 service2 ...]
+
+Commands:
+  up         Start (or update) the service(s)
+  down       Stop/remove the service(s)
+  logs       Show logs of the service(s)
+  stop       Stop the service(s)
+  restart    Restart the service(s)
+  ps         Show the status of the service(s)
+  config     Show the configuration of the service(s)
+  pull       Pull the latest images for the service(s)
+  update     Pull latest images and restart the service(s)
+  remove     Remove containers by name, even if stopped or missing in compose.yml
+  get-ip     Show the external IP for the specified container(s)
+  containers List the services available in the Docker Compose configuration
+  profiles   List the profiles available in the Docker Compose configuration
+
+Options:
+  -p, --profile <profile_name>   Docker Compose profile to use
+  --args "<extra arguments>"  Additional Docker Compose arguments (Note the quotes!)
+  -h, --help                 Show this help message
+
+Note:
+  For commands up, down, logs, stop, restart, config, pull, update, remove, and get-ip,
+  you must provide either one or more container names or a profile name.
+  
+Examples:
+  jdc up mycontainer
+  jdc up --profile core
+  jdc logs radarr sonarr
+  jdc update mycontainer
+  jdc remove radarr --args "--volumes"
+  jdc get-ip qbittorrent
+  jdc containers
+  jdc profiles
+EOF
+}
+
+# ------------------------------------------------------------------------------
+# Command Functions
+# ------------------------------------------------------------------------------
+
+cmd_up() {
+  "${CMD[@]}" up -d "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_down() {
+  "${CMD[@]}" down "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_logs() {
+  "${CMD[@]}" logs -ft "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_stop() {
+  "${CMD[@]}" stop "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_restart() {
+  "${CMD[@]}" restart "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_ps() {
+  "${CMD[@]}" ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+}
+
+cmd_config() {
+  "${CMD[@]}" config "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_pull() {
+  "${CMD[@]}" pull "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+cmd_update() {
+  "${CMD[@]}" pull "${SERVICES[@]}" "${ARGS[@]}"
+  "${CMD[@]}" up -d "${SERVICES[@]}" "${ARGS[@]}"
+}
+
+remove_containers() {
+  if [[ ${#SERVICES[@]} -eq 0 ]]; then
+    error "No service names specified. Refusing to remove anything."
+  fi
+
+  for svc in "${SERVICES[@]}"; do
+    info "Removing container: $svc"
+    if ! "${CMD[@]}" rm -f "$svc" "${ARGS[@]}"; then
+      info "'$svc' not found in docker-compose; trying direct 'docker rm -f'"
+      if ! docker rm -f "$svc"; then
+        echo "[WARN] Could not remove container '$svc'"
+      fi
+    fi
+  done
+}
+
+get_container_ip() {
+  for svc in "${SERVICES[@]}"; do
+    info "Checking external IP for container: $svc"
+    if ! ext_ip=$(docker exec "$svc" curl --silent "http://ipinfo.io/ip" 2>/dev/null); then
+      echo "[ERROR] Failed to execute docker exec for container '$svc'." >&2
+      continue
+    fi
+    # If no IP is returned display error and continue
+    if [[ -z "$ext_ip" ]]; then
+      echo "[ERROR] No IP returned for container '$svc'." >&2
+      continue
+    fi
+    echo "$svc container's external IP address: $ext_ip"
+    echo "IP info: "
+    curl --silent "http://ipinfo.io/${ext_ip}"
+    echo ""
+  done
+}
+
+# List available services from the Docker Compose configuration
+# Note: this relies on all container configs having `profiles: ["all", ...]`
+cmd_containers() {
+  "${CMD[@]}" --profile all config --services "${ARGS[@]}" | sort
+}
+
+# List available profiles from the Docker Compose configuration
+# Note: this relies on all container configs having `profiles: ["all", ...]`
+cmd_profiles() {
+  "${CMD[@]}" --profile all config --profiles "${ARGS[@]}" | sort
+}
+
+# -----------------------------------------------------------------------------
+# Argument Parsing & Command Dispatching
+# ------------------------------------------------------------------------------
+
+# Global variables for options and arguments
+PROFILE=""
+PROFILE_SPECIFIED=0
+ARGS=()      # Array to hold extra Docker Compose arguments
+COMMAND=""
+SERVICES=()  # List of service names
+CMD=()       # Will hold the Docker Compose command as an array
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      up|down|logs|stop|restart|ps|config|pull|update|remove|get-ip|containers|profiles)
+        if [[ -n "$COMMAND" ]]; then
+          error "Multiple commands specified: '$COMMAND' and '$1'"
+        fi
+        COMMAND="$1"
+        shift
+        ;;
+      -p|--profile)
+        if [[ $# -lt 2 ]]; then
+          error "--profile requires a value"
+        fi
+        PROFILE="$2"
+        PROFILE_SPECIFIED=1
+        shift 2
+        ;;
+      --args)
+        if [[ $# -lt 2 ]]; then
+          error "--args requires a value"
+        fi
+        # Convert the provided string into an array
+        read -r -a ARGS <<< "$2"
+        shift 2
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      *)
+        SERVICES+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z "$COMMAND" ]]; then
+    usage
+    exit 1
+  fi
+
+  # Build the base docker compose command as an array.
+  CMD=(docker compose --project-directory "$REPO_ROOT" --profile "$PROFILE")
+}
+
+main() {
+  if [[ "$#" -eq 0 ]]; then
+    usage
+    exit 1
+  elif [[ "$*" =~ (-l|--list-commands) ]]; then
+    list_commands
+  fi
+
+  parse_args "$@"
+
+  # For the following commands, ensure that either container names or a profile was provided.
+  case "$COMMAND" in
+    up|down|logs|stop|restart|config|pull|update|remove|get-ip)
+      if [[ ${#SERVICES[@]} -eq 0 && $PROFILE_SPECIFIED -eq 0 ]]; then
+        error "For command '$COMMAND', you must provide either a container name or a profile name. Run \"jdc containers\" or \"jdc profiles\" to list."
+      elif [[ ${#SERVICES[@]} -eq 0 && $PROFILE_SPECIFIED -eq 1 ]]; then
+        info "No container specified; applying command to containers in profile '$PROFILE'."
+        # Populate SERVICES with the list of containers in the specified profile.
+        mapfile -t SERVICES < <("${CMD[@]}" config --services "${ARGS[@]}")
+        if [[ ${#SERVICES[@]} -eq 0 ]]; then
+          error "No containers found for profile '$PROFILE'."
+        fi
+      fi
+      ;;
+  esac
+
+  case "$COMMAND" in
+    up) cmd_up ;;
+    down) cmd_down ;;
+    logs) cmd_logs ;;
+    stop) cmd_stop ;;
+    restart) cmd_restart ;;
+    ps) cmd_ps ;;
+    config) cmd_config ;;
+    pull) cmd_pull ;;
+    update) cmd_update ;;
+    remove) remove_containers ;;
+    get-ip) get_container_ip ;;
+    containers) cmd_containers ;;
+    profiles) cmd_profiles ;;
+    *) error "Unknown command '$COMMAND'" ;;
+  esac
+}
+
+main "$@"
