@@ -5,7 +5,7 @@
 services:
     prowlarr:
         container_name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:develop
+        image: lscr.io/linuxserver/prowlarr:latest
         profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/prowlarr:/config
