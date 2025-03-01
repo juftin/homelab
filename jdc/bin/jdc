@@ -19,6 +19,7 @@
 #   get-ip     - Show the external IP for the specified container(s)
 #   containers - List the services available in the Docker Compose configuration
 #   profiles   - List the profiles available in the Docker Compose configuration
+#   setup      - Run setup tasks for the homelab environment
 #
 # Options:
 #   -p, --profile <profile_name>   Docker Compose profile to use (default: all)
@@ -66,6 +67,7 @@ list_commands() {
     "get-ip"
     "containers"
     "profiles"
+    "setup"
   )
   echo "${commands[*]}"
   exit 0
@@ -94,6 +96,7 @@ Commands:
   get-ip     Show the external IP for the specified container(s)
   containers List the services available in the Docker Compose configuration
   profiles   List the profiles available in the Docker Compose configuration
+  setup      Run setup tasks for the homelab environment
 
 Options:
   -p, --profile <profile_name>   Docker Compose profile to use
@@ -113,6 +116,7 @@ Examples:
   jdc get-ip qbittorrent
   jdc containers
   jdc profiles
+  jdc setup init-acme
 EOF
 }
 
@@ -204,6 +208,12 @@ cmd_profiles() {
   "${CMD[@]}" --profile all config --profiles "${ARGS[@]}" | sort
 }
 
+# Handle setup command by delegating to setup.sh
+cmd_setup() {
+  # Pass all arguments to setup.sh
+  "$REPO_ROOT/jdc/bin/setup.sh" "$@"
+}
+
 # -----------------------------------------------------------------------------
 # Argument Parsing & Command Dispatching
 # ------------------------------------------------------------------------------
@@ -219,7 +229,7 @@ CMD=()       # Will hold the Docker Compose command as an array
 parse_args() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      up|down|logs|stop|restart|ps|config|pull|update|remove|get-ip|containers|profiles)
+      up|down|logs|stop|restart|ps|config|pull|update|remove|get-ip|containers|profiles|setup)
         if [[ -n "$COMMAND" ]]; then
           error "Multiple commands specified: '$COMMAND' and '$1'"
         fi
@@ -266,6 +276,13 @@ main() {
   if [[ "$#" -eq 0 ]]; then
     usage
     exit 1
+  fi
+
+  # Special handling for setup command
+  if [[ "$1" == "setup" ]]; then
+    shift
+    "$REPO_ROOT/jdc/bin/setup.sh" "$@"
+    exit $?
   elif [[ "$*" =~ (-l|--list-commands) ]]; then
     list_commands
   fi
@@ -302,6 +319,7 @@ main() {
     get-ip) get_container_ip ;;
     containers) cmd_containers ;;
     profiles) cmd_profiles ;;
+    setup) cmd_setup ;;
     *) error "Unknown command '$COMMAND'" ;;
   esac
 }
