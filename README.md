@@ -1,93 +1,86 @@
-<div align="center">
- <h1>homelab</h1>
-  <a href="https://github.com/juftin/homelab">
-    <img src="docs/static/homelab.png" alt="homelab" width="350" />
-  </a>
-  <p align="center">
-    homelab deployment via docker compose <i>(made easy)</i>
-  </p>
-  <a href="https://github.com/juftin/homelab/"><img src="https://img.shields.io/github/v/release/juftin/homelab?color=blue&label=%F0%9F%A4%96%20homelab" alt="docs"></a>
-  <a href="https://juftin.com/homelab/"><img src="https://img.shields.io/static/v1?message=docs&color=526CFE&logo=Material+for+MkDocs&logoColor=FFFFFF&label=" alt="docs"></a>
-  <a href="https://github.com/pre-commit/pre-commit"><img src="https://img.shields.io/badge/pre--commit-enabled-lightgreen?logo=pre-commit" alt="pre-commit"></a>
-  <a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release"></a>
-  <a href="https://gitmoji.dev"><img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji"></a>
-</div>
-
 ## What is homelab?
 
+A fork of [juftin/homelab](https://github.com/juftin/homelab) with some additional features and improvements.
+
 **`homelab`** is a collection of services that can be deployed from your home server and accessed
-securely from anywhere in the world. Ultimately everything is deployed into a single
-docker compose application. Each service belongs to a [docker compose profile] - and the
-`Makefile` contains everything you need to get started and manage your homelab.
+securely from anywhere in the world. Everything is deployed into a single docker compose application
+and managed through the convenient `jdc` command-line tool.
 
--   **`core`**: The `core` profile is the base of this project, it includes a [traefik] reverse proxy
-    and [OAuth] service that allows you to access all of your services via a single domain name
-    securely behind HTTPS and protected with Google OAuth.
--   **`media`**: The `media` profile includes services like [Plex], [Sonarr], [Radarr], and
-    [Ombi] that allow you to request, download, organize, and stream media to your devices. This profile
-    is perfect for those who want to have a media server in their homelab.
--   **`utilities`**: The `utilities` profile includes services like [Watchtower] and [Portainer] that
-    are designed to help you manage your homelab, monitor your services,
-    and keep your containers up-to-date.
--   **`miscellaneous`**: The `miscellaneous` profile is disabled by default.
-    It includes services like [ChatGPT Next Web] and [LibreOffice Online]
-    that don't fit into the other profiles. These services are great for improving your
-    productivity and adding some fun to your homelab.
+### Quick Start
 
-## How does it work?
-
-This repository is a large [docker compose](https://docs.docker.com/compose/)
-project that allows you to deploy a variety of services to your homelab.
-
-At the root of this repository is a `docker-compose.yaml` file that defines
-the entire homelab project - it uses the `include` directive to pull in
-individual service docker compose files from the `apps` directory.
-
-```text
-.
-├── docker-compose.yaml                     # Main Docker Compose File
-├── .env                                    # Environment Variables and Configuration
-├── Makefile                                # Makefile for common tasks and docker compose wrappers
-├── secrets                                 # Secret Files
-│   ├── cloudflare_api_key.secret           # Cloudflare API Key
-│   └── google_oauth.secret                 # Google OAuth Credentials and Whitelist
-├── apps                                    # Individual Service Docker Compose Files
-│   ├── plex.yaml
-│   ├── radarr.yaml
-│   ├── ombi.yaml
-│   ├── sonarr.yaml
-│   ├── oauth.yaml
-│   ├── chat-gpt-next-web.yaml
-│   ├── watchtower.yaml
-│   └── traefik                             # Traefik Reverse Proxy
-│       ├── docker-compose.yaml             # Traefik Docker Compose File
-│       └── rules                           # Traefik Middlewares and Rules
-│           ├── middlewares-chains.yml
-│           ├── middlewares.yml
-│           └── tls-opts.yml
-└── appdata                                 # Application Data Persistent Volumes
-    ├── plex                                # Each individual service has its own subdirectory
-    ├── sonarr
-    ├── oauth
-    ├── traefik
-    ├── chat-gpt-next-web
-    ├── utilities
-    └── watchtower
+1. Clone this repository
+2. Enable tab completion for the `jdc` command by adding the following to your `.bashrc` or `.zshrc`: !Remember to replace `path/to/homelab` with the actual path to the repository.
+```bash
+[[ -f "${HOME}/path/to/homelab/jdc/bin/_jdc_completion.sh" ]] && source "${HOME}/path/to/homelab/jdc/bin/_jdc_completion.sh"
 ```
 
-### Configuration
+Walk through the setup process (i need to populate this section fully, but in a nutshell)
+1. Setup traefik, duckdns, cloudflare by following this guide https://www.simplehomelab.com/traefik-v3-docker-compose-guide-2024/
+  - This guide is a little frustrating, but it works.
 
-All services are configured via a `.env` file at the root of the project and a few secret
-files in the `secrets` directory. These files are used to define settings and credentials
-for all services that are deployed. You can copy the example files to get started:
+2. In your `.env` file add your domain_name, duckdns, and cloudflare detials.
 
-```shell
-cp docs/example.env .env
-cp -r docs/example-secrets/ secrets/
+3. !important: uncomment the `LETS_ENCRYPT_ENV` line so that failed letsencrypt attempts hit the staging servers and don't get you timed out.
+
+4. Spin up the traefik related services, and monitor the traefik logs to ensure the certificates are being issued.
+
+```bash
+jdc up -p traefik
+jdc logs traefik
 ```
 
-See the [docs](https://juftin.github.io/homelab/) for more information on configuration and
-getting started.
+5. Once the certificates are being issued correctly, you can comment out the `LETS_ENCRYPT_ENV` line again.
+
+6. Spin up the rest of the services.
+
+```bash
+jdc up -p all
+```
+
+or target specific services
+
+```bash
+jdc up sonarr radarr prowlarr plex
+```
+
+7. Run through setup of these services following guides on those services easily found elsewhere.
+
+Note: typically if you are referencing a service from inside another container (e.g., connecting prowlarr to sonarr), the host & port is simply something like
+```
+host: sonarr # or sometimes host: http://sonarr
+port: 8989 # found in the sonarr.yaml file -> loadbalancer.server.port: 8989
+```
+
+### Service Profiles
+
+Each service belongs to a [docker compose profile] that can be managed independently:
+
+- **`core`**: Base infrastructure including [traefik] reverse proxy and [OAuth] service for secure HTTPS access
+- **`media`**: Media services like [Plex], [Sonarr], [Radarr], and [Ombi] for streaming and content management
+- **`utilities`**: Management tools like [Watchtower] and [Portainer] for monitoring and updates
+- **`miscellaneous`**: Optional services like [ChatGPT Next Web] and [LibreOffice Online]
+
+### Common Commands
+
+```bash
+# Start all services
+jdc up
+
+# Start just core services
+jdc up -p core
+
+# View logs for a specific service
+jdc logs sonarr
+
+# Update all containers
+jdc update -p all
+
+# List available containers
+jdc containers
+
+# Show help
+jdc --help
+```
 
 [traefik]: https://github.com/traefik/traefik
 [OAuth]: https://github.com/thomseddon/traefik-forward-auth
