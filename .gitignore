@@ -1,8 +1,8 @@
 # Secrets
 .env
 
-secrets/
-! secrets/.gitkeep
+secrets/*
+!secrets/.gitkeep
 
-appdata/
-! appdata/.gitkeep
+appdata/*
+!appdata/.gitkeep
