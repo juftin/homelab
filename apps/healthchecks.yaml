@@ -6,15 +6,15 @@ services:
     healthchecks:
         container_name: healthchecks
         image: lscr.io/linuxserver/healthchecks:latest
-        profiles: ["miscellaneous", "all"]
+        profiles: [ "miscellaneous", "all" ]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/healthchecks:/config
+          - ${DOCKER_DIRECTORY}/appdata/healthchecks:/config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
         security_opt:
-            - no-new-privileges:true
+          - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         networks:
             traefik:

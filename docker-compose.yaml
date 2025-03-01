@@ -3,86 +3,86 @@
 ################################################################################
 
 include:
-    #############################################################################
-    # TRAEFIK (profile=core)
-    #############################################################################
+  #############################################################################
+  # TRAEFIK (profile=core)
+  #############################################################################
 
-    - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
-    - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
-    - apps/oauth.yaml # OAuth (Authentication)
-    - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
+  - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
+  - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
+  - apps/oauth.yaml # OAuth (Authentication)
+  - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
 
-    #############################################################################
-    # MEDIA (profile=media)
-    #############################################################################
+  #############################################################################
+  # MEDIA (profile=media)
+  #############################################################################
 
-    - apps/plex.yaml # Plex (Media Server)
-    # - apps/jellyfin.yaml # Jellyfin (Media Server) # Note - not properly working
-    - apps/sonarr.yaml # Sonarr (TV Show Downloads)
-    - apps/radarr.yaml # Radarr (Movie Downloads)
-    - apps/prowlarr.yaml # Prowlarr (Indexer)
-    - apps/overseerr.yaml # Overseerr (Media Requests)
-    - apps/tautulli.yaml # Tautulli (Plex Analytics)
+  - apps/plex.yaml # Plex (Media Server)
+  # - apps/jellyfin.yaml # Jellyfin (Media Server) # Note - not properly working
+  - apps/sonarr.yaml # Sonarr (TV Show Downloads)
+  - apps/radarr.yaml # Radarr (Movie Downloads)
+  - apps/prowlarr.yaml # Prowlarr (Indexer)
+  - apps/overseerr.yaml # Overseerr (Media Requests)
+  - apps/tautulli.yaml # Tautulli (Plex Analytics)
 
-    #############################################################################
-    # READING (profile=books)
-    #############################################################################
+  #############################################################################
+  # READING (profile=books)
+  #############################################################################
 
-    # - apps/readarr.yaml # Readarr (Ebook Downloads)
-    # - apps/calibre.yaml # Calibre (Books Management)
-    # - apps/calibre-web.yaml # Calibre Web-UI
+  # - apps/readarr.yaml # Readarr (Ebook Downloads)
+  # - apps/calibre.yaml # Calibre (Books Management)
+  # - apps/calibre-web.yaml # Calibre Web-UI
 
-    #############################################################################
-    # DOWNLOADERS (profile=downloaders)
-    #############################################################################
+  #############################################################################
+  # DOWNLOADERS (profile=downloaders)
+  #############################################################################
 
-    - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
-    - apps/gluetun.yaml # VPN client for torrent
-    - apps/qbittorrent.yaml # qbittorrent (torrent downloading)
-    - apps/unpackerr.yaml # Unpackerr (unzips rars post download)
-    # - apps/flaresolverr.yaml # flaresolverr (Indexer Proxies for prowlarr) Runs but doesn't seem to solve.
+  - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
+  - apps/gluetun.yaml # VPN client for torrent
+  - apps/qbittorrent.yaml # qbittorrent (torrent downloading)
+  - apps/unpackerr.yaml # Unpackerr (unzips rars post download)
+  - apps/flaresolverr.yaml # flaresolverr (Indexer Proxies for prowlarr) Runs but doesn't seem to solve.
 
-    #############################################################################
-    # UTILITIES
-    #############################################################################
+  #############################################################################
+  # UTILITIES
+  #############################################################################
 
-    - apps/homepage.yaml # Homepage (Landing Page)
-    - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
-    # - apps/watchtower.yaml #  Watchtower (Container Updating)
-    # - apps/postgres.yaml # PostgreSQL (Shared Database)
-    # - apps/sftpgo.yaml # SFTPGo (File Management)
-    - apps/technitium.yaml # technitium-dns (DNS Ad-Blocking)
-    - apps/profilarr.yaml # Quality profiles for radarr sonarr
-    # - apps/portainer.yaml # Portainer (Container Management)
+  - apps/homepage.yaml # Homepage (Landing Page)
+  - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
+  # - apps/watchtower.yaml #  Watchtower (Container Updating)
+  # - apps/postgres.yaml # PostgreSQL (Shared Database)
+  # - apps/sftpgo.yaml # SFTPGo (File Management)
+  - apps/technitium.yaml # technitium-dns (DNS Ad-Blocking)
+  - apps/profilarr.yaml # Quality profiles for radarr sonarr
+  # - apps/portainer.yaml # Portainer (Container Management)
 
-    #############################################################################
-    # MISCELLANEOUS
-    #############################################################################
+  #############################################################################
+  # MISCELLANEOUS
+  #############################################################################
 
-    # - apps/chat-gpt-next-web.yaml # ChatGPT Next Web
-    # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
-    # - apps/libreoffice.yaml # LibreOffice (Office Suite)
-    # - apps/umami.yaml # Umami Analytics
-    # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
-    # - apps/healthchecks.yaml # Healthchecks (Monitoring)
+  # - apps/chat-gpt-next-web.yaml # ChatGPT Next Web
+  # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+  # - apps/libreoffice.yaml # LibreOffice (Office Suite)
+  # - apps/umami.yaml # Umami Analytics
+  # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
+  # - apps/healthchecks.yaml # Healthchecks (Monitoring)
 
-################################################################################
-# NETWORK CONFIGURATION
-################################################################################
+  ################################################################################
+  # NETWORK CONFIGURATION
+  ################################################################################
 
 networks:
     traefik:
         driver: bridge
         ipam:
             config:
-                - subnet: 192.168.90.0/24
+              - subnet: 192.168.90.0/24
     docker:
         driver: bridge
         ipam:
             config:
-                - subnet: 192.168.91.0/24
+              - subnet: 192.168.91.0/24
     internal:
         driver: bridge
         ipam:
             config:
-                - subnet: 192.168.92.0/24
+              - subnet: 192.168.92.0/24

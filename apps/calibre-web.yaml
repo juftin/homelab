@@ -8,11 +8,11 @@ services:
     calibre-web:
         container_name: calibre-web
         image: lscr.io/linuxserver/calibre-web:latest
-        profiles: ["books", "all"]
+        profiles: [ "books", "all" ]
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
-            - ${MEDIA_DIRECTORY}/data:/data
-            - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre-config
+          - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
+          - ${MEDIA_DIRECTORY}/data:/data
+          - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre-config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -20,7 +20,7 @@ services:
             DOCKER_MODS: linuxserver/mods:universal-calibre
             OAUTHLIB_RELAX_TOKEN_SCOPE: 1
         security_opt:
-            - no-new-privileges:true
+          - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
         platform: linux/amd64
         networks:

@@ -7,15 +7,15 @@ services:
     libreoffice:
         container_name: libreoffice
         image: lscr.io/linuxserver/libreoffice:latest
-        profiles: ["miscellaneous", "all"]
+        profiles: [ "miscellaneous", "all" ]
         environment:
-            - PUID=${PUID}
-            - PGID=${PGID}
-            - TZ=${TZ}
+          - PUID=${PUID}
+          - PGID=${PGID}
+          - TZ=${TZ}
         volumes:
-            - ${DOCKER_DIRECTORY}/appdata/libreoffice:/config
+          - ${DOCKER_DIRECTORY}/appdata/libreoffice:/config
         security_opt:
-            - no-new-privileges:true
+          - no-new-privileges:true
         networks:
             traefik:
         labels:

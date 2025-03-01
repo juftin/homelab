@@ -8,7 +8,7 @@ services:
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin:latest
-    profiles: ["media", "all"]
+    profiles: [ "media", "all" ]
     user: "${PUID}:${PGID}"
     networks:
       - traefik
@@ -26,31 +26,31 @@ services:
 
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
     labels:
-          # Same service definition as before
-          traefik.enable: "true"
+      # Same service definition as before
+      traefik.enable: "true"
 
-          ##################################################################
-          # 1) LAN Router (No OAuth)
-          ##################################################################
-          traefik.http.routers.jellyfin-lan.rule: Host(`${SUBDOMAIN__JELLYFIN}.${DOMAIN_NAME}`) && RemoteIP(`192.168.1.0/24`)
-          traefik.http.routers.jellyfin-lan.priority: "100"
-          traefik.http.routers.jellyfin-lan.middlewares: "chain-no-auth"
-          traefik.http.routers.jellyfin-lan.service: "jellyfin-svc"
+      ##################################################################
+      # 1) LAN Router (No OAuth)
+      ##################################################################
+      traefik.http.routers.jellyfin-lan.rule: Host(`${SUBDOMAIN__JELLYFIN}.${DOMAIN_NAME}`) && RemoteIP(`192.168.1.0/24`)
+      traefik.http.routers.jellyfin-lan.priority: "100"
+      traefik.http.routers.jellyfin-lan.middlewares: "chain-no-auth"
+      traefik.http.routers.jellyfin-lan.service: "jellyfin-svc"
 
-          ##################################################################
-          # 2) WAN Router (With Google OAuth)
-          ##################################################################
-          traefik.http.routers.jellyfin-wan.rule: Host(`${JELLYFIN_SUBDOMAIN}.${DOMAIN_NAME}`)
-          traefik.http.routers.jellyfin-wan.entrypoints: "websecure"
-          traefik.http.routers.jellyfin-wan.tls: "true"
+      ##################################################################
+      # 2) WAN Router (With Google OAuth)
+      ##################################################################
+      traefik.http.routers.jellyfin-wan.rule: Host(`${JELLYFIN_SUBDOMAIN}.${DOMAIN_NAME}`)
+      traefik.http.routers.jellyfin-wan.entrypoints: "websecure"
+      traefik.http.routers.jellyfin-wan.tls: "true"
 
-          # Lower priority so that LAN router wins when IP matches
-          # !!! This doesn't actually work be cause we use cloudflare for IP
-          traefik.http.routers.jellyfin-wan.priority: "1"
+      # Lower priority so that LAN router wins when IP matches
+      # !!! This doesn't actually work be cause we use cloudflare for IP
+      traefik.http.routers.jellyfin-wan.priority: "1"
 
-          # Middlewares chain that INCLUDES OAuth
-          traefik.http.routers.jellyfin-wan.middlewares: "chain-oauth-google"
+      # Middlewares chain that INCLUDES OAuth
+      traefik.http.routers.jellyfin-wan.middlewares: "chain-oauth-google"
 
-          traefik.http.routers.jellyfin-wan.service: "jellyfin-svc"
-          # The same container port
-          traefik.http.services.jellyfin-svc.loadbalancer.server.port: "8096"
+      traefik.http.routers.jellyfin-wan.service: "jellyfin-svc"
+      # The same container port
+      traefik.http.services.jellyfin-svc.loadbalancer.server.port: "8096"

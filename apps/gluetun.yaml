@@ -5,15 +5,15 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-    profiles: ["downloaders", "all"] # Note: change profile to match routed services
+    profiles: [ "downloaders", "all" ] # Note: change profile to match routed services
     networks:
-        traefik:
+      traefik:
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun
     ports:
-      - "8081:8080" # expose qBittorrent through Docker Host LAN IP
+    - "8081:8080" # expose qBittorrent through Docker Host LAN IP
     # #   - 8888:8888/tcp # HTTP proxy
     # #   - 8388:8388/tcp # Shadowsocks
     # #   - 8388:8388/udp # Shadowsocks
@@ -29,7 +29,6 @@ services:
       # SERVER_COUNTRIES: Netherlands
     labels:
       - "traefik.enable=true"
-
       # ===========
       # qBittorrent
       # ===========

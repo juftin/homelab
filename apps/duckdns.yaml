@@ -7,7 +7,7 @@ services:
     duckdns:
         container_name: duckdns
         image: lscr.io/linuxserver/duckdns:latest
-        profiles: ["traefik", "core", "all"]
+        profiles: [ "traefik", "core", "all" ]
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
@@ -17,7 +17,7 @@ services:
         networks:
             internal:
         security_opt:
-            - no-new-privileges:true
+          - no-new-privileges:true
         restart: always
         labels:
             com.ouroboros.enable: "true"
