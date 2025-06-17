@@ -9,7 +9,7 @@ secrets:
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v3.0
+        image: library/traefik:v3.4
         profiles: ["traefik", "core", "all"]
         ports:
             - published: 80

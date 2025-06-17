@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# Open WebUI
+#######################################
+
+services:
+    open-webui:
+        container_name: open-webui
+        image: ghcr.io/open-webui/open-webui:main
+        profiles: ["llm", "all"]
+        networks:
+            traefik:
+            internal:
+        environment:
+            TZ: ${TZ}
+            OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+            ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+            DATA_DIR: /app/backend/data
+            OLLAMA_BASE_URLS: http://ollama:11434
+            CHROMA_HTTP_PORT: 8000
+            CHROMA_HTTP_HOST: chromadb
+            CHROMA_TENANT: default_tenant
+            VECTOR_DB: chroma
+            RAG_EMBEDDING_ENGINE: ollama
+            RAG_EMBEDDING_MODEL: nomic-embed-text-v1.5
+            RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE: "True"
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/open-webui/open-webui:/app/backend/data
+        labels:
+            traefik.enable: true
+            traefik.http.routers.open-webui-rtr.rule: Host(`${OPEN_WEBUI_SUBDOMAIN:-open-webui}.${DOMAIN_NAME}`)
+            traefik.http.routers.open-webui-rtr.service: open-webui-svc
+            traefik.http.services.open-webui-svc.loadbalancer.server.port: 8080
+            traefik.http.routers.open-webui-rtr.entrypoints: websecure
+            traefik.http.routers.open-webui-rtr.middlewares: chain-oauth-google@file
