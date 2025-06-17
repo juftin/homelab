@@ -16,7 +16,7 @@ services:
             ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
             STABILITY_API_KEY: ${STABILITY_API_KEY:-}
             HIDE_USER_API_KEY: ${HIDE_USER_API_KEY:-1}
-            DEFAULT_MODEL: gpt-4.1@OpenAI
+            DEFAULT_MODEL: +gpt-4.1@OpenAI
             CUSTOM_MODELS: >
                 -all,
                 gpt-4.1@OpenAI,
