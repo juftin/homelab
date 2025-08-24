@@ -20,19 +20,19 @@ securely from anywhere in the world. Ultimately everything is deployed into a si
 docker compose application. Each service belongs to a [docker compose profile] - and the
 `Makefile` contains everything you need to get started and manage your homelab.
 
--   **`core`**: The `core` profile is the base of this project, it includes a [traefik] reverse proxy
-    and [OAuth] service that allows you to access all of your services via a single domain name
-    securely behind HTTPS and protected with Google OAuth.
--   **`media`**: The `media` profile includes services like [Plex], [Sonarr], [Radarr], and
-    [Ombi] that allow you to request, download, organize, and stream media to your devices. This profile
-    is perfect for those who want to have a media server in their homelab.
--   **`utilities`**: The `utilities` profile includes services like [Watchtower] and [Portainer] that
-    are designed to help you manage your homelab, monitor your services,
-    and keep your containers up-to-date.
--   **`miscellaneous`**: The `miscellaneous` profile is disabled by default.
-    It includes services like [ChatGPT Next Web] and [LibreOffice Online]
-    that don't fit into the other profiles. These services are great for improving your
-    productivity and adding some fun to your homelab.
+- **`core`**: The `core` profile is the base of this project, it includes a [traefik] reverse proxy
+  and [OAuth] service that allows you to access all of your services via a single domain name
+  securely behind HTTPS and protected with Google OAuth.
+- **`media`**: The `media` profile includes services like [Plex], [Sonarr], [Radarr], and
+  [Ombi] that allow you to request, download, organize, and stream media to your devices. This profile
+  is perfect for those who want to have a media server in their homelab.
+- **`utilities`**: The `utilities` profile includes services like [Watchtower] and [Portainer] that
+  are designed to help you manage your homelab, monitor your services,
+  and keep your containers up-to-date.
+- **`miscellaneous`**: The `miscellaneous` profile is disabled by default.
+  It includes services like [ChatGPT Next Web] and [LibreOffice Online]
+  that don't fit into the other profiles. These services are great for improving your
+  productivity and adding some fun to your homelab.
 
 ## How does it work?
 

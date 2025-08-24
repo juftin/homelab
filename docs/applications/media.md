@@ -2,18 +2,18 @@
 
 ## Table of Contents
 
--   [plex](#plex)
--   [sonarr](#sonarr)
--   [radarr](#radarr)
--   [prowlarr](#prowlarr)
--   [overseerr](#overseerr)
--   [tautulli](#tautulli)
--   [transmission](#transmission)
--   [sabnzbd](#sabnzbd)
--   [heimdall](#heimdall)
--   [readarr](#readarr)
--   [calibre](#calibre)
--   [calibre-web](#calibre-web)
+- [plex](#plex)
+- [sonarr](#sonarr)
+- [radarr](#radarr)
+- [prowlarr](#prowlarr)
+- [overseerr](#overseerr)
+- [tautulli](#tautulli)
+- [transmission](#transmission)
+- [sabnzbd](#sabnzbd)
+- [heimdall](#heimdall)
+- [readarr](#readarr)
+- [calibre](#calibre)
+- [calibre-web](#calibre-web)
 
 ## plex
 

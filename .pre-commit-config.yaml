@@ -7,6 +7,7 @@ repos:
           - id: trailing-whitespace
           - id: end-of-file-fixer
           - id: check-yaml
+            exclude: mkdocs.yaml
           - id: check-ast
           - id: check-docstring-first
           - id: check-merge-conflict

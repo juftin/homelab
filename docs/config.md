@@ -30,9 +30,9 @@ cp docs/example.env .env
 cp -r docs/example-secrets/ secrets/
 ```
 
--   `.env` - Environment variables that are used by the `docker-compose.yaml` files
--   `secrets/google_oauth.secret` - The Google OAuth API credentials and user whitelist
--   `secrets/cloudflare_api_key.secret` - The CloudFlare API key (singular, plaintext key)
+- `.env` - Environment variables that are used by the `docker-compose.yaml` files
+- `secrets/google_oauth.secret` - The Google OAuth API credentials and user whitelist
+- `secrets/cloudflare_api_key.secret` - The CloudFlare API key (singular, plaintext key)
 
 <details><summary>📄 .env</summary>
 <p>

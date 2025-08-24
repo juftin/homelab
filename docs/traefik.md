@@ -141,8 +141,8 @@ certificate recreation. Keep in mind that certificate creation and registration 
 uncomment the `LETS_ENCRYPT_ENV` setting on the `.env` file to test with the
 LetsEncrypt staging environment.
 
--   file location: `traefik/core/config/acme/acme.json`
--   file permissions (chmod): `600`
+- file location: `traefik/core/config/acme/acme.json`
+- file permissions (chmod): `600`
 
 ```shell
 mkdir -p appdata/traefik/acme/ && \
@@ -159,10 +159,10 @@ mkdir -p appdata/traefik/acme/ && \
 
 ## Containers in Core Profile
 
--   [traefik](applications/core.md#traefik)
--   [oauth](applications/core.md#oauth)
--   [duckdns](applications/core.md#duckdns)
--   [docker-socket-proxy](applications/core.md#docker-socket-proxy)
+- [traefik](applications/core.md#traefik)
+- [oauth](applications/core.md#oauth)
+- [duckdns](applications/core.md#duckdns)
+- [docker-socket-proxy](applications/core.md#docker-socket-proxy)
 
 ## Creating New Services
 
@@ -188,16 +188,16 @@ the reference to `apps/libreoffice.yaml` line) and then run
     --8<-- "docker-compose.yaml"
     ```
 
--   `traefik.enable`
-    -   Allows Traefik to interact with this application
--   `traefik.http.routers.libreoffice-rtr.rule`
-    -   Creates a router, "libreoffice-rtr", that can be accessed @ libreoffice.example.com
--   `traefik.http.routers.libreoffice-rtr.service`
-    -   Attaches a load balancing service, "libreoffice-svc",to the router
--   `traefik.http.services.libreoffice-svc.loadbalancer.server.port`
-    -   Instructs the load balancer to operate on port 8888 (the exposed port of the application)
--   `traefik.http.routers.libreoffice-rtr.entrypoints`
-    -   Instructs the router to use the "websecure" entrypoint (https://libreoffice.example.com)
--   `traefik.http.routers.libreoffice-rtr.middlewares:`
-    -   Instructs the router to use the middleware service, `chain-oauth-google@file`
-        which requires Google OAuth for access
+- `traefik.enable`
+    - Allows Traefik to interact with this application
+- `traefik.http.routers.libreoffice-rtr.rule`
+    - Creates a router, "libreoffice-rtr", that can be accessed @ libreoffice.example.com
+- `traefik.http.routers.libreoffice-rtr.service`
+    - Attaches a load balancing service, "libreoffice-svc",to the router
+- `traefik.http.services.libreoffice-svc.loadbalancer.server.port`
+    - Instructs the load balancer to operate on port 8888 (the exposed port of the application)
+- `traefik.http.routers.libreoffice-rtr.entrypoints`
+    - Instructs the router to use the "websecure" entrypoint (https://libreoffice.example.com)
+- `traefik.http.routers.libreoffice-rtr.middlewares:`
+    - Instructs the router to use the middleware service, `chain-oauth-google@file`
+      which requires Google OAuth for access
