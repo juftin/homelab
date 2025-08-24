@@ -6,14 +6,15 @@ description = "Homelab Deployment Via Docker-Compose"
 license = "MIT"
 name = "homelab"
 readme = "README.md"
+requires-python = ">=3.12,<3.13"
+version = "0.0.0"
 
-[tool.hatch.env]
-requires = ["hatch-pip-compile", "hatch-mkdocs"]
-
-[tool.hatch.env.collectors.mkdocs.docs]
-path = "mkdocs.yaml"
-
-[tool.hatch.envs.docs]
-detached = true
-type = "pip-compile"
-lock-filename = "docs/requirements.txt"
+[dependency-groups]
+dev = [
+  "markdown-exec",
+  "mkdocs",
+  "mkdocs-callouts",
+  "mkdocs-material",
+  "mkdocs-section-index",
+  "pymdown-extensions"
+]

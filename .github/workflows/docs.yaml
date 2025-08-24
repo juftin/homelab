@@ -13,14 +13,12 @@ jobs:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
-            - name: Set up Github Workspace
+            - name: checkout
               uses: actions/checkout@v4
-            - name: Setup Hatch
-              uses: juftin/actions/hatch-setup@v1
-              with:
-                  python_version: "3.11"
-            - name: Build Docs
-              uses: juftin/actions/hatch-docs@v1
-            - name: Publish Docs
+            - name: setup-uv
+              uses: astral-sh/setup-uv@v6
+            - name: docs
+              run: uv run mkdocs build
+            - name: github-pages
               uses: juftin/actions/github-pages@v1
               id: deployment
