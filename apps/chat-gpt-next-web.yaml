@@ -4,22 +4,51 @@
 #######################################
 
 services:
-    chat-gpt-next-web:
-        container_name: chat-gpt-next-web
-        image: yidadaa/chatgpt-next-web:latest
-        profiles: ["miscellaneous", "all"]
+    next-chat:
+        container_name: next-chat
+        image: yidadaa/chatgpt-next-web:v2.16.0
+        profiles: ["llm", "all"]
         networks:
             traefik:
         environment:
             TZ: ${TZ}
             OPENAI_API_KEY: ${OPENAI_API_KEY:-}
             ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-            CUSTOM_MODELS: -all,gpt-4o@OpenAI,gpt-4o-mini@OpenAI,claude-3-5-sonnet-20240620@Anthropic=claude-3-5-sonnet,claude-3-opus-20240229@Anthropic=claude-3-opus,claude-3-haiku-20240307@Anthropic=claude-3-haiku
+            GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+            STABILITY_API_KEY: ${STABILITY_API_KEY:-}
             HIDE_USER_API_KEY: ${HIDE_USER_API_KEY:-1}
+            ENABLE_MCP: true
+            DEFAULT_MODEL: +gpt-5@OpenAI
+            CUSTOM_MODELS: >
+                -all,
+                gpt-5@OpenAI,
+                gpt-5-mini@OpenAI,
+                gpt-5-nano@OpenAI,
+                gpt-4.1@OpenAI,
+                chatgpt-4o-latest@OpenAI,
+                gpt-4o@OpenAI,
+                gpt-4o-mini@OpenAI,
+                o1-pro@OpenAI,
+                o3@OpenAI,
+                o3-mini@OpenAI,
+                o4-mini@OpenAI,
+                gpt-4.1-mini@OpenAI,
+                gpt-4.1-nano@OpenAI,
+                claude-opus-4-0@Anthropic,
+                claude-sonnet-4-0@Anthropic,
+                claude-3-7-sonnet-latest@Anthropic,
+                claude-3-5-haiku-latest@Anthropic,
+                claude-3-opus-latest@Anthropic,
+                gemini-2.5-pro@Google,
+                gemini-2.5-flash@Google
+        command:
+            - sh
+            - -c
+            - export CUSTOM_MODELS=$(echo "$$CUSTOM_MODELS" | tr -d " ") && node server.js
         labels:
             traefik.enable: true
-            traefik.http.routers.chat-rtr.rule: Host(`${CHAT_SUBDOMAIN:-chat}.${DOMAIN_NAME}`)
-            traefik.http.routers.chat-rtr.service: chat-svc
-            traefik.http.services.chat-svc.loadbalancer.server.port: 3000
-            traefik.http.routers.chat-rtr.entrypoints: websecure
-            traefik.http.routers.chat-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.nextchat-rtr.rule: Host(`${NEXTCHAT_SUBDOMAIN:-nextchat}.${DOMAIN_NAME}`)
+            traefik.http.routers.nextchat-rtr.service: nextchat-svc
+            traefik.http.services.nextchat-svc.loadbalancer.server.port: 3000
+            traefik.http.routers.nextchat-rtr.entrypoints: websecure
+            traefik.http.routers.nextchat-rtr.middlewares: chain-oauth-google@file

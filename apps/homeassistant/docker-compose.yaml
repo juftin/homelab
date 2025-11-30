@@ -21,4 +21,4 @@ services:
             traefik.http.routers.homeassistant-rtr.service: homeassistant-svc
             traefik.http.services.homeassistant-svc.loadbalancer.server.port: 8123
             traefik.http.routers.homeassistant-rtr.entrypoints: websecure
-            traefik.http.routers.homeassistant-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.homeassistant-rtr.middlewares: chain-rate-limit@file

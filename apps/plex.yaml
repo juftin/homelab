@@ -12,7 +12,7 @@ services:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
-            - ${PLEX_TRANSCODE_DIR:-/tmp}:/transcode
+            - ${TRANSCODE_DIR:-/dev/shm}:/transcode
             - ${BOOKS_DIR}:/books
         devices:
             - /dev/dri:/dev/dri

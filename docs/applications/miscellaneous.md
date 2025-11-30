@@ -67,14 +67,6 @@ Umami is a simple, fast, privacy-focused alternative to Google Analytics.
 > The default username is `admin` and the default password
 > is `umami`. You should change this as soon as you log in the first time.
 
-> [!NOTE]
->
-> The current setup of Umami uses a secondary domain for the ultimate
-> tracking URL. You can change this in the `umami.yaml` file. If you choose to use
-> the secondary domain, you must uncomment `SECONDARY_DOMAIN_NAME` settings in the
-> `apps/traefik/docker-compose.yaml` file and uncomment the `SECONDARY_DOMAIN_NAME`
-> variable in your `.env` file before regenerating HTTPS certificates.
-
 ## homeassistant
 
 [![](https://img.shields.io/static/v1?message=homeassistant/home-assistant&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/homeassistant/home-assistant)

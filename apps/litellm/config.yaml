@@ -1,0 +1,143 @@
+#######################################################
+# LITELLM CONFIGURATION FILE
+#
+# https://docs.litellm.ai/docs/proxy/config_settings
+#######################################################
+
+general_settings:
+    disable_master_key_return: true
+    maximum_spend_logs_retention_period: 30d
+    maximum_spend_logs_retention_interval: 1d
+    proxy_batch_write_at: 60
+    disable_error_logs: true
+    store_model_in_db: true
+
+model_list:
+    - model_name: gpt-5
+      litellm_params:
+          model: openai/gpt-5
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-5-mini
+      litellm_params:
+          model: openai/gpt-5-mini
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-5-nano
+      litellm_params:
+          model: openai/gpt-5-nano
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-4.1
+      litellm_params:
+          model: openai/gpt-4.1
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-4o
+      litellm_params:
+          model: openai/gpt-4o
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-4o-mini
+      litellm_params:
+          model: openai/gpt-4o-mini
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: o3
+      litellm_params:
+          model: openai/o3
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: o3-mini
+      litellm_params:
+          model: openai/o3-mini
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: o4-mini
+      litellm_params:
+          model: openai/o4-mini
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-4.1-mini
+      litellm_params:
+          model: openai/gpt-4.1-mini
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: gpt-4.1-nano
+      litellm_params:
+          model: openai/gpt-4.1-nano
+          api_key: os.environ/OPENAI_API_KEY
+
+    - model_name: anthropic/claude-opus-4-1
+      litellm_params:
+          model: anthropic/claude-opus-4-1
+          api_key: os.environ/ANTHROPIC_API_KEY
+          merge_reasoning_content_in_choices: true
+
+    - model_name: anthropic/claude-sonnet-4-5
+      litellm_params:
+          model: anthropic/claude-sonnet-4-5
+          api_key: os.environ/ANTHROPIC_API_KEY
+          merge_reasoning_content_in_choices: true
+
+    - model_name: anthropic/claude-sonnet-4-5-thinking
+      litellm_params:
+          model: anthropic/claude-sonnet-4-5
+          api_key: os.environ/ANTHROPIC_API_KEY
+          thinking: { "type": "enabled", "budget_tokens": 1024 }
+          merge_reasoning_content_in_choices: true
+
+    - model_name: anthropic/claude-sonnet-4-0
+      litellm_params:
+          model: anthropic/claude-sonnet-4-20250514
+          api_key: os.environ/ANTHROPIC_API_KEY
+          merge_reasoning_content_in_choices: true
+
+    - model_name: anthropic/claude-sonnet-4-0-thinking
+      litellm_params:
+          model: anthropic/claude-sonnet-4-20250514
+          api_key: os.environ/ANTHROPIC_API_KEY
+          thinking: { "type": "enabled", "budget_tokens": 1024 }
+          merge_reasoning_content_in_choices: true
+
+    - model_name: anthropic/claude-3-5-haiku-latest
+      litellm_params:
+          model: anthropic/claude-3-5-haiku-latest
+          api_key: os.environ/ANTHROPIC_API_KEY
+          thinking: { "type": "enabled" }
+          merge_reasoning_content_in_choices: true
+
+    - model_name: gemini/gemini-2.5-pro
+      litellm_params:
+          model: gemini/gemini-2.5-pro
+          api_key: os.environ/GEMINI_API_KEY
+          thinking: { "type": "enabled" }
+          merge_reasoning_content_in_choices: true
+
+    - model_name: gemini/gemini-2.5-flash
+      litellm_params:
+          model: gemini/gemini-2.5-flash
+          api_key: os.environ/GEMINI_API_KEY
+          thinking: { "type": "enabled" }
+          merge_reasoning_content_in_choices: true
+
+    - model_name: gemini/gemini-2.5-flash-lite
+      litellm_params:
+          model: gemini/gemini-2.5-flash-lite
+          api_key: os.environ/GEMINI_API_KEY
+          thinking: { "type": "enabled" }
+          merge_reasoning_content_in_choices: true
+
+litellm_settings:
+    drop_params: true
+    request_timeout: 600
+    set_verbose: false
+    cache: true
+    cache_params:
+        type: redis
+        host: os.environ/REDIS_HOST
+        port: os.environ/REDIS_PORT
+
+router_settings:
+    redis_host: os.environ/REDIS_HOST
+    redis_port: os.environ/REDIS_PORT

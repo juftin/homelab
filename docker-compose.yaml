@@ -46,12 +46,22 @@ include:
     # * Note the existing services that are disabled by default.
     #############################################################################
 
-    # - apps/chat-gpt-next-web.yaml # ChatGPT Next Web
-    # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
     # - apps/libreoffice.yaml # LibreOffice (Office Suite)
     # - apps/umami.yaml # Umami Analytics
     # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
     # - apps/healthchecks.yaml # Healthchecks (Monitoring)
+    # - apps/jellyfin.yaml
+
+    #############################################################################
+    # LLM
+    #
+    # * Note the existing services that are disabled by default.
+    #############################################################################
+
+    # - apps/litellm/docker-compose.yaml # (LLM - LiteLLM)
+    # - apps/open-webui.yaml # (LLM - OpenWebUI)
+    # - apps/chat-gpt-next-web.yaml # (LLM - NextChat)
+    # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
 
 ################################################################################
 # NETWORK CONFIGURATION

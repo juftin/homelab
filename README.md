@@ -33,6 +33,10 @@ docker compose application. Each service belongs to a [docker compose profile] -
   It includes services like [ChatGPT Next Web] and [LibreOffice Online]
   that don't fit into the other profiles. These services are great for improving your
   productivity and adding some fun to your homelab.
+- **`llm`**: The `llm` profile is disabled by default.
+  It includes services like [ChatGPT Next Web] that allow you to run a local instance of
+  ChatGPT and other LLMs. This profile is perfect for those who want to experiment with
+  LLMs and AI in their homelab.
 
 ## How does it work?
 

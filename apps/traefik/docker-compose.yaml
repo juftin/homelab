@@ -9,7 +9,7 @@ secrets:
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v3.0
+        image: library/traefik:v3.6
         profiles: ["traefik", "core", "all"]
         ports:
             - published: 80
@@ -74,8 +74,6 @@ services:
             - --entrypoints.websecure.http.tls.certresolver=dns-cloudflare
             - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
             - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
-            # - --entrypoints.websecure.http.tls.domains[1].main=${SECONDARY_DOMAIN_NAME}
-            # - --entrypoints.websecure.http.tls.domains[1].sans=*.${SECONDARY_DOMAIN_NAME}
             - --entrypoints.websecure.http.tls=true
             - --entrypoints.websecure.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS

@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# ChromaDB
+#######################################
+
+services:
+    chromadb:
+        container_name: chromadb
+        image: chromadb/chroma:1.0.12
+        profiles: ["llm", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/chromadb:/data
+        networks:
+            internal:
+        environment:
+            IS_PERSISTENT: "TRUE"
+            ALLOW_RESET: "TRUE"
+        healthcheck:
+            test:
+                ["CMD-SHELL", "curl localhost:8000/api/v1/heartbeat || exit 1"]
+            interval: 10s
+            retries: 2
+            start_period: 5s
+            timeout: 10s

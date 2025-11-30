@@ -27,7 +27,7 @@ services:
             retries: 5
         labels:
             traefik.enable: true
-            traefik.http.routers.umami-rtr.rule: Host(`${UMAMI_SUBDOMAIN:-umami}.${SECONDARY_DOMAIN_NAME}`)
+            traefik.http.routers.umami-rtr.rule: Host(`${UMAMI_SUBDOMAIN:-umami}.${DOMAIN_NAME}`)
             traefik.http.routers.umami-rtr.service: umami-svc
             traefik.http.services.umami-svc.loadbalancer.server.port: 3000
             traefik.http.routers.umami-rtr.entrypoints: websecure

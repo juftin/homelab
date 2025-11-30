@@ -1,45 +1,46 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 PYTHON:=$(ROOT_DIR)/.venv/bin/python
+PROFILE:=all
 SHELL:=/bin/bash
 
 ##@ Homelab 🐳
 
 .PHONY: update
 update: ## Update the service(s) *
-	docker compose --project-directory "$(ROOT_DIR)" --profile all pull $(APP)
-	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) pull $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) up -d $(APP)
 
 .PHONY: pull
 pull: ## Pull the latest image(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all pull $(APP)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) pull $(APP)
 
 .PHONY: up
 up: ## Start the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all up -d $(APP) $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) up -d $(APP) $(ARGS)
 
 .PHONY: down
 down: ## Stop the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all down $(APP) $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) down $(APP) $(ARGS)
 
 .PHONY: stop
 stop: ## Stop the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all stop $(APP) $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) stop $(APP) $(ARGS)
 
 .PHONY: logs
 logs: ## Show the logs*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all logs $(APP) -ft $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) logs $(APP) -ft $(ARGS)
 
 .PHONY: restart
 restart: ## Restart the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all restart  $(APP) $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) restart  $(APP) $(ARGS)
 
 .PHONY: ps
 ps: ## Show the status of the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
 
 .PHONY: config
 config: ## Show the configuration of the service(s)*
-	docker compose --project-directory "$(ROOT_DIR)" --profile all config $(APP) $(ARGS)
+	docker compose --project-directory "$(ROOT_DIR)" --profile $(PROFILE) config $(APP) $(ARGS)
 
 ##@ Core Services 🧠
 
@@ -94,7 +95,7 @@ backup-no-timestamp: ## Backup the homelab repo to the ${BACKUP_DIR} without a t
 
 .PHONY: docs
 docs: ## Build the documentation.
-	uv run mkdocs serve --livereload --dev-addr localhost:8000
+	hatch run docs:serve --livereload --dev-addr localhost:8000
 
 .PHONY: lint
 lint: ## Lint the code with pre-commit.

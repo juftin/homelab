@@ -9,3 +9,8 @@ http:
         - fe80::/64
         - fe00::/64
         - fd00::/64
+default_config:
+recorder:
+    purge_keep_days: 90
+    auto_purge: true
+    auto_repack: true

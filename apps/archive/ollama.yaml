@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# Ollama
+#######################################
+
+services:
+    ollama:
+        container_name: ollama
+        image: ollama/ollama:latest
+        profiles: ["llm", "all"]
+        environment:
+            OLLAMA_HOST: "0.0.0.0"
+            OLLAMA_KEEP_ALIVE: "1m"
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/ollama:/root/.ollama
+        networks:
+            internal:

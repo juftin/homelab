@@ -19,5 +19,3 @@ services:
         security_opt:
             - no-new-privileges:true
         restart: always
-        labels:
-            com.ouroboros.enable: "true"

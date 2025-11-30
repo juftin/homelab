@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+#######################################
+# Jellyfin
+#######################################
+
+services:
+    jellyfin:
+        container_name: jellyfin
+        image: lscr.io/linuxserver/jellyfin:latest
+        profiles: ["media", "all"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/jellyfin:/config
+            - ${TV_DIR}:/data/tvshows
+            - ${MOVIE_DIR}:/data/movies
+            - /dev/shm:/data/transcode
+        networks:
+            traefik:
+        devices:
+            - /dev/dri:/dev/dri
+            - /dev/dvb:/dev/dvb
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            JELLYFIN_PublishedServerUrl: https://${JELLYFIN_SUBDOMAIN:-jellyfin}.${DOMAIN_NAME}
+        labels:
+            traefik.enable: true
+            traefik.http.routers.jellyfin-rtr.rule: Host(`${JELLYFIN_SUBDOMAIN:-jellyfin}.${DOMAIN_NAME}`)
+            traefik.http.routers.jellyfin-rtr.entrypoints: websecure
+            traefik.http.routers.jellyfin-rtr.service: jellyfin-svc
+            traefik.http.services.jellyfin-svc.loadbalancer.server.port: 8096
+            traefik.http.routers.jellyfin-rtr.middlewares: chain-rate-limit@file

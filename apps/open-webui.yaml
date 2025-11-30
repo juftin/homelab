@@ -1,0 +1,99 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# Open WebUI
+#######################################
+
+services:
+    open-webui-pgvector:
+        container_name: open-webui-pgvector
+        image: pgvector/pgvector:pg18-trixie
+        profiles: ["llm", "all", "chat"]
+        environment:
+            POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
+            POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
+            POSTGRES_DB: ${OPENWEBU_POSTGRES_DB:-openwebui}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/open-webui/pgvector:/var/lib/postgresql/18/docker
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-openwebui}"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    open-webui-db:
+        container_name: open-webui-db
+        image: postgres:18
+        profiles: ["llm", "all", "chat"]
+        environment:
+            POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
+            POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
+            POSTGRES_DB: ${OPENWEBU_POSTGRES_DB:-openwebui}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/open-webui/db:/var/lib/postgresql/18/docker
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-openwebui}"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    open-webui:
+        container_name: open-webui
+        image: ghcr.io/open-webui/open-webui:main
+        profiles: ["llm", "all", "chat"]
+        networks:
+            traefik:
+            internal:
+        depends_on:
+            open-webui-db:
+                condition: service_healthy
+            open-webui-pgvector:
+                condition: service_healthy
+            ollama:
+                condition: service_started
+        environment:
+            TZ: ${TZ}
+            DATABASE_URL: postgresql://${OPENWEBUI_POSTGRES_USER:-openwebui}:${OPENWEBU_POSTGRES_PASSWORD:-openwebui}@open-webui-db:5432/${OPENWEBU_POSTGRES_DB:-openwebui}
+            PGVECTOR_DB_URL: postgresql://${OPENWEBUI_POSTGRES_USER:-openwebui}:${OPENWEBU_POSTGRES_PASSWORD:-openwebui}@open-webui-pgvector:5432/${OPENWEBU_POSTGRES_DB:-openwebui}
+            OPENAI_API_BASE_URL: http://litellm:4000
+            OPENAI_API_KEY: ${LITELLM_OPEN_WEBUI_KEY:?}
+            DATA_DIR: /app/backend/data
+            OLLAMA_BASE_URLS: http://ollama:11434
+            VECTOR_DB: pgvector
+            RAG_EMBEDDING_ENGINE: ollama
+            RAG_EMBEDDING_MODEL: nomic-embed-text-v1.5
+            RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE: "True"
+            TASK_MODEL: granite3.3:2b
+            TASK_MODEL_EXTERNAL: gpt-5-nano
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/open-webui/open-webui:/app/backend/data
+        labels:
+            traefik.enable: true
+            traefik.http.routers.open-webui-rtr.rule: Host(`${OPEN_WEBUI_SUBDOMAIN:-open-webui}.${DOMAIN_NAME}`)
+            traefik.http.routers.open-webui-rtr.service: open-webui-svc
+            traefik.http.services.open-webui-svc.loadbalancer.server.port: 8080
+            traefik.http.routers.open-webui-rtr.entrypoints: websecure
+            traefik.http.routers.open-webui-rtr.middlewares: chain-oauth-google@file
+
+    ollama:
+        container_name: ollama
+        image: ollama/ollama:latest
+        profiles: ["llm", "all", "chat"]
+        environment:
+            OLLAMA_HOST: "0.0.0.0"
+            OLLAMA_KEEP_ALIVE: "1m"
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/ollama:/root/.ollama
+        networks:
+            internal:

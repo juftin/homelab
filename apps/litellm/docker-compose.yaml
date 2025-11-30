@@ -1,0 +1,113 @@
+#######################################
+# LITELLM (LLM PROXY)
+#######################################
+
+services:
+    litellm:
+        container_name: litellm
+        image: ghcr.io/berriai/litellm:main-stable
+        depends_on:
+            litellm-db:
+                condition: service_healthy
+            litellm-redis:
+                condition: service_healthy
+        profiles: ["llm", "all", "chat"]
+        environment:
+            DATABASE_URL: "postgresql://${LITELLM_POSTGRES_USER:-litellm}:${LITELLM_POSTGRES_PASSWORD:-litellm}@litellm-db:5432/${LITELLM_POSTGRES_DB:-litellm}"
+            STORE_MODEL_IN_DB: "True"
+            LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?}
+            LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:?}
+            LITELLM_MODE: PRODUCTION
+            LITELLM_LOG: ERROR
+            SEPARATE_HEALTH_APP: "1"
+            SEPARATE_HEALTH_PORT: "4001"
+            REDIS_HOST: litellm-redis
+            REDIS_PORT: 6379
+            OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+            ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+            GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+            NO_DOCS: "True"
+            NO_REDOC: "True"
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/litellm/config:/config
+            - ${DOCKER_DIRECTORY}/apps/litellm/config.yaml:/app/config.yaml:ro
+        command:
+            - "--config=/app/config.yaml"
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+            internal:
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 http://localhost:4001/health/liveliness || exit 1",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        labels:
+            traefik.enable: true
+            traefik.http.routers.litellm-rtr.rule: Host(`${LITELLM_SUBDOMAIN:-litellm}.${DOMAIN_NAME}`)
+            traefik.http.routers.litellm-rtr.entrypoints: websecure
+            traefik.http.routers.litellm-rtr.service: litellm-svc
+            traefik.http.services.litellm-svc.loadbalancer.server.port: 4000
+            traefik.http.routers.litellm-rtr.middlewares: chain-rate-limit@file
+
+    litellm-db:
+        container_name: litellm-db
+        image: postgres:17
+        profiles: ["llm", "all", "chat"]
+        environment:
+            POSTGRES_USER: ${LITELLM_POSTGRES_USER:-litellm}
+            POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-litellm}
+            POSTGRES_DB: ${LITELLM_POSTGRES_DB:-litellm}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/litellm/db:/var/lib/postgresql/data
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-litellm}"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    litellm-redis:
+        container_name: litellm-redis
+        image: valkey/valkey:8.1
+        profiles: ["llm", "all", "chat"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/apps/litellm/valkey.conf:/app/valkey.conf:ro
+        command: ["valkey-server", "/app/valkey.conf"]
+        networks:
+            - internal
+        healthcheck:
+            test: ["CMD", "valkey-cli", "ping"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    litellm-bootstrap:
+        container_name: litellm-bootstrap
+        image: badouralix/curl-jq:debian
+        depends_on:
+            litellm:
+                condition: service_healthy
+        profiles: ["llm", "all", "chat"]
+        volumes:
+            - ${DOCKER_DIRECTORY}/apps/litellm/bootstrap.sh:/bootstrap.sh:ro
+        networks:
+            - internal
+        environment:
+            LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?}
+            LITELLM_OPEN_WEBUI_KEY: ${LITELLM_OPEN_WEBUI_KEY:?}
+        command: ["/bin/bash", "/bootstrap.sh"]
+        restart: no

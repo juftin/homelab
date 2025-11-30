@@ -26,7 +26,7 @@ http:
                 contentTypeNosniff: true
                 browserXssFilter: true
                 referrerPolicy: same-origin
-                permissionsPolicy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), vr=()
+                permissionsPolicy: camera=(), microphone=(self), geolocation=(), payment=(), usb=(), vr=()
                 customResponseHeaders:
                     X-Robots-Tag: none,noarchive,nosnippet,notranslate,noimageindex,
                     server: ""
