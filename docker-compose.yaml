@@ -26,19 +26,19 @@ include:
     - apps/transmission.yaml # Transmission (Torrents Behind VPN)
     - apps/sabnzbd.yaml # SABnzbd (Usenet Downloading)
     - apps/nzbhydra.yaml # NZBHydra2 (Usenet Browsing)
-    # - apps/readarr.yaml # Readarr (Ebook Downloads)
-    # - apps/calibre.yaml # Calibre (Books Management)
-    # - apps/calibre-web.yaml # Calibre Web-UI
+    - apps/readarr.yaml # Readarr (Ebook Downloads)
+    - apps/calibre.yaml # Calibre (Books Management)
+    - apps/calibre-web.yaml # Calibre Web-UI
 
     #############################################################################
     # UTILITIES
     #############################################################################
 
     - apps/watchtower.yaml #  Watchtower (Container Updating)
-    # - apps/postgres.yaml # PostgreSQL (Shared Database)
-    # - apps/sftpgo.yaml # SFTPGo (File Management)
-    # - apps/pihole.yaml # Pi-hole (DNS Ad-Blocking)
-    # - apps/portainer.yaml # Portainer (Container Management)
+    - apps/postgres.yaml # PostgreSQL (Shared Database)
+    - apps/sftpgo.yaml # SFTPGo (File Management)
+    - apps/pihole.yaml # Pi-hole (DNS Ad-Blocking)
+    - apps/portainer.yaml # Portainer (Container Management)
 
     #############################################################################
     # MISCELLANEOUS
@@ -48,20 +48,20 @@ include:
 
     # - apps/libreoffice.yaml # LibreOffice (Office Suite)
     # - apps/umami.yaml # Umami Analytics
-    # - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
+    - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
     # - apps/healthchecks.yaml # Healthchecks (Monitoring)
-    # - apps/jellyfin.yaml
+    - apps/jellyfin.yaml
+    - apps/camply.yaml
 
     #############################################################################
     # LLM
     #
     # * Note the existing services that are disabled by default.
     #############################################################################
-
-    # - apps/litellm/docker-compose.yaml # (LLM - LiteLLM)
-    # - apps/open-webui.yaml # (LLM - OpenWebUI)
-    # - apps/chat-gpt-next-web.yaml # (LLM - NextChat)
-    # - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+    - apps/open-webui.yaml # (LLM - OpenWebUI)
+    - apps/chat-gpt-next-web.yaml # (LLM - NextChat)
+    - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
+    - apps/litellm/docker-compose.yaml # (LLM - LiteLLM)
 
 ################################################################################
 # NETWORK CONFIGURATION
