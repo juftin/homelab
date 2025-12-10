@@ -2,30 +2,15 @@
 # TRAEFIK (REVERSE PROXY)
 ####################################
 
-secrets:
-    cloudflare_api_key:
-        file: ${DOCKER_DIRECTORY}/secrets/cloudflare_api_key.secret
-
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v3.6
-        profiles: ["traefik", "core", "all"]
+        image: library/traefik:v3.6.4@sha256:c5bd185c41ba3dbb42cf8a1b9fbdc368bdc96f90c8e598134879935f64e7a7f1
         ports:
             - published: 80
               target: 80
               protocol: tcp
               mode: host
-            - published: 443
-              target: 443
-              protocol: tcp
-              mode: host
-        environment:
-            CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-            CF_API_KEY_FILE: /run/secrets/cloudflare_api_key
-        secrets:
-            - source: cloudflare_api_key
-              target: /run/secrets/cloudflare_api_key
         volumes:
             - ${DOCKER_DIRECTORY}/apps/traefik/rules:/rules
             - ${DOCKER_DIRECTORY}/appdata/traefik/logs:/logs
@@ -39,8 +24,6 @@ services:
         restart: always
         depends_on:
             - socket-proxy
-            - duckdns
-            - oauth
         command:
             # GLOBAL SETTINGS
             - --global.checkNewVersion=true
@@ -60,32 +43,15 @@ services:
             - --providers.docker=true
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
-            - --providers.docker.network=homelab_traefik
+            - --providers.docker.network=homelab-core_traefik
             - --providers.file.directory=/rules
             - --providers.file.watch=true
             # ENTRYPOINTS
             - --entrypoints.web.address=:80
-            - --entrypoints.websecure.address=:443
             - --entrypoints.traefik.address=:8080
-            - --entrypoints.web.http.redirections.entrypoint.to=websecure
-            - --entrypoints.web.http.redirections.entrypoint.scheme=https
-            - --entrypoints.web.http.redirections.entrypoint.permanent=true
-            - --entrypoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22
-            - --entrypoints.websecure.http.tls.certresolver=dns-cloudflare
-            - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN_NAME}
-            - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN_NAME}
-            - --entrypoints.websecure.http.tls=true
-            - --entrypoints.websecure.http.tls.options=tls-opts@file
-            # CERTIFICATE RESOLVERS
-            - --certificatesResolvers.dns-cloudflare.acme.caServer=${LETS_ENCRYPT_ENV:-https://acme-v02.api.letsencrypt.org/directory}
-            - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
-            - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
-            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
-            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
-            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
         labels:
             traefik.enable: true
             traefik.http.routers.traefik-rtr.rule: Host(`${TRAEFIK_SUBDOMAIN:-traefik}.${DOMAIN_NAME}`)
-            traefik.http.routers.traefik-rtr.entrypoints: websecure
+            traefik.http.routers.traefik-rtr.entrypoints: web
             traefik.http.routers.traefik-rtr.service: api@internal
-            traefik.http.routers.traefik-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.traefik-rtr.middlewares: chain-rate-limit@file

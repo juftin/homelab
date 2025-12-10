@@ -5,8 +5,7 @@
 services:
     heimdall:
         container_name: heimdall
-        image: lscr.io/linuxserver/heimdall:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/heimdall:latest@sha256:79cb9ff5d001516f6809d9bf9ef88a20c0a145703c4f7ee0a32722facced14d4
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/heimdall:/config
         environment:
@@ -20,8 +19,8 @@ services:
             traefik:
         labels:
             traefik.enable: true
-            traefik.http.routers.heimdall-rtr.rule: Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
-            traefik.http.routers.heimdall-rtr.entrypoints: websecure
+            traefik.http.routers.heimdall-rtr.rule: Host(`${HEIMDALL_DOMAIN:-heimdall}.${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.entrypoints: web
             traefik.http.routers.heimdall-rtr.service: heimdall-svc
             traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
-            traefik.http.routers.heimdall-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.heimdall-rtr.middlewares: chain-rate-limit@file

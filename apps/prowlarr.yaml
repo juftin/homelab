@@ -5,8 +5,7 @@
 services:
     prowlarr:
         container_name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:develop
-        profiles: ["media", "arrs", "all"]
+        image: lscr.io/linuxserver/prowlarr:develop@sha256:6972ea29955d3022d1189b696a00fa7311050db85e6ac8dd58afb1b5a2552c79
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/prowlarr:/config
         environment:
@@ -21,7 +20,7 @@ services:
         labels:
             traefik.enable: true
             traefik.http.routers.prowlarr-rtr.rule: Host(`${PROWLARR_SUBDOMAIN:-prowlarr}.${DOMAIN_NAME}`)
-            traefik.http.routers.prowlarr-rtr.entrypoints: websecure
+            traefik.http.routers.prowlarr-rtr.entrypoints: web
             traefik.http.routers.prowlarr-rtr.service: prowlarr-svc
             traefik.http.services.prowlarr-svc.loadbalancer.server.port: 9696
-            traefik.http.routers.prowlarr-rtr.middlewares: chain-oauth-google@file
+            traefik.http.routers.prowlarr-rtr.middlewares: chain-rate-limit@file

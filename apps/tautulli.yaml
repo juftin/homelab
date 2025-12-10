@@ -6,7 +6,7 @@
 services:
     tautulli:
         container_name: tautulli
-        image: lscr.io/linuxserver/tautulli:latest
+        image: lscr.io/linuxserver/tautulli:latest@sha256:4d764be0f66532f6820a82aa365e530414f50f462410ce0949edd3fc22ccb9d5
         profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/tautulli:/config

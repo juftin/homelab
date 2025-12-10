@@ -6,7 +6,7 @@
 services:
     watchtower:
         container_name: watchtower
-        image: containrrr/watchtower:latest
+        image: containrrr/watchtower:1.7.1@sha256:6dd50763bbd632a83cb154d5451700530d1e44200b268a4e9488fefdfcf2b038
         profiles: ["utilities", "all"]
         networks:
             internal:

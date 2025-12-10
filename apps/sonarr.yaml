@@ -5,7 +5,7 @@
 services:
     sonarr:
         container_name: sonarr
-        image: lscr.io/linuxserver/sonarr:latest
+        image: lscr.io/linuxserver/sonarr:latest@sha256:60e5edcac39172294ad22d55d1b08c2c0a9fe658cad2f2c4d742ae017d7874de
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sonarr:/config

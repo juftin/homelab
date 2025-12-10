@@ -6,7 +6,7 @@
 services:
     chatgpt-in-slack:
         container_name: chatgpt-in-slack
-        image: juftin/chatgpt-in-slack:latest
+        image: juftin/chatgpt-in-slack:latest@sha256:28e8efdf546666859c4bcf8aab584ab3dc6ad32943a812535265962067ffb350
         profiles: ["llm", "all"]
         networks:
             internal:

@@ -5,7 +5,7 @@
 services:
     plex:
         container_name: plex
-        image: lscr.io/linuxserver/plex:latest
+        image: lscr.io/linuxserver/plex:latest@sha256:ab81c7313fb5dc4d1f9562e5bbd5e5877a8a3c5ca6b9f9fff3437b5096a2b123
         profiles: ["media", "all"]
         network_mode: host
         volumes:

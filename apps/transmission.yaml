@@ -5,7 +5,7 @@
 services:
     transmission:
         container_name: transmission
-        image: haugene/transmission-openvpn:latest
+        image: haugene/transmission-openvpn:5.3.2@sha256:ecc30da79114d801295fd10a5dbaf8640b19707d012fb55be0671ddbe0503037
         profiles: ["media", "all"]
         volumes:
             - /etc/localtime:/etc/localtime:ro
