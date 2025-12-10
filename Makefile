@@ -95,7 +95,7 @@ backup-no-timestamp: ## Backup the homelab repo to the ${BACKUP_DIR} without a t
 
 .PHONY: docs
 docs: ## Build the documentation.
-	hatch run docs:serve --livereload --dev-addr localhost:8000
+	uv run mkdocs serve --livereload --dev-addr localhost:8000
 
 .PHONY: lint
 lint: ## Lint the code with pre-commit.
