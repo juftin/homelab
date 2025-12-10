@@ -1,0 +1,119 @@
+{
+    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+    baseBranchPatterns: ["gitops"],
+    gitAuthor: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    extends: [
+        "mergeConfidence:all-badges",
+        "config:recommended",
+        "docker:enableMajor",
+        "docker:pinDigests",
+        "helpers:pinGitHubActionDigests",
+        ":automergeDigest",
+        ":dependencyDashboard",
+        ":disableRateLimiting",
+        ":semanticCommits",
+    ],
+    rangeStrategy: "pin",
+    dependencyDashboard: true,
+    dependencyDashboardTitle: "Renovate Dashboard 🤖",
+    timezone: "America/Denver",
+    schedule: ["* 0-4 * * *"],
+    ignorePaths: ["**/*.sops.*"],
+    "docker-compose": {
+        managerFilePatterns: [
+            "//(^|/)(?:docker-)?compose[^/]*\\.ya?ml$//",
+            "/^apps/[^/]+\\.ya?ml$/",
+        ],
+    },
+    packageRules: [
+        {
+            description: "Auto-merge Minor and Patch",
+            matchUpdateTypes: ["minor", "patch"],
+            matchCurrentVersion: "!/^0/",
+            automerge: true,
+        },
+        {
+            description: "Auto-merge Patch on 0.x",
+            matchUpdateTypes: ["patch"],
+            matchCurrentVersion: "/^0\\./",
+            automerge: true,
+        },
+        {
+            description: "Auto-merge Mise Tools",
+            matchManagers: ["mise"],
+            automerge: true,
+            automergeType: "branch",
+            matchUpdateTypes: ["minor", "patch"],
+            ignoreTests: true,
+        },
+        {
+            matchUpdateTypes: ["major"],
+            semanticCommitType: "💥 ",
+            commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
+            commitBody: "[skip release]",
+        },
+        {
+            matchUpdateTypes: ["minor"],
+            semanticCommitType: "✨ ",
+            commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
+            commitBody: "[skip release]",
+        },
+        {
+            matchUpdateTypes: ["patch"],
+            semanticCommitType: "🐛 ",
+            commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
+            commitBody: "[skip release]",
+        },
+        {
+            matchUpdateTypes: ["digest"],
+            semanticCommitType: "📌 ",
+            commitMessageExtra: "( {{currentDigestShort}} → {{newDigestShort}} )",
+            commitBody: "[skip release]",
+        },
+        {
+            matchDatasources: ["docker"],
+            semanticCommitScope: "container",
+            commitMessageTopic: "image {{depName}}",
+        },
+        {
+            matchManagers: ["github-actions"],
+            semanticCommitType: "👷 ",
+            semanticCommitScope: "github-action",
+            commitMessageTopic: "action {{depName}}",
+        },
+        {
+            matchDatasources: ["github-releases"],
+            semanticCommitScope: "github-release",
+            commitMessageTopic: "release {{depName}}",
+        },
+        {
+            matchManagers: ["mise"],
+            semanticCommitScope: "mise",
+            commitMessageTopic: "tool {{depName}}",
+        },
+        {
+            matchUpdateTypes: ["major"],
+            labels: ["type/major"],
+        },
+        {
+            matchUpdateTypes: ["minor"],
+            labels: ["type/minor"],
+        },
+        {
+            matchUpdateTypes: ["patch"],
+            labels: ["type/patch"],
+        },
+        {
+            matchDatasources: ["docker"],
+            addLabels: ["renovate/container"],
+        },
+        {
+            matchManagers: ["github-actions"],
+            addLabels: ["renovate/github-action"],
+        },
+        {
+            matchDatasources: ["github-releases"],
+            addLabels: ["renovate/github-release"],
+        },
+    ],
+}

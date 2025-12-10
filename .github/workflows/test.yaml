@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: test
+on:
+    pull_request:
+        branches:
+            - gitops
+    merge_group:
+        branches:
+            - gitops
+jobs:
+    test:
+        name: test
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: checkout
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - name: docker-compose-validate
+              run: |
+                  cp docs/example.env .env
+                  docker compose -f docker-compose.apps.yaml config
