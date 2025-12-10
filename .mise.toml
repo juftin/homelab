@@ -1,0 +1,41 @@
+# $schema = "https://mise.jdx.dev/schema/mise.json"
+
+[tools]
+sops = "3.11.0"
+age = "1.2.1"
+
+[env]
+MISE_DATA_DIR = "{{config_root}}/.mise"
+SOPS_AGE_KEY_FILE = "{{config_root}}/.age/key.txt"
+
+[vars]
+ENCRYPTED_ENV_FILE = "{{config_root}}/.env.yaml"
+DECRYPTED_ENV_FILE = "{{config_root}}/.env"
+ENCRYPTED_CLOUDFLARE_SECRET = "{{config_root}}/secrets/cloudflare_api_key.secret.yaml"
+DECRYPTED_CLOUDFLARE_SECRET = "{{config_root}}/secrets/cloudflare_api_key.secret"
+ENCRYPTED_GOOGLE_SECRET = "{{config_root}}/secrets/google_oauth.secret.yaml"
+DECRYPTED_GOOGLE_SECRET = "{{config_root}}/secrets/google_oauth.secret"
+
+[tasks.keygen]
+description = "Generate age keypair for secrets encryption"
+run = [
+  "mkdir -p $(dirname ${SOPS_AGE_KEY_FILE})",
+  "age-keygen -o ${SOPS_AGE_KEY_FILE}",
+  "chmod 600 ${SOPS_AGE_KEY_FILE}"
+]
+
+[tasks.decrypt]
+description = "Decrypt secrets file(s)"
+run = [
+  "sops decrypt '{{vars.ENCRYPTED_ENV_FILE}}' --output '{{vars.DECRYPTED_ENV_FILE}}' --input-type yaml --output-type dotenv",
+  "sops decrypt '{{vars.ENCRYPTED_CLOUDFLARE_SECRET}}' --output '{{vars.DECRYPTED_CLOUDFLARE_SECRET}}' --input-type yaml --output-type binary",
+  "sops decrypt '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --output '{{vars.DECRYPTED_GOOGLE_SECRET}}' --input-type yaml --output-type binary"
+]
+
+[tasks.encrypt]
+description = "Encrypt secrets file(s)"
+run = [
+  "sops encrypt '{{vars.DECRYPTED_ENV_FILE}}' --output '{{vars.ENCRYPTED_ENV_FILE}}' --input-type dotenv --output-type yaml",
+  "sops encrypt '{{vars.DECRYPTED_CLOUDFLARE_SECRET}}' --output '{{vars.ENCRYPTED_CLOUDFLARE_SECRET}}' --input-type binary --output-type yaml",
+  "sops encrypt '{{vars.DECRYPTED_GOOGLE_SECRET}}' --output '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --input-type binary --output-type yaml"
+]
