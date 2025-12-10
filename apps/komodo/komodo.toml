@@ -1,0 +1,100 @@
+################################################
+# Repos
+################################################
+
+[[repo]]
+name = "homelab"
+tags = ["homelab"]
+
+[repo.config]
+server = "homelab"
+repo = "juftin/homelab"
+branch = "gitops"
+
+################################################
+# Syncs
+################################################
+
+[[resource_sync]]
+name = "homelab"
+tags = ["homelab"]
+
+[resource_sync.config]
+repo = "juftin/homelab"
+branch = "gitops"
+resource_path = ["apps/komodo/komodo.toml"]
+
+################################################
+# Servers
+################################################
+
+[[server]]
+name = "homelab"
+tags = ["homelab"]
+
+[server.config]
+address = "https://komodo-periphery:8120"
+enabled = true
+
+################################################
+# Stacks
+################################################
+
+[[stack]]
+name = "homelab"
+tags = ["homelab"]
+
+[stack.config]
+server = "homelab"
+poll_for_updates = true
+auto_update = true
+linked_repo = "homelab"
+file_paths = ["docker-compose.apps.yaml"]
+pre_deploy.command = """
+mise trust .
+mise set SOPS_AGE_KEY_FILE=/app/mise/.age/key.txt
+mise run decrypt
+"""
+extra_args = ["--remove-orphans"]
+ignore_services = ["litellm-bootstrap"]
+
+################################################
+# Procedures
+################################################
+
+[[procedure]]
+name = "Auto Sync"
+tags = ["homelab"]
+config.webhook_enabled = false
+config.schedule_format = "Cron"
+config.schedule = "0 0 */1 * * *"
+config.schedule_alert = false
+
+[[procedure.config.stage]]
+name = "Auto Sync"
+enabled = true
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "homelab", enabled = true }
+]
+
+[[procedure]]
+name = "Auto Deploy"
+tags = ["homelab"]
+config.webhook_enabled = false
+config.schedule_format = "Cron"
+config.schedule = "0 */10 * * * *"
+config.schedule_alert = false
+
+[[procedure.config.stage]]
+name = "Pull Repo"
+enabled = true
+executions = [
+  { execution.type = "PullRepo", execution.params.repo = "homelab", enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "Deploy Stack"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "homelab", execution.params.services = [], enabled = true }
+]
