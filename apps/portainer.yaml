@@ -6,7 +6,7 @@
 services:
     portainer:
         container_name: portainer
-        image: portainer/portainer-ce:latest
+        image: portainer/portainer-ce:2.36.0@sha256:ec77ae8c4b36a31e00e8e6740bbdaf624f36f637c1ef1cdf3da50a63668aa483
         profiles: ["utilities", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/portainer:/data

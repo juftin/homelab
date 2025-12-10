@@ -5,7 +5,7 @@
 services:
     litellm:
         container_name: litellm
-        image: ghcr.io/berriai/litellm:main-stable
+        image: ghcr.io/berriai/litellm:main-stable@sha256:129f35725ea5a5e3a2f96b7e7eb39d1377096999a66b6748cab42b07e58289c3
         depends_on:
             litellm-db:
                 condition: service_healthy
@@ -59,7 +59,7 @@ services:
 
     litellm-db:
         container_name: litellm-db
-        image: postgres:17
+        image: postgres:18.1@sha256:0033c194dc640cc4dcc62ef7c3117e5791365cca5fc1a2998e5c1693254784bc
         profiles: ["llm", "all", "chat"]
         environment:
             POSTGRES_USER: ${LITELLM_POSTGRES_USER:-litellm}
@@ -81,7 +81,7 @@ services:
 
     litellm-redis:
         container_name: litellm-redis
-        image: valkey/valkey:8.1
+        image: valkey/valkey:9.0@sha256:00e026f877bbbed33d13241e5e701142e8842f94e1124ce1d5ddbbf6d0cee4fb
         profiles: ["llm", "all", "chat"]
         volumes:
             - ${DOCKER_DIRECTORY}/apps/litellm/valkey.conf:/app/valkey.conf:ro
@@ -97,7 +97,7 @@ services:
 
     litellm-bootstrap:
         container_name: litellm-bootstrap
-        image: badouralix/curl-jq:debian
+        image: badouralix/curl-jq:debian@sha256:64199ae83353c69f80bb4618764431cbc993957f4db72eded37bdcecb1561196
         depends_on:
             litellm:
                 condition: service_healthy

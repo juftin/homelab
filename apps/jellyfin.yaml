@@ -7,7 +7,7 @@
 services:
     jellyfin:
         container_name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:latest
+        image: lscr.io/linuxserver/jellyfin:latest@sha256:eb34c52b9fda39157fabee6fccb26729f1e710912896495fd1a91ba934703f58
         profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/jellyfin:/config

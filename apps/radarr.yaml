@@ -5,7 +5,7 @@
 services:
     radarr:
         container_name: radarr
-        image: lscr.io/linuxserver/radarr:latest
+        image: lscr.io/linuxserver/radarr:latest@sha256:06ac318ecb95a34c7b229568dcb4271f02cb5007bb189a0dd67a2032864187ca
         profiles: ["media", "arrs", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/radarr:/config

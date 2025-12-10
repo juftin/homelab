@@ -5,8 +5,7 @@
 services:
     heimdall:
         container_name: heimdall
-        image: lscr.io/linuxserver/heimdall:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/heimdall:latest@sha256:79cb9ff5d001516f6809d9bf9ef88a20c0a145703c4f7ee0a32722facced14d4
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/heimdall:/config
         environment:

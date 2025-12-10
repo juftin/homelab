@@ -5,7 +5,7 @@
 services:
     overseerr:
         container_name: overseerr
-        image: lscr.io/linuxserver/overseerr:latest
+        image: lscr.io/linuxserver/overseerr:latest@sha256:feddc11664639721d4e220d161ce5eb8fd2483d2e252e3e119570abcce3c7474
         profiles: ["media", "all"]
         environment:
             PUID: ${PUID}

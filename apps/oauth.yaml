@@ -10,7 +10,8 @@ secrets:
 services:
     oauth:
         container_name: oauth
-        image: thomseddon/traefik-forward-auth:latest
+        # TODO(@juftin): migrate off of unmaintained image
+        image: thomseddon/traefik-forward-auth:latest@sha256:b364aa6a4117569163eff793999901f9f5a0c4f7f2da18b4ecbcd140d7b6107b
         profiles: ["traefik", "core", "all"]
         environment:
             CONFIG: /config

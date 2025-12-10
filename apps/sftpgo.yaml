@@ -6,7 +6,7 @@
 services:
     sftpgo:
         container_name: sftpgo
-        image: drakkan/sftpgo:latest
+        image: drakkan/sftpgo:v2.7.0@sha256:24f68c1e6617f3999debde0478f435d375d496c46644b82d3ca154842d4f6c40
         profiles: ["utilities", "all"]
         volumes:
             - ${COMPLETED_DOWNLOADS}:/srv/sftpgo/data/juftin/downloads
