@@ -1,0 +1,29 @@
+# $schema = "https://mise.jdx.dev/schema/mise.json"
+
+[tools]
+sops = "3.11.0"
+age = "1.2.1"
+
+[env]
+MISE_DATA_DIR = "{{config_root}}/.mise"
+SOPS_AGE_KEY_FILE = "{{config_root}}/.age/key.txt"
+
+[vars]
+ENCRYPTED_FILE = "{{config_root}}/.env.yaml"
+DECRYPTED_FILE = "{{config_root}}/.env"
+
+[tasks.keygen]
+description = "Generate age keypair for secrets encryption"
+run = [
+  "mkdir -p $(dirname ${SOPS_AGE_KEY_FILE})",
+  "age-keygen -o ${SOPS_AGE_KEY_FILE}",
+  "chmod 600 ${SOPS_AGE_KEY_FILE}"
+]
+
+[tasks.decrypt]
+description = "Decrypt secrets file(s)"
+run = "sops decrypt '{{vars.ENCRYPTED_FILE}}' --output '{{vars.DECRYPTED_FILE}}' --input-type yaml --output-type dotenv"
+
+[tasks.encrypt]
+description = "Encrypt secrets file(s)"
+run = "sops encrypt '{{vars.DECRYPTED_FILE}}' --output '{{vars.ENCRYPTED_FILE}}' --input-type dotenv --output-type yaml"

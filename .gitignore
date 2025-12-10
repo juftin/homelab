@@ -2,3 +2,8 @@
 .env*
 secrets/
 appdata/
+.github/renovate/node_modules/
+.age/key.txt
+.env
+!.env.yaml
+.mise/
