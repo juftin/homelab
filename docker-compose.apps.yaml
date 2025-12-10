@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-go/refs/heads/main/schema/compose-spec.json
+
+################################################################################
+# HOMELAB
+################################################################################
+
+name: homelab
+
+include:
+    - apps/heimdall.yaml
+
+################################################################################
+# NETWORK CONFIGURATION
+################################################################################
+
+networks:
+    traefik:
+        external: true
+        name: homelab-core_traefik
+    docker:
+        external: true
+        name: homelab-core_docker
+    internal:
+        external: true
+        name: homelab-core_internal

@@ -59,7 +59,7 @@ services:
             - --providers.docker=true
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
-            - --providers.docker.network=homelab_traefik
+            - --providers.docker.network=homelab-core_traefik
             - --providers.file.directory=/rules
             - --providers.file.watch=true
             # ENTRYPOINTS
