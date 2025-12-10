@@ -5,7 +5,7 @@ on:
 jobs:
     release:
         name: Release
-        if: github.repository_owner == 'juftin'
+        if: false
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -13,10 +13,10 @@ jobs:
             pull-requests: write
         steps:
             - name: Check out the repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
               with:
                   fetch-depth: 2
             - name: Semantic Release
-              uses: juftin/actions/semantic-release@v1
+              uses: juftin/actions/semantic-release@5a54b64fe07d8de40f92676cae6b56c565ec28b2 # v1
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}

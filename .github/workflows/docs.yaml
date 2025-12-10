@@ -5,6 +5,7 @@ on:
 jobs:
     release:
         name: docs
+        if: false
         runs-on: ubuntu-latest
         permissions:
             pages: write
@@ -14,11 +15,11 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
             - name: setup-uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
             - name: docs
               run: uv run mkdocs build
             - name: github-pages
-              uses: juftin/actions/github-pages@v1
+              uses: juftin/actions/github-pages@5a54b64fe07d8de40f92676cae6b56c565ec28b2 # v1
               id: deployment
