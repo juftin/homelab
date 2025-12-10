@@ -606,7 +606,7 @@ Build the documentation.
 === "bash"
 
     ```shell
-    hatch run docs:serve --livereload --dev-addr localhost:8000
+    uv run mkdocs serve --livereload --dev-addr localhost:8000
     ```
 
 #### lint
