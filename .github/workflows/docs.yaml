@@ -16,7 +16,7 @@ jobs:
             - name: checkout
               uses: actions/checkout@v4
             - name: setup-uv
-              uses: astral-sh/setup-uv@v6
+              uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
             - name: docs
               run: uv run mkdocs build
             - name: github-pages
