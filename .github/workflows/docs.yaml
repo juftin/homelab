@@ -14,7 +14,7 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
             - name: setup-uv
               uses: astral-sh/setup-uv@v6
             - name: docs
