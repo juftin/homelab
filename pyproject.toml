@@ -6,7 +6,7 @@ description = "Homelab Deployment Via Docker-Compose"
 license = "MIT"
 name = "homelab"
 readme = "README.md"
-requires-python = "==3.12.12"
+requires-python = "==3.14.2"
 version = "0.0.0"
 
 [dependency-groups]
