@@ -38,7 +38,7 @@ services:
         restart: always
         depends_on:
             - socket-proxy
-            - duckdns
+            - cloudflare-ddns
             - oauth
         command:
             # GLOBAL SETTINGS
