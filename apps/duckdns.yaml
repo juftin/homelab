@@ -1,4 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
 #######################################
 # DUCKDNS (DYNAMIC DNS MONITORING)
 #######################################
@@ -7,7 +8,7 @@ services:
     duckdns:
         container_name: duckdns
         image: lscr.io/linuxserver/duckdns:latest
-        profiles: ["traefik", "core", "all"]
+        profiles: ["utilities", "all"]
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

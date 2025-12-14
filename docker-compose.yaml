@@ -8,7 +8,7 @@ include:
     #############################################################################
 
     - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
-    - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
+    - apps/cloudflare-ddns.yaml # Cloudflare-DDNS (Dynamic DNS)
     - apps/oauth.yaml # OAuth (Authentication)
     - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
 
@@ -34,7 +34,8 @@ include:
     # UTILITIES
     #############################################################################
 
-    - apps/watchtower.yaml #  Watchtower (Container Updating)
+    - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
+    # - apps/watchtower.yaml #  Watchtower (Container Updating)
     - apps/postgres.yaml # PostgreSQL (Shared Database)
     - apps/sftpgo.yaml # SFTPGo (File Management)
     - apps/pihole.yaml # Pi-hole (DNS Ad-Blocking)
@@ -52,6 +53,7 @@ include:
     # - apps/healthchecks.yaml # Healthchecks (Monitoring)
     - apps/jellyfin.yaml
     - apps/camply.yaml
+    - apps/coder.yaml # Coder (Remote Development)
 
     #############################################################################
     # LLM
