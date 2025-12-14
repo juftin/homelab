@@ -30,7 +30,7 @@ include:
     #############################################################################
 
     - apps/duckdns.yaml # DuckDNS (Dynamic DNS)
-    - apps/postgres.yaml # PostgreSQL (Shared Database)
+    # - apps/postgres.yaml # PostgreSQL (Shared Database)
     - apps/sftpgo.yaml # SFTPGo (File Management)
     - apps/pihole.yaml # Pi-hole (DNS Ad-Blocking)
     - apps/portainer.yaml # Portainer (Container Management)
