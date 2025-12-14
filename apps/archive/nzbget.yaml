@@ -6,7 +6,6 @@ services:
     nzbget:
         container_name: nzbget
         image: lscr.io/linuxserver/nzbget:latest
-        profiles: ["media", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/nzbget:/config
             - ${COMPLETED_DOWNLOADS}:/downloads/completed
