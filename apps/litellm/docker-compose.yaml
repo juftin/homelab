@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-go/refs/heads/main/schema/compose-spec.json
+
 #######################################
 # LITELLM (LLM PROXY)
 #######################################
@@ -11,7 +13,6 @@ services:
                 condition: service_healthy
             litellm-redis:
                 condition: service_healthy
-        profiles: ["llm", "all", "chat"]
         environment:
             DATABASE_URL: "postgresql://${LITELLM_POSTGRES_USER:-litellm}:${LITELLM_POSTGRES_PASSWORD:-litellm}@litellm-db:5432/${LITELLM_POSTGRES_DB:-litellm}"
             STORE_MODEL_IN_DB: "True"
@@ -43,7 +44,7 @@ services:
             test:
                 [
                     "CMD-SHELL",
-                    "wget --no-verbose --tries=1 http://localhost:4001/health/liveliness || exit 1",
+                    'python3 -c "import urllib.request; urllib.request.urlopen(''http://localhost:4000/health/liveliness'')"',
                 ]
             interval: 30s
             timeout: 10s
@@ -59,8 +60,7 @@ services:
 
     litellm-db:
         container_name: litellm-db
-        image: postgres:18.1@sha256:38d5c9d522037d8bf0864c9068e4df2f8a60127c6489ab06f98fdeda535560f9
-        profiles: ["llm", "all", "chat"]
+        image: postgres:17.7
         environment:
             POSTGRES_USER: ${LITELLM_POSTGRES_USER:-litellm}
             POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-litellm}
@@ -82,7 +82,6 @@ services:
     litellm-redis:
         container_name: litellm-redis
         image: valkey/valkey:9.0@sha256:fb8d272e529ea567b9bf1302245796f21a2672b8368ca3fcb938ac334e613c8f
-        profiles: ["llm", "all", "chat"]
         volumes:
             - ${DOCKER_DIRECTORY}/apps/litellm/valkey.conf:/app/valkey.conf:ro
         command: ["valkey-server", "/app/valkey.conf"]
@@ -98,10 +97,11 @@ services:
     litellm-bootstrap:
         container_name: litellm-bootstrap
         image: badouralix/curl-jq:debian@sha256:64199ae83353c69f80bb4618764431cbc993957f4db72eded37bdcecb1561196
+        deploy:
+            mode: replicated-job
         depends_on:
             litellm:
                 condition: service_healthy
-        profiles: ["llm", "all", "chat"]
         volumes:
             - ${DOCKER_DIRECTORY}/apps/litellm/bootstrap.sh:/bootstrap.sh:ro
         networks:
@@ -110,4 +110,4 @@ services:
             LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?}
             LITELLM_OPEN_WEBUI_KEY: ${LITELLM_OPEN_WEBUI_KEY:?}
         command: ["/bin/bash", "/bootstrap.sh"]
-        restart: no
+        restart: on-failure
