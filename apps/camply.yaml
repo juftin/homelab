@@ -1,0 +1,53 @@
+services:
+    camply-db:
+        image: postgres:17
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-camply}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            POSTGRES_DB: ${POSTGRES_DB:-camply}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/camply:/var/lib/postgresql/data
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-camply}"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    camply:
+        image: juftin/camply-backend:latest
+        depends_on:
+            camply-db:
+                condition: service_healthy
+        environment:
+            CAMPLY_DB_DRIVERNAME: postgresql+psycopg
+            CAMPLY_DB_HOST: camply-db
+            CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
+            CAMPLY_DB_PORT: 5432
+            GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+            internal:
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        labels:
+            traefik.enable: true
+            traefik.http.routers.camply-rtr.rule: Host(`${CAMPLY_SUBDOMAIN:-camply}.${DOMAIN_NAME}`)
+            traefik.http.routers.camply-rtr.service: camply-svc
+            traefik.http.services.camply-svc.loadbalancer.server.port: 8000
+            traefik.http.routers.camply-rtr.entrypoints: websecure
+            traefik.http.routers.camply-rtr.middlewares: chain-rate-limit@file
