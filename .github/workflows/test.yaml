@@ -20,4 +20,4 @@ jobs:
             - name: docker-compose-validate
               run: |
                   cp docs/example.env .env
-                  docker compose -f docker-compose.apps.yaml config
+                  make validate
