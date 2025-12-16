@@ -7,11 +7,11 @@
 name: homelab-core
 
 include:
-    - apps/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
-    - apps/cloudflare-ddns.yaml # Cloudflare-DDNS (Dynamic DNS Updater)
-    - apps/oauth.yaml # traefik-forward-auth (Google OAuth2)
-    - apps/socket-proxy.yaml # Docker Socket Proxy (Security)
-    - apps/komodo/docker-compose.yaml # Komodo (Docker Management Platform)
+    - core/traefik/docker-compose.yaml # Traefik (Reverse Proxy)
+    - core/cloudflare-ddns.yaml # Cloudflare-DDNS (Dynamic DNS Updater)
+    - core/oauth.yaml # traefik-forward-auth (Google OAuth2)
+    - core/socket-proxy.yaml # Docker Socket Proxy (Security)
+    - core/komodo/docker-compose.yaml # Komodo (Docker Management Platform)
 
 ################################################################################
 # NETWORK CONFIGURATION
