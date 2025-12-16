@@ -134,6 +134,11 @@ lint: ## Lint the code with pre-commit.
 mise-install: ## Helper target to install mise.
 	curl -sSL https://mise.run | sh
 
+.PHONY: validate
+validate: ## Validate the docker-compose files.
+	docker compose -f $(CORE_DOCKERFILE) config
+	docker compose -f $(HOMELAB_DOCKERFILE) config
+
 ##@ General 🌐
 
 .PHONY: version
