@@ -42,7 +42,7 @@ services:
             <<: *komodo-env
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/komodo/core/backups:/backups
-            - ${DOCKER_DIRECTORY}/apps/komodo/komodo.toml:/config/config.toml
+            - ${DOCKER_DIRECTORY}/core/komodo/komodo.toml:/config/config.toml
         networks:
             internal:
             traefik:
@@ -62,7 +62,7 @@ services:
         volumes:
             - /proc:/proc
             - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
-            - ${DOCKER_DIRECTORY}/apps/komodo/entrypoint.sh:/app/mise/entrypoint.sh:ro
+            - ${DOCKER_DIRECTORY}/core/komodo/entrypoint.sh:/app/mise/entrypoint.sh:ro
             - ${DOCKER_DIRECTORY}/.age/key.txt:/app/mise/.age/key.txt:ro
         entrypoint: /app/mise/entrypoint.sh
         command: periphery
