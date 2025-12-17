@@ -1,6 +1,6 @@
 services:
     camply-db:
-        image: postgres:17
+        image: postgres:17@sha256:dca7512acaa113409df7e40d977d801e53c0c8088e45d4311a45b4065ccfdcd3
         environment:
             POSTGRES_USER: ${POSTGRES_USER:-camply}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-camply}
@@ -20,7 +20,7 @@ services:
             start_period: 10s
 
     camply:
-        image: juftin/camply-backend:latest
+        image: juftin/camply-backend:latest@sha256:e6a4d7dad3d3e6d86d68f7ee59a05c84bbf123b253781625d3e6c8ca08b5d138
         depends_on:
             camply-db:
                 condition: service_healthy
