@@ -18,7 +18,7 @@ x-comodo-env: &komodo-env
 services:
     komodo-mongo:
         container_name: komodo-mongo
-        image: mongo:8.2.2@sha256:bf5995bcccb65725aa81fd92e68449323c94b96bf1c1fa9f7acbc2a8ad518114
+        image: mongo:8.2.3@sha256:7f5bbdafebde7c42e42e33396d01c0eda3eb753da8dae99071a30e350568a0a4
         command: --quiet --wiredTigerCacheSizeGB 0.25
         restart: always
         volumes:
