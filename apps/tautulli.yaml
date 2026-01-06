@@ -6,7 +6,7 @@
 services:
     tautulli:
         container_name: tautulli
-        image: lscr.io/linuxserver/tautulli:latest@sha256:cb2226d9ab37f084d67a396e3c79059ca7d0fa7e1b2e6f1a473472af2afa7b12
+        image: lscr.io/linuxserver/tautulli:latest@sha256:876aae4ce0f1dc099216bef843cf4cefe743837eca8717a2a7ff2bf9e0e07062
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/tautulli:/config
             - ${DOCKER_DIRECTORY}/appdata/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
