@@ -27,7 +27,7 @@ services:
 
     open-webui-db:
         container_name: open-webui-db
-        image: postgres:18.1@sha256:f42fe58fa146f29072559fcb855cc2e93e2c9ab08c1cbe7c5db4973d665e3d86
+        image: postgres:18.1@sha256:3bb77a07b9ce8b8de0fe6d9b063adf20b9cca1068a1bcdc054cac71a69ce0ca6
         environment:
             POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
             POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
