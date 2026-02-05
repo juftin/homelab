@@ -5,7 +5,7 @@
 services:
     overseerr:
         container_name: overseerr
-        image: lscr.io/linuxserver/overseerr:latest@sha256:ad4c6a173bc0f5e1ff9bfa4169fe232fd6556796677d30daa455f6348093a3d5
+        image: lscr.io/linuxserver/overseerr:latest@sha256:987a6bd200a88501a5fa0cfa0c3179acd83e5b0af986da1537b70f44cfe059b8
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
