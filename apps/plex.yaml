@@ -5,7 +5,7 @@
 services:
     plex:
         container_name: plex
-        image: lscr.io/linuxserver/plex:latest@sha256:937a04f1cfc72fe6580970b1965325310d7e61d3d97ea3d2adb269e70d32e10b
+        image: lscr.io/linuxserver/plex:latest@sha256:bbe0118e39e2c071fc5fe39af3f32072207bf4146d56b6a8901bcb23082df207
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
