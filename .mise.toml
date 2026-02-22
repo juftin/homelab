@@ -1,7 +1,7 @@
 # $schema = "https://mise.jdx.dev/schema/mise.json"
 
 [tools]
-sops = "3.11.0"
+sops = "3.12.1"
 age = "1.2.1"
 
 [env]
