@@ -1,6 +1,6 @@
 services:
     camply-db:
-        image: postgres:17@sha256:f6ba4a3c3de6ae0f361a8b628d452c14295dc4d076ceb193b8c46fb0a2273e46
+        image: postgres:17@sha256:2cd82735a36356842d5eb1ef80db3ae8f1154172f0f653db48fde079b2a0b7f7
         environment:
             POSTGRES_USER: ${POSTGRES_USER:-camply}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-camply}
