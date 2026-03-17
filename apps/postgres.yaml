@@ -6,7 +6,7 @@
 services:
     homelab-postgres:
         container_name: homelab-postgres
-        image: postgres:16.13@sha256:78df81b1442dcc764c1104154da7162635e40cfffe67579c42a1c1b96dfc209c
+        image: postgres:16.13@sha256:ce5c12ac6952df86affd04ade354cfcb9a0aa1171cd7912e6dbd81578a989a63
         ports:
             - 5432:5432
         environment:
