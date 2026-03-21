@@ -5,7 +5,7 @@
 services:
     heimdall:
         container_name: heimdall
-        image: lscr.io/linuxserver/heimdall:latest@sha256:d2c76a5e90f4c5a735d74d5279ed0dc9af8e3509d4f977402dc3741251f5529b
+        image: lscr.io/linuxserver/heimdall:latest@sha256:6e1f4ece26f91db87223b3384fa6a715bda7780d765a291621b9b277881bece5
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/heimdall:/config
         environment:
