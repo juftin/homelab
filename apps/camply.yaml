@@ -20,7 +20,7 @@ services:
             start_period: 10s
 
     camply:
-        image: juftin/camply-backend:latest@sha256:375a7c2ddb4243d56450e34c5da616d185e1015a4b11d724db09540b63bd85d2
+        image: juftin/camply-backend:latest@sha256:f510733f153caf664de6e107ff38037f1fd3beede1cc0f6a970dc1c9805f192c
         depends_on:
             camply-db:
                 condition: service_healthy
