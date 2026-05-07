@@ -5,7 +5,7 @@
 services:
     nzbhydra:
         container_name: nzbhydra
-        image: lscr.io/linuxserver/nzbhydra2:latest@sha256:c10777a378f5f48079f6a69c933e53793edf2e09e92540b9bcdcad20a0c1f986
+        image: lscr.io/linuxserver/nzbhydra2:latest@sha256:cc344d7a1f33ae35573403d63f60ab64f82da06f9b07d6fdb11c7547a973c7eb
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/nzbhydra:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
