@@ -6,7 +6,7 @@
 services:
     open-webui-pgvector:
         container_name: open-webui-pgvector
-        image: pgvector/pgvector:pg18-trixie@sha256:058fdb396f7b11f66cb7084db6c970846f8cb3a36b101b2714bea6727d530322
+        image: pgvector/pgvector:pg18-trixie@sha256:b7337db8fe39d12fe8ecb0003c72680f24479813a744b43154eee6f2eab5a5f3
         environment:
             POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
             POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
