@@ -81,7 +81,7 @@ services:
 
     litellm-redis:
         container_name: litellm-redis
-        image: valkey/valkey:9.1@sha256:e69af20ab48e499c263627ee18bf5f568f3064f054019c097ca14d52872be0bb
+        image: valkey/valkey:9.1@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9
         volumes:
             - ${DOCKER_DIRECTORY}/apps/litellm/valkey.conf:/app/valkey.conf:ro
         command: ["valkey-server", "/app/valkey.conf"]
