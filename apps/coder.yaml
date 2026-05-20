@@ -31,7 +31,7 @@ services:
             traefik.http.routers.coder-rtr.entrypoints: websecure
             traefik.http.routers.coder-rtr.middlewares: chain-rate-limit@file
     coder-db:
-        image: postgres:17@sha256:538bdb8c6b278f2f09070a4d79f04a83363a795ed23ec0d92d6b70cabc398eae
+        image: postgres:17@sha256:3faba5d113bdbdfda79ed7f0d68ddae736d17473e8888e250f2471c651694f3f
         environment:
             POSTGRES_USER: ${CODER_POSTGRES_USER:-coder}
             POSTGRES_PASSWORD: ${CODER_POSTGRES_PASSWORD:-coder}
