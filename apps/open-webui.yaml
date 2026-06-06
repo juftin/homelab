@@ -85,7 +85,7 @@ services:
 
     ollama:
         container_name: ollama
-        image: ollama/ollama:latest@sha256:72c60eb9e115e24078864c00274dc067fff2217b105918409856031cca7a7e92
+        image: ollama/ollama:latest@sha256:fbaaecc6c632a73c2b4ca25ef52dbee0b68d07783fcb850f916404c004040f90
         environment:
             OLLAMA_HOST: "0.0.0.0"
             OLLAMA_KEEP_ALIVE: "1m"
