@@ -46,7 +46,7 @@ include:
     - apps/homeassistant/docker-compose.yaml # Home Assistant (Smart Home)
     # - apps/healthchecks.yaml # Healthchecks (Monitoring)
     - apps/jellyfin.yaml
-    - apps/camply.yaml
+    - apps/camply/docker-compose.yaml
     - apps/coder.yaml # Coder (Remote Development)
 
     #############################################################################
