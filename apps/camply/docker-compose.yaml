@@ -60,7 +60,7 @@ services:
     ########################################################################
 
     camply:
-        image: juftin/camply-backend:latest@sha256:f510733f153caf664de6e107ff38037f1fd3beede1cc0f6a970dc1c9805f192c
+        image: juftin/camply-backend:latest@sha256:7f8c65b1556fb298188ad485b7c3148261263ae2e2f365ba132d64159938fdaf
         container_name: camply
         depends_on:
             camply-db:
