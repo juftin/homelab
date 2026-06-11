@@ -1,0 +1,245 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-go/refs/heads/main/schema/compose-spec.json
+####################################
+# Camply Web - Campsite Finder Web Application
+#
+# Full stack: API backend, Celery workers, Valkey cache, PostgreSQL,
+# Prometheus metrics, Grafana dashboards
+# Frontend deployed separately to Cloudflare Pages.
+####################################
+
+services:
+    ########################################################################
+    # DATABASE
+    ########################################################################
+
+    camply-db:
+        image: postgres:17@sha256:0027bef26712baaee437a4ea48fdf3d2d2e2bc5f0d81615374408ca320f3c7e3
+        container_name: camply-db
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-camply}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            POSTGRES_DB: ${POSTGRES_DB:-camply}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/camply/db/:/var/lib/postgresql/data/
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-camply}"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+
+    ########################################################################
+    # VALKEY (Celery Broker & Result Backend)
+    ########################################################################
+
+    camply-valkey:
+        image: valkey/valkey:8-alpine@sha256:18c7010efe0a74c334ee01bd2c5632735d2c0d9518f85b9ad3d995314c6a0b7a
+        container_name: camply-valkey
+        command: valkey-server --save 60 1 --loglevel warning
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/camply/valkey/:/data/
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "valkey-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 5s
+
+    ########################################################################
+    # BACKEND API
+    ########################################################################
+
+    camply:
+        image: juftin/camply-backend:latest@sha256:f510733f153caf664de6e107ff38037f1fd3beede1cc0f6a970dc1c9805f192c
+        container_name: camply
+        depends_on:
+            camply-db:
+                condition: service_healthy
+        environment:
+            CAMPLY_DB_DRIVERNAME: postgresql+psycopg
+            CAMPLY_DB_HOST: camply-db
+            CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
+            CAMPLY_DB_PORT: 5432
+            GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+            PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+            CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+            internal:
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        labels:
+            traefik.enable: true
+            traefik.http.routers.camply-rtr.rule: Host(`${CAMPLY_SUBDOMAIN:-camply}.${DOMAIN_NAME}`)
+            traefik.http.routers.camply-rtr.service: camply-svc
+            traefik.http.services.camply-svc.loadbalancer.server.port: 8000
+            traefik.http.routers.camply-rtr.entrypoints: websecure
+            traefik.http.routers.camply-rtr.middlewares: chain-rate-limit@file
+
+    ########################################################################
+    # CELERY WORKER
+    ########################################################################
+
+    camply-worker:
+        image: juftin/camply-backend:latest
+        container_name: camply-worker
+        command: celery -A worker.celery_app worker -l info -Q celery --concurrency=4
+        depends_on:
+            camply-db:
+                condition: service_healthy
+            camply-valkey:
+                condition: service_healthy
+        environment:
+            CAMPLY_DB_DRIVERNAME: postgresql+psycopg
+            CAMPLY_DB_HOST: camply-db
+            CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
+            CAMPLY_DB_PORT: 5432
+            CAMPLY_VALKEY_URL: redis://camply-valkey:6379/0
+            CAMPLY_SENTRY_DSN: ${CAMPLY_SENTRY_DSN:-}
+            CAMPLY_SENTRY_TRACES_SAMPLE_RATE: ${CAMPLY_SENTRY_TRACES_SAMPLE_RATE:-0.0}
+            CAMPLY_METRICS_PORT: 8001
+            PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+            CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+            PUSHOVER_APP_TOKEN: ${PUSHOVER_APP_TOKEN:-}
+            SKIP_MIGRATIONS: "1"
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "celery", "-A", "worker.celery_app", "inspect", "ping"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
+
+    ########################################################################
+    # CELERY BEAT (Scheduler & Ingestion)
+    ########################################################################
+
+    camply-beat:
+        image: juftin/camply-backend:latest
+        container_name: camply-beat
+        command: >
+            sh -c "
+            celery -A worker.celery_app call worker.tasks.ingestion.populate_database --expires=600 &&
+            celery -A worker.celery_app beat -l info
+            "
+        depends_on:
+            camply-db:
+                condition: service_healthy
+            camply-valkey:
+                condition: service_healthy
+        environment:
+            CAMPLY_DB_DRIVERNAME: postgresql+psycopg
+            CAMPLY_DB_HOST: camply-db
+            CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
+            CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
+            CAMPLY_DB_PORT: 5432
+            CAMPLY_VALKEY_URL: redis://camply-valkey:6379/0
+            CAMPLY_SENTRY_DSN: ${CAMPLY_SENTRY_DSN:-}
+            CAMPLY_SENTRY_TRACES_SAMPLE_RATE: ${CAMPLY_SENTRY_TRACES_SAMPLE_RATE:-0.0}
+            SKIP_MIGRATIONS: "1"
+            CAMPLY_METRICS_PORT: 8001
+            PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+            CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "celery", "-A", "worker.celery_app", "inspect", "ping"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
+
+    ########################################################################
+    # PROMETHEUS (Metrics Collection)
+    ########################################################################
+
+    camply-prometheus:
+        image: prom/prometheus:latest
+        container_name: camply-prometheus
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+            - "--web.console.templates=/usr/share/prometheus/consoles"
+            - "--storage.tsdb.retention.time=30d"
+        volumes:
+            - ./apps/camply/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+            - ${DOCKER_DIRECTORY}/appdata/camply/prometheus/:/prometheus/
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            internal:
+        healthcheck:
+            test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+
+    ########################################################################
+    # GRAFANA (Dashboards)
+    ########################################################################
+
+    camply-grafana:
+        image: grafana/grafana:latest
+        container_name: camply-grafana
+        depends_on:
+            camply-prometheus:
+                condition: service_started
+        environment:
+            GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+            GF_AUTH_ANONYMOUS_ENABLED: "true"
+        volumes:
+            - ./apps/camply/monitoring/grafana/datasources/:/etc/grafana/provisioning/datasources/:ro
+            - ./apps/camply/monitoring/grafana/dashboards/:/etc/grafana/provisioning/dashboards/:ro
+            - ${DOCKER_DIRECTORY}/appdata/camply/grafana/:/var/lib/grafana/
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+            internal:
+        healthcheck:
+            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3000/api/health"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+        labels:
+            traefik.enable: true
+            traefik.http.routers.camply-grafana-rtr.rule: Host(`grafana-${CAMPLY_SUBDOMAIN:-camply}.${DOMAIN_NAME}`)
+            traefik.http.routers.camply-grafana-rtr.entrypoints: websecure
+            traefik.http.routers.camply-grafana-rtr.service: camply-grafana-svc
+            traefik.http.services.camply-grafana-svc.loadbalancer.server.port: 3000
+            traefik.http.routers.camply-grafana-rtr.middlewares: chain-oauth-google@file
