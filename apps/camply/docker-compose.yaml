@@ -192,7 +192,7 @@ services:
             - "--web.console.templates=/usr/share/prometheus/consoles"
             - "--storage.tsdb.retention.time=30d"
         volumes:
-            - ./apps/camply/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+            - ${DOCKER_DIRECTORY}/apps/camply/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
             - ${DOCKER_DIRECTORY}/appdata/camply/prometheus/:/prometheus/
         security_opt:
             - no-new-privileges:true
@@ -221,8 +221,8 @@ services:
             GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
             GF_AUTH_ANONYMOUS_ENABLED: "true"
         volumes:
-            - ./apps/camply/monitoring/grafana/datasources/:/etc/grafana/provisioning/datasources/:ro
-            - ./apps/camply/monitoring/grafana/dashboards/:/etc/grafana/provisioning/dashboards/:ro
+            - ${DOCKER_DIRECTORY}/apps/camply/monitoring/grafana/datasources/:/etc/grafana/provisioning/datasources/:ro
+            - ${DOCKER_DIRECTORY}/apps/camply/monitoring/grafana/dashboards/:/etc/grafana/provisioning/dashboards/:ro
             - ${DOCKER_DIRECTORY}/appdata/camply/grafana/:/var/lib/grafana/
         security_opt:
             - no-new-privileges:true
