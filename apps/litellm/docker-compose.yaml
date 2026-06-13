@@ -60,7 +60,7 @@ services:
 
     litellm-db:
         container_name: litellm-db
-        image: postgres:17.10@sha256:ef92240eff6b0bcce8ccf038c2edcd0d8fd8ef90621849993b8c8995881ab09a
+        image: postgres:17.10@sha256:2203e6282d9e7de7c24d7da234e2a744fb325df366a3fd8ed940e8abbee39527
         environment:
             POSTGRES_USER: ${LITELLM_POSTGRES_USER:-litellm}
             POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-litellm}
