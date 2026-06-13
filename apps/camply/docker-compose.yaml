@@ -213,7 +213,7 @@ services:
     camply-grafana:
         image: grafana/grafana:latest
         container_name: camply-grafana
-        user: "${PUID:-1000}:${PGID:-1000}"
+        user: '0'
         depends_on:
             camply-prometheus:
                 condition: service_started
