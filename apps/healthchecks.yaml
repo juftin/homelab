@@ -5,7 +5,7 @@
 services:
     healthchecks:
         container_name: healthchecks
-        image: lscr.io/linuxserver/healthchecks:latest@sha256:86d1c6d7ff2582e2d6e5017bb4ee99120479beff5408b89907f1a7a523d2d1b8
+        image: lscr.io/linuxserver/healthchecks:latest@sha256:f8ef758421c26529856cd5ca337fb4123226db0c313c256cb973a2d656cda81f
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/healthchecks:/config
         environment:
