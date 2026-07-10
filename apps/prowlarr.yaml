@@ -5,7 +5,7 @@
 services:
     prowlarr:
         container_name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:develop@sha256:d2217b1d61686065a85905fc5558b5cc5fca25db5011e5a43e3446c7d7368cf5
+        image: lscr.io/linuxserver/prowlarr:develop@sha256:14c714b2f437a65fd27f9105f41b2bcf6760ddb717a232457b0d8c7efd3c1697
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/prowlarr:/config
         environment:
