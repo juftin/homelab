@@ -60,8 +60,9 @@ services:
     ########################################################################
 
     camply:
-        image: juftin/camply-backend:latest@sha256:f510733f153caf664de6e107ff38037f1fd3beede1cc0f6a970dc1c9805f192c
+        image: juftin/camply-backend:latest
         container_name: camply
+        pull_policy: always
         depends_on:
             camply-db:
                 condition: service_healthy
@@ -73,6 +74,8 @@ services:
             CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
             CAMPLY_DB_PORT: 5432
             GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+            CAMPLY_BASIC_AUTH_USERNAME: ${CAMPLY_BASIC_AUTH_USERNAME:-admin}
+            CAMPLY_BASIC_AUTH_PASSWORD: ***
             PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
             CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
         security_opt:
@@ -82,7 +85,7 @@ services:
             traefik:
             internal:
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+            test: ["CMD", "curl", "-f", "-u", "${CAMPLY_BASIC_AUTH_USERNAME:-admin}:${CAMPLY_BASIC_AUTH_PASSWORD:***", "http://localhost:8000/api/health"]
             interval: 30s
             timeout: 10s
             retries: 3
@@ -102,6 +105,7 @@ services:
     camply-worker:
         image: juftin/camply-backend:latest
         container_name: camply-worker
+        pull_policy: always
         command: celery -A worker.celery_app worker -l info -Q celery --concurrency=4
         depends_on:
             camply-db:
@@ -142,6 +146,7 @@ services:
     camply-beat:
         image: juftin/camply-backend:latest
         container_name: camply-beat
+        pull_policy: always
         command: >
             sh -c "
             celery -A worker.celery_app call worker.tasks.ingestion.populate_database --expires=600 &&
