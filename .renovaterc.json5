@@ -27,6 +27,12 @@
     },
     packageRules: [
         {
+            description: "Never pin camply images — use latest tag",
+            matchDatasources: ["docker"],
+            matchPackageNames: ["juftin/camply-backend", "juftin/camply-frontend"],
+            pinDigests: false,
+        },
+        {
             description: "Auto-merge Minor and Patch",
             matchUpdateTypes: ["minor", "patch"],
             matchCurrentVersion: "!/^0/",

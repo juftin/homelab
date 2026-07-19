@@ -17,7 +17,7 @@ services:
         container_name: camply-db
         environment:
             POSTGRES_USER: ${POSTGRES_USER:-camply}
-            POSTGRES_PASSWORD: ${POST…ply}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-camply}
             POSTGRES_DB: ${POSTGRES_DB:-camply}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/camply/db/:/var/lib/postgresql/data/
@@ -60,8 +60,9 @@ services:
     ########################################################################
 
     camply:
-        image: juftin/camply-backend:latest@sha256:f510733f153caf664de6e107ff38037f1fd3beede1cc0f6a970dc1c9805f192c
+        image: juftin/camply-backend:latest
         container_name: camply
+        pull_policy: always
         depends_on:
             camply-db:
                 condition: service_healthy
@@ -69,10 +70,12 @@ services:
             CAMPLY_DB_DRIVERNAME: postgresql+psycopg
             CAMPLY_DB_HOST: camply-db
             CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
-            CAMPLY_DB_PASSWORD: ${POST…ply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
             CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
             CAMPLY_DB_PORT: 5432
             GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+            CAMPLY_BASIC_AUTH_USERNAME: ${CAMPLY_BASIC_AUTH_USERNAME:-admin}
+            CAMPLY_BASIC_AUTH_PASSWORD: ${CAMPLY_BASIC_AUTH_PASSWORD:-camply}
             PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
             CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
         security_opt:
@@ -82,7 +85,7 @@ services:
             traefik:
             internal:
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+            test: ["CMD", "curl", "-f", "-u", "${CAMPLY_BASIC_AUTH_USERNAME:-admin}:${CAMPLY_BASIC_AUTH_PASSWORD:-camply", "http://localhost:8000/api/health"]
             interval: 30s
             timeout: 10s
             retries: 3
@@ -102,6 +105,7 @@ services:
     camply-worker:
         image: juftin/camply-backend:latest
         container_name: camply-worker
+        pull_policy: always
         command: celery -A worker.celery_app worker -l info -Q celery --concurrency=4
         depends_on:
             camply-db:
@@ -112,7 +116,7 @@ services:
             CAMPLY_DB_DRIVERNAME: postgresql+psycopg
             CAMPLY_DB_HOST: camply-db
             CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
-            CAMPLY_DB_PASSWORD: ${POST…ply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
             CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
             CAMPLY_DB_PORT: 5432
             CAMPLY_VALKEY_URL: redis://camply-valkey:6379/0
@@ -142,6 +146,7 @@ services:
     camply-beat:
         image: juftin/camply-backend:latest
         container_name: camply-beat
+        pull_policy: always
         command: >
             sh -c "
             celery -A worker.celery_app call worker.tasks.ingestion.populate_database --expires=600 &&
@@ -156,7 +161,7 @@ services:
             CAMPLY_DB_DRIVERNAME: postgresql+psycopg
             CAMPLY_DB_HOST: camply-db
             CAMPLY_DB_USERNAME: ${POSTGRES_USER:-camply}
-            CAMPLY_DB_PASSWORD: ${POST…ply}
+            CAMPLY_DB_PASSWORD: ${POSTGRES_PASSWORD:-camply}
             CAMPLY_DB_DATABASE: ${POSTGRES_DB:-camply}
             CAMPLY_DB_PORT: 5432
             CAMPLY_VALKEY_URL: redis://camply-valkey:6379/0
@@ -218,7 +223,7 @@ services:
                 condition: service_started
         environment:
             GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-            GF_SECURITY_ADMIN_PASSWORD: ${GRAF…min}
+            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-camply}
             GF_AUTH_ANONYMOUS_ENABLED: "true"
         volumes:
             - ./monitoring/grafana/datasources/:/etc/grafana/provisioning/datasources/:ro
