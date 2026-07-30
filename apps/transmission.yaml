@@ -5,7 +5,7 @@
 services:
     transmission:
         container_name: transmission
-        image: haugene/transmission-openvpn:5.4.1@sha256:bdef5158b09debdca558c9eeeb87dd77c55351dea8a89e66df413db4e18099b4
+        image: haugene/transmission-openvpn:5.4.2@sha256:e930c2ef41f446c721de2431385f3641830ba7dbdfc58033ef22c446bbc0641c
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ${DOCKER_DIRECTORY}/appdata/transmission:/config/transmission-home
