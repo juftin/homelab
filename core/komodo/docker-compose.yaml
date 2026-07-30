@@ -34,7 +34,7 @@ services:
 
     komodo-core:
         container_name: komodo-core
-        image: ghcr.io/moghtech/komodo-core:2.2.0@sha256:7afbcfa99674bf3f51539ec3aa7235795e9b994af9b7099a6c4c654d5d8a5b6b
+        image: ghcr.io/moghtech/komodo-core:2.3.0@sha256:2662f0f0db66b8d83e438ab15e0693bebe1b3d6c31fe0bf960c1ae6ea6246b83
         init: true
         restart: always
         depends_on:
