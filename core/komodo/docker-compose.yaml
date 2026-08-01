@@ -60,7 +60,7 @@ services:
 
     komodo-periphery:
         container_name: komodo-periphery
-        image: ghcr.io/moghtech/komodo-periphery:2.3.0@sha256:d5c1b59cad0875c4f08418bbfb465bf69694f3c37f97c6d036647477fbef729d
+        image: ghcr.io/moghtech/komodo-periphery:2.3.1@sha256:637bf3c03a84f04821c902eba12f63e527ea1f781a350489aa34f17f48f36e57
         init: true
         restart: always
         volumes:
