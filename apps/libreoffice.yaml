@@ -6,7 +6,7 @@
 services:
     libreoffice:
         container_name: libreoffice
-        image: lscr.io/linuxserver/libreoffice:latest@sha256:285077d75eb63505b0a4cdac412fbbf74c636ca540e1a058171ee21d15183e18
+        image: lscr.io/linuxserver/libreoffice:latest@sha256:1e906b58446409a9f3d3139f5b516e9834b46e6eeed8714b4c8a0f6e3acfd68c
         environment:
             - PUID=${PUID}
             - PGID=${PGID}
