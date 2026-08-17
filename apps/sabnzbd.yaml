@@ -5,7 +5,7 @@
 services:
     sabnzbd:
         container_name: sabnzbd
-        image: lscr.io/linuxserver/sabnzbd:latest@sha256:b0f9755d795913bd26ae3f3a12805668ab0681ab847a7624568559c573fc7cae
+        image: lscr.io/linuxserver/sabnzbd:latest@sha256:e79d3fd9282b7fa51a3382cec9fdcc4cf736f46c9d43d188193e3ce1c7accbcd
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
