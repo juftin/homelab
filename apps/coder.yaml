@@ -7,7 +7,7 @@
 services:
     coder:
         container_name: coder
-        image: ghcr.io/coder/coder:latest@sha256:399156bf96c736448e7d62c8371b0c310b50796e0cb7ca6b9285eb8f5034edab
+        image: ghcr.io/coder/coder:latest@sha256:e71d75fac8743c1295ab5394a3ec05aeb9849c997fd670c914c27334bb8a7761
         environment:
             CODER_PG_CONNECTION_URL: "postgresql://${CODER_POSTGRES_USER:-coder}:${CODER_POSTGRES_PASSWORD:-coder}@coder-db/${CODER_POSTGRES_DB:-coder}?sslmode=disable"
             CODER_HTTP_ADDRESS: "0.0.0.0:7080"
