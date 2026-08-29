@@ -6,7 +6,7 @@
 services:
     calibre:
         container_name: calibre
-        image: lscr.io/linuxserver/calibre:latest@sha256:2e8a99a474d42d1ca13970d74ab83da5da93a1cf0c75e194ce696eceb3e20daa
+        image: lscr.io/linuxserver/calibre:latest@sha256:aab1217345dd3f1f25aa0182cefa41909316fd44eb1e914e9836f79f44208b1f
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre:/config
             - ${BOOKS_DIR}:/books
