@@ -75,6 +75,11 @@ services:
             GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
             PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
             CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
+            CAMPLY_ENVIRONMENT: production
+            CAMPLY_AUTH_MODE: auth0
+            CAMPLY_AUTH0_DOMAIN: ${CAMPLY_AUTH0_DOMAIN}
+            CAMPLY_AUTH0_AUDIENCE: ${CAMPLY_AUTH0_AUDIENCE}
+            CAMPLY_AUTH0_CLIENT_ID: ${CAMPLY_AUTH0_CLIENT_ID}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
