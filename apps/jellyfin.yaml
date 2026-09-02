@@ -7,7 +7,7 @@
 services:
     jellyfin:
         container_name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:latest@sha256:4f6d8dfc53ec5a1ddf7a90e4338972d57d7b0adff6dc88b53184f8285d0b594f
+        image: lscr.io/linuxserver/jellyfin:latest@sha256:438e44330078e6b1a810fdec9dc0f4773e6595edb137c5eb4417a516da4c7f0e
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/jellyfin:/config
             - ${TV_DIR}:/data/tvshows
