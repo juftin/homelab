@@ -6,8 +6,7 @@
 services:
     readarr:
         container_name: readarr
-        image: lscr.io/linuxserver/readarr:develop
-        profiles: ["media", "arrs", "all"]
+        image: lscr.io/linuxserver/readarr:develop@sha256:eb37f58646a901dc7727cf448cae36daaefaba79de33b5058dab79aa4c04aefb
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/readarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads

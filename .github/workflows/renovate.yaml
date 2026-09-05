@@ -21,11 +21,11 @@ jobs:
             cancel-in-progress: false
         steps:
             - name: checkout
-              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
               with:
                   ref: gitops
             - name: renovate
-              uses: renovatebot/github-action@5712c6a41dea6cdf32c72d92a763bd417e6606aa # v44.0.5
+              uses: renovatebot/github-action@39b914146caeff8cd512e61c8992f1d5913af85c # v46.2.5
               with:
                   token: ${{ secrets.RENOVATE_TOKEN }}
                   configurationFile: .github/renovate-config.js

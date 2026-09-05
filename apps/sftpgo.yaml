@@ -6,8 +6,7 @@
 services:
     sftpgo:
         container_name: sftpgo
-        image: drakkan/sftpgo:latest
-        profiles: ["utilities", "all"]
+        image: drakkan/sftpgo:v2.7.5@sha256:9011fe608d336d3daf6ed6224b16fd40443aab8f3335e0b20853d6a539c58738
         volumes:
             - ${COMPLETED_DOWNLOADS}:/srv/sftpgo/data/juftin/downloads
             - ${MOVIE_DIR}:/srv/sftpgo/data/juftin/movies

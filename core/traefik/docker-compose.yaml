@@ -9,8 +9,7 @@ secrets:
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v3.6
-        profiles: ["traefik", "core", "all"]
+        image: library/traefik:v3.7.13@sha256:f86a2cab1b5c649070c49f883c743dd32d8485a56e3368c5f93b9e91f1e91259
         ports:
             - published: 80
               target: 80
@@ -27,7 +26,7 @@ services:
             - source: cloudflare_api_key
               target: /run/secrets/cloudflare_api_key
         volumes:
-            - ${DOCKER_DIRECTORY}/apps/traefik/rules:/rules
+            - ${DOCKER_DIRECTORY}/core/traefik/rules:/rules
             - ${DOCKER_DIRECTORY}/appdata/traefik/logs:/logs
             - ${DOCKER_DIRECTORY}/appdata/traefik/traefik:/etc/traefik
             - ${DOCKER_DIRECTORY}/appdata/traefik/acme/acme.json:/acme.json
@@ -39,7 +38,7 @@ services:
         restart: always
         depends_on:
             - socket-proxy
-            - duckdns
+            - cloudflare-ddns
             - oauth
         command:
             # GLOBAL SETTINGS
@@ -60,7 +59,7 @@ services:
             - --providers.docker=true
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
-            - --providers.docker.network=homelab_traefik
+            - --providers.docker.network=homelab-core_traefik
             - --providers.file.directory=/rules
             - --providers.file.watch=true
             # ENTRYPOINTS

@@ -1,8 +1,7 @@
 services:
     homeassistant:
         container_name: homeassistant
-        image: homeassistant/home-assistant:stable
-        profiles: ["miscellaneous", "all"]
+        image: homeassistant/home-assistant:2026.9.0@sha256:372d991e58882a1d8c68c07e9aa3f3b509276e695355f73ccdb03baa70407293
         volumes:
             - ${DOCKER_DIRECTORY}/apps/homeassistant/configuration.yaml:/config/configuration.yaml
             - ${DOCKER_DIRECTORY}/appdata/homeassistant:/config

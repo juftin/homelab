@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-go/main/schema/compose-spec.json
+
+#######################################
+# Komodo
+#######################################
+
+x-comodo-env: &komodo-env
+    TZ: ${TZ:?}
+    KOMODO_DATABASE_ADDRESS: komodo-mongo:27017
+    KOMODO_DATABASE_USERNAME: ${KOMODO_DB_USERNAME:-komodo}
+    KOMODO_DATABASE_PASSWORD: ${KOMODO_DB_PASSWORD:-komodo}
+    KOMODO_TITLE: ${KOMODO_TITLE:-Komodo}
+    KOMODO_FIRST_SERVER: https://komodo-periphery:8120
+    KOMODO_FIRST_SERVER_NAME: ${KOMODO_FIRST_SERVER_NAME:-homelab}
+    KOMODO_LOCAL_AUTH: true
+    KOMODO_INIT_ADMIN_USERNAME: ${KOMODO_ADMIN_USERNAME:-admin}
+    KOMODO_INIT_ADMIN_PASSWORD: ${KOMODO_ADMIN_PASSWORD:-password}
+services:
+    komodo-mongo:
+        container_name: komodo-mongo
+        image: mongo:8.3.8@sha256:5211c51171f57ae60842b11664bb244628971b3d35325762a97888337b9bb0db
+        command: --quiet --wiredTigerCacheSizeGB 0.25
+        restart: always
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/komodo/mongo/db:/data/db
+            - ${DOCKER_DIRECTORY}/appdata/komodo/mongo/configdb:/data/configdb
+        networks:
+            internal:
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DB_USERNAME:-komodo}
+            MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DB_PASSWORD:-komodo}
+        labels:
+            komodo.skip: true
+
+    komodo-core:
+        container_name: komodo-core
+        image: ghcr.io/moghtech/komodo-core:2.3.3@sha256:bca73d0eee143066228fb9b80c38a5a2726e573ad2758f7aa92b5c91a8aef1c7
+        init: true
+        restart: always
+        depends_on:
+            - komodo-mongo
+        environment:
+            <<: *komodo-env
+            KOMODO_HOST: https://${KOMODO_SUBDOMAIN:-komodo}.${DOMAIN_NAME:?}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/komodo/core/backups:/backups
+            - ${DOCKER_DIRECTORY}/core/komodo/komodo.toml:/config/config.toml
+            - ${DOCKER_DIRECTORY}/appdata/komodo/keys:/config/keys
+        networks:
+            internal:
+            traefik:
+        labels:
+            komodo.skip: true
+            traefik.enable: true
+            traefik.http.routers.komodo-rtr.rule: Host(`${KOMODO_SUBDOMAIN:-komodo}.${DOMAIN_NAME:?}`)
+            traefik.http.routers.komodo-rtr.entrypoints: websecure
+            traefik.http.routers.komodo-rtr.service: komodo-svc
+            traefik.http.services.komodo-svc.loadbalancer.server.port: 9120
+            traefik.http.routers.komodo-rtr.middlewares: chain-oauth-google@file
+
+    komodo-periphery:
+        container_name: komodo-periphery
+        image: ghcr.io/moghtech/komodo-periphery:2.3.3@sha256:fa3f1a641a265216066676950d5eecdf506955a7bafe2f01996135ae93115cd5
+        init: true
+        restart: always
+        volumes:
+            - /proc:/proc
+            - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+            - ${DOCKER_DIRECTORY}/core/komodo/entrypoint.sh:/app/mise/entrypoint.sh:ro
+            - ${DOCKER_DIRECTORY}/.age/key.txt:/app/mise/.age/key.txt:ro
+            - ${DOCKER_DIRECTORY}/appdata/komodo/keys:/config/keys
+        entrypoint: /app/mise/entrypoint.sh
+        command: periphery
+        networks:
+            internal:
+            docker:
+        environment:
+            <<: *komodo-env
+            DOCKER_HOST: tcp://socket-proxy:2375
+            SOPS_AGE_KEY_FILE: /app/mise/.age/key.txt
+        labels:
+            komodo.skip: true
