@@ -7,7 +7,7 @@
 services:
     litellm:
         container_name: litellm
-        image: ghcr.io/berriai/litellm:main-stable@sha256:c8756e7b9a61fe45df2ccb5b781d388c3b2f3a21ef9e4956630caef20f9f03aa
+        image: ghcr.io/berriai/litellm:main-stable@sha256:a3715fa7ad8387941ab697259bd2881d68931657247a41984f90fae6d11c62bf
         depends_on:
             litellm-db:
                 condition: service_healthy
