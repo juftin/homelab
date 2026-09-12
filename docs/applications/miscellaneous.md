@@ -1,28 +1,26 @@
 # Miscellaneous Profile
 
-## chat-gtp-next-web
+## coder
 
-[![](https://img.shields.io/static/v1?message=yidadaa/chatgpt-next-web&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/yidadaa/chatgpt-next-web)
-[![](https://img.shields.io/static/v1?message=ChatGPTNextWeb/ChatGPT-Next-Web&logo=github&label=github)](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
-[![](https://img.shields.io/static/v1?message=nextchat.dev&logo=google+chrome&label=website&color=teal)](https://nextchat.dev/)
+[![](https://img.shields.io/static/v1?message=codercom/coder&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/codercom/coder)
+[![](https://img.shields.io/static/v1?message=coder/coder&logo=github&label=github)](https://github.com/coder/coder)
+[![](https://img.shields.io/static/v1?message=coder.com&logo=google+chrome&label=website&color=teal)](https://coder.com)
 
-<img src="https://i.imgur.com/CtZghAF.png" width="220" alt="ChatGPT Next Web Logo">
+<img src="https://i.imgur.com/S0fGmKE.png" width="250" alt="Coder Logo">
 
-> [!NOTE] ChatGPT-Next-Web is not enabled by default
+Coder is a cloud-based development environment that allows you to code from anywhere.
+It provides a consistent, secure development environment that can be accessed from any device.
 
-NextChat (ChatGPT Next Web) is a well-designed ChatGPT web UI that uses the OpenAI API
-to chat with language models. It's customizable, easy to use, and way cheaper than
-a GPT Premium subscription.
+## camply
 
-## chatgpt-in-slack
+[![](https://img.shields.io/static/v1?message=juftin/camply&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/juftin/camply)
+[![](https://img.shields.io/static/v1?message=juftin/camply&logo=github&label=github)](https://github.com/juftin/camply)
 
-[![](https://img.shields.io/static/v1?message=juftin/chatgpt-in-slack&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/juftin/chatgpt-in-slack)
-[![](https://img.shields.io/static/v1?message=seratch/ChatGPT-in-Slack&logo=github&label=github)](https://github.com/seratch/ChatGPT-in-Slack)
+<img src="https://raw.githubusercontent.com/juftin/camply/main/docs/static/camply.svg" width="250" alt="Camply Logo">
 
-> [!NOTE] ChatGPT-in-Slack is not enabled by default
-
-`ChatGPT-in-Slack` is a Slack bot that uses the OpenAI API to chat with language models.
-It's a great way to interact with language models directly from your Slack workspace.
+Camply is a camping search and notification tool that helps you find available campsites
+at popular recreation areas. It monitors availability and sends notifications when
+campsites become available.
 
 ## libreoffice
 

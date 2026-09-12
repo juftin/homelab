@@ -1,18 +1,8 @@
 # Utilities Profile
 
-## watchtower
-
-[![](https://img.shields.io/static/v1?message=containrrr/watchtower&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/containrrr/watchtower)
-[![](https://img.shields.io/static/v1?message=containrrr/watchtower&logo=github&label=github)](https://github.com/containrrr/watchtower)
-[![](https://img.shields.io/static/v1?message=containrrr.dev&logo=google+chrome&label=website&color=teal)](https://containrrr.dev/watchtower)
-
-<img src="https://i.imgur.com/rQDP17g.png" width="220" alt="Watchtower Logo">
-
-Watchtower is a container-based solution for automating Docker container base image updates.
-
-For each service with the `latest` tag, Watchtower will check if the
-image has been updated on the Docker Hub, and if it has, Watchtower will
-pull the new image and restart the container.
+> [!NOTE]
+> Container updates are now managed by [Renovate](https://github.com/renovatebot/renovate)
+> via automated pull requests, replacing the need for Watchtower.
 
 ## homelab-postgres
 

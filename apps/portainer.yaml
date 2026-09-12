@@ -6,8 +6,7 @@
 services:
     portainer:
         container_name: portainer
-        image: portainer/portainer-ce:latest
-        profiles: ["utilities", "all"]
+        image: portainer/portainer-ce:2.45.0@sha256:511f3f06c96fe3b993ebeaafde311c1959cae73a7ef825dba6397d51b450dffa
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/portainer:/data
         command: -H tcp://socket-proxy:2375
