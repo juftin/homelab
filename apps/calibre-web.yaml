@@ -6,8 +6,7 @@
 services:
     calibre-web:
         container_name: calibre-web
-        image: lscr.io/linuxserver/calibre-web:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/calibre-web:latest@sha256:802729966faed5e32d671cd4f92ba6196e9e754a6c0f740ce1ee9acd86b10e55
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
             - ${BOOKS_DIR}:/books

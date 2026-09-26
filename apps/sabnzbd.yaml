@@ -5,8 +5,7 @@
 services:
     sabnzbd:
         container_name: sabnzbd
-        image: lscr.io/linuxserver/sabnzbd:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/sabnzbd:latest@sha256:4f7ee6c53834bc336365bd0a7c35f4fc870156a72d33a334753010258aa077a4
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
             - ${COMPLETED_DOWNLOADS}:/downloads

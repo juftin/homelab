@@ -1,0 +1,27 @@
+# Prometheus Configuration — camply Monitoring
+#
+# Scrapes metrics from the FastAPI backend, Celery worker, and
+# optionally Valkey via the valkey-exporter.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    application: camply
+
+scrape_configs:
+  - job_name: "camply-backend"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["camply:8000"]
+    scrape_interval: 15s
+
+  - job_name: "camply-worker"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["camply-worker:8001"]
+    scrape_interval: 15s
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
