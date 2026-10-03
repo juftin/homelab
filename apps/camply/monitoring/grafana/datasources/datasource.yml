@@ -1,0 +1,16 @@
+# Grafana Datasource Provisioning — Prometheus
+#
+# Auto-provisioned. Grafana loads this on startup so the Prometheus
+# datasource is immediately available for dashboards.
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://camply-prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"

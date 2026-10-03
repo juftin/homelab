@@ -5,13 +5,12 @@
 
 services:
     umami:
-        image: ghcr.io/umami-software/umami:postgresql-latest
+        image: ghcr.io/umami-software/umami:3.4.0@sha256:85909afc45bdcda1917394594a087421fdbb05610fded0fa9f6fb861abb2f367
         platform: linux/amd64
         container_name: umami
         networks:
             traefik:
             internal:
-        profiles: ["miscellaneous", "all"]
         environment:
             DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@homelab-postgres:5432/umami
             DATABASE_TYPE: postgresql

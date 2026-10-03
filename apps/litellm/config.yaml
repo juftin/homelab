@@ -13,6 +13,11 @@ general_settings:
     store_model_in_db: true
 
 model_list:
+    - model_name: gpt-5.2
+      litellm_params:
+          model: openai/gpt-5
+          api_key: os.environ/OPENAI_API_KEY
+
     - model_name: gpt-5
       litellm_params:
           model: openai/gpt-5
@@ -33,39 +38,14 @@ model_list:
           model: openai/gpt-4.1
           api_key: os.environ/OPENAI_API_KEY
 
-    - model_name: gpt-4o
+    - model_name: o3-deep-research
       litellm_params:
-          model: openai/gpt-4o
+          model: openai/o3-deep-research
           api_key: os.environ/OPENAI_API_KEY
 
-    - model_name: gpt-4o-mini
+    - model_name: o4-mini-deep-research
       litellm_params:
-          model: openai/gpt-4o-mini
-          api_key: os.environ/OPENAI_API_KEY
-
-    - model_name: o3
-      litellm_params:
-          model: openai/o3
-          api_key: os.environ/OPENAI_API_KEY
-
-    - model_name: o3-mini
-      litellm_params:
-          model: openai/o3-mini
-          api_key: os.environ/OPENAI_API_KEY
-
-    - model_name: o4-mini
-      litellm_params:
-          model: openai/o4-mini
-          api_key: os.environ/OPENAI_API_KEY
-
-    - model_name: gpt-4.1-mini
-      litellm_params:
-          model: openai/gpt-4.1-mini
-          api_key: os.environ/OPENAI_API_KEY
-
-    - model_name: gpt-4.1-nano
-      litellm_params:
-          model: openai/gpt-4.1-nano
+          model: openai/o4-mini-deep-research
           api_key: os.environ/OPENAI_API_KEY
 
     - model_name: anthropic/claude-opus-4-1
@@ -87,23 +67,17 @@ model_list:
           thinking: { "type": "enabled", "budget_tokens": 1024 }
           merge_reasoning_content_in_choices: true
 
-    - model_name: anthropic/claude-sonnet-4-0
+    - model_name: gemini/gemini-3-pro-preview
       litellm_params:
-          model: anthropic/claude-sonnet-4-20250514
-          api_key: os.environ/ANTHROPIC_API_KEY
+          model: gemini/gemini-3-pro-preview
+          api_key: os.environ/GEMINI_API_KEY
+          thinking: { "type": "enabled" }
           merge_reasoning_content_in_choices: true
 
-    - model_name: anthropic/claude-sonnet-4-0-thinking
+    - model_name: gemini/gemini-3-flash-preview
       litellm_params:
-          model: anthropic/claude-sonnet-4-20250514
-          api_key: os.environ/ANTHROPIC_API_KEY
-          thinking: { "type": "enabled", "budget_tokens": 1024 }
-          merge_reasoning_content_in_choices: true
-
-    - model_name: anthropic/claude-3-5-haiku-latest
-      litellm_params:
-          model: anthropic/claude-3-5-haiku-latest
-          api_key: os.environ/ANTHROPIC_API_KEY
+          model: gemini/gemini-3-flash-preview
+          api_key: os.environ/GEMINI_API_KEY
           thinking: { "type": "enabled" }
           merge_reasoning_content_in_choices: true
 
