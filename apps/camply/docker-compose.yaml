@@ -60,7 +60,7 @@ services:
     ########################################################################
 
     camply:
-        image: juftin/camply-backend:latest
+        image: juftin/camply-backend:latest@sha256:3239d9ff5b815a58babe5ebaa74ec4198b7503069486d597b7a7686a405863e9
         pull_policy: always
         container_name: camply
         depends_on:
@@ -108,7 +108,7 @@ services:
     ########################################################################
 
     camply-worker:
-        image: juftin/camply-backend:latest
+        image: juftin/camply-backend:latest@sha256:3239d9ff5b815a58babe5ebaa74ec4198b7503069486d597b7a7686a405863e9
         pull_policy: always
         container_name: camply-worker
         command: celery -A worker.celery_app worker -l info -Q celery --concurrency=4
@@ -150,7 +150,7 @@ services:
     ########################################################################
 
     camply-beat:
-        image: juftin/camply-backend:latest
+        image: juftin/camply-backend:latest@sha256:3239d9ff5b815a58babe5ebaa74ec4198b7503069486d597b7a7686a405863e9
         pull_policy: always
         container_name: camply-beat
         command: >
@@ -195,7 +195,7 @@ services:
     ########################################################################
 
     camply-prometheus:
-        image: prom/prometheus:latest
+        image: prom/prometheus:latest@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e
         container_name: camply-prometheus
         user: "0"
         command:
@@ -232,7 +232,7 @@ services:
     ########################################################################
 
     camply-grafana:
-        image: grafana/grafana:latest
+        image: grafana/grafana:latest@sha256:b28bae15e219c998fb0e0424ed724930cc61b1f61fb404d47c862f9a23f9e572
         container_name: camply-grafana
         user: "0"
         depends_on:
