@@ -57,7 +57,7 @@ include:
     - apps/open-webui.yaml # (LLM - OpenWebUI)
     - apps/chat-gpt-next-web.yaml # (LLM - NextChat)
     - apps/chatgpt-in-slack.yaml # ChatGPT Slack Bot
-    - apps/litellm/docker-compose.yaml # (LLM - LiteLLM)
+    # - apps/litellm/docker-compose.yaml # (LLM - LiteLLM)
 
 ################################################################################
 # NETWORK CONFIGURATION
