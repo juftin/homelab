@@ -13,14 +13,36 @@ It provides a consistent, secure development environment that can be accessed fr
 
 ## camply
 
-[![](https://img.shields.io/static/v1?message=juftin/camply&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/juftin/camply)
-[![](https://img.shields.io/static/v1?message=juftin/camply&logo=github&label=github)](https://github.com/juftin/camply)
+[![](https://img.shields.io/static/v1?message=juftin/camply-backend&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/juftin/camply-backend)
+[![](https://img.shields.io/static/v1?message=juftin/camply-web&logo=github&label=github)](https://github.com/juftin/camply-web)
 
 <img src="https://raw.githubusercontent.com/juftin/camply/main/docs/static/camply.svg" width="250" alt="Camply Logo">
 
 Camply is a camping search and notification tool that helps you find available campsites
 at popular recreation areas. It monitors availability and sends notifications when
 campsites become available.
+
+The API, worker, and scheduler use `juftin/camply-backend:latest` with `pull_policy: always`.
+Renovate leaves this image unpinned, so each deployment pulls the latest upstream build.
+The frontend is deployed separately to Cloudflare Pages and must also be updated for session login.
+
+The API uses in-app session login. Supply `CAMPLY_LOGIN_USERNAME`, `CAMPLY_LOGIN_PASSWORD`,
+and `CAMPLY_SESSION_SECRET` through the deployment environment. The signing secret must be
+at least 32 characters. Store these values through the existing encrypted environment
+workflow or Komodo environment configuration before deploying; `docs/example.env` contains
+synthetic values for validation only. Sessions require HTTPS and expire after 12 hours.
+Set `CAMPLY_CORS_ORIGINS` to a JSON array containing the frontend's HTTPS origin if it differs
+from `https://camply.juftin.dev`.
+
+After merging into `gitops`, Komodo deploys the application stack on its next scheduled run.
+To update Camply immediately on the homelab server:
+
+```shell
+make update APP="camply camply-worker camply-beat"
+```
+
+The API runs database migrations at startup. Verify `/api/health`, then sign in through the
+frontend and confirm that scans load. Signing out should require login again.
 
 ## libreoffice
 
