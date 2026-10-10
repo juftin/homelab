@@ -6,8 +6,7 @@
 services:
     socket-proxy:
         container_name: socket-proxy
-        image: tecnativa/docker-socket-proxy:latest
-        profiles: ["traefik", "core", "all"]
+        image: tecnativa/docker-socket-proxy:v0.4.1@sha256:3400c429c5f9e1b21d62130fb93b16e2e772d4fb7695bd52fc2b743800b9fe9e
         privileged: true
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro

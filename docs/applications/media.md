@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [plex](#plex)
+- [jellyfin](#jellyfin)
 - [sonarr](#sonarr)
 - [radarr](#radarr)
 - [prowlarr](#prowlarr)
@@ -10,6 +11,7 @@
 - [tautulli](#tautulli)
 - [transmission](#transmission)
 - [sabnzbd](#sabnzbd)
+- [nzbhydra](#nzbhydra)
 - [heimdall](#heimdall)
 - [readarr](#readarr)
 - [calibre](#calibre)
@@ -32,6 +34,23 @@ design and bulk actions mean getting things done faster.
 
 Plex setup is fairly intuitive and straightforward. When setting up libraries you will
 use the root directories, `/tv/` and `/movies/`
+
+## jellyfin
+
+[![](https://img.shields.io/static/v1?message=linuxserver/jellyfin&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/jellyfin)
+[![](https://img.shields.io/static/v1?message=jellyfin/jellyfin&logo=github&label=github)](https://github.com/jellyfin/jellyfin)
+[![](https://img.shields.io/static/v1?message=jellyfin.org&logo=google+chrome&label=website&color=teal)](https://jellyfin.org)
+
+<img src="https://i.imgur.com/BjIOz1v.png" width="250" alt="Jellyfin Logo">
+
+Jellyfin is a free and open-source media server and suite of multimedia applications designed
+to organize, manage, and share digital media files to networked devices. It's an alternative
+to proprietary media servers like Plex and Emby.
+
+### Configuration
+
+Jellyfin setup is similar to Plex. When setting up libraries you will use the
+root directories, `/tv/` and `/movies/`
 
 ## sonarr
 

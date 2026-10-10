@@ -18,6 +18,7 @@ repos:
       hooks:
           - id: pretty-format-toml
             args: [--autofix, --no-sort]
+            exclude: core/komodo/komodo.toml
 
     - repo: local
       hooks:
