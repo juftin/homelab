@@ -24,6 +24,13 @@ connection in the Open WebUI settings to point to the LiteLLM service.
 
 ## litellm
 
+> [!NOTE]
+> LiteLLM is disabled by default. Uncomment its include in `docker-compose.apps.yaml`
+> to enable the proxy, database, cache, and bootstrap service. Komodo's next deployment
+> removes the disabled containers using `--remove-orphans`; persistent data remains in
+> `appdata/litellm`. Open WebUI's configured LiteLLM connection is unavailable while
+> this stack is disabled; Ollama remains available.
+
 [![](https://img.shields.io/static/v1?message=ghcr.io/berriai/litellm&logo=docker&label=docker&color=blue)](https://github.com/BerriAI/litellm/pkgs/container/litellm)
 [![](https://img.shields.io/static/v1?message=BerriAI/litellm&logo=github&label=github)](https://github.com/BerriAI/litellm)
 [![](https://img.shields.io/static/v1?message=litellm.ai&logo=google+chrome&label=website&color=teal)](https://www.litellm.ai)
