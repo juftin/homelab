@@ -46,6 +46,7 @@ tags = ["homelab"]
 
 [stack.config]
 server = "homelab"
+auto_pull = false
 poll_for_updates = true
 auto_update = true
 linked_repo = "homelab"
