@@ -3,7 +3,7 @@
 # Camply Web - Campsite Finder Web Application
 #
 # Full stack: API backend, Celery workers, Valkey cache, PostgreSQL,
-# Prometheus metrics, Grafana dashboards
+# Prometheus metrics, native admin monitoring
 # Frontend deployed separately to Cloudflare Pages.
 ####################################
 
@@ -81,6 +81,8 @@ services:
             CAMPLY_SESSION_SECRET: ${CAMPLY_SESSION_SECRET:?Set CAMPLY_SESSION_SECRET to at least 32 characters}
             CAMPLY_SESSION_COOKIE_SECURE: "true"
             CAMPLY_CORS_ORIGINS: '${CAMPLY_CORS_ORIGINS:-["https://camply.juftin.dev"]}'
+            CAMPLY_VALKEY_URL: redis://camply-valkey:6379/0
+            CAMPLY_PROMETHEUS_URL: http://camply-prometheus:9090
             PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
             CAMPLY_PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc
         security_opt:
@@ -113,6 +115,8 @@ services:
         container_name: camply-worker
         command: celery -A worker.celery_app worker -l info -Q celery --concurrency=4
         depends_on:
+            camply:
+                condition: service_healthy
             camply-db:
                 condition: service_healthy
             camply-valkey:
@@ -159,6 +163,8 @@ services:
             celery -A worker.celery_app beat -l info
             "
         depends_on:
+            camply:
+                condition: service_healthy
             camply-db:
                 condition: service_healthy
             camply-valkey:
@@ -226,50 +232,3 @@ services:
             timeout: 5s
             retries: 3
             start_period: 10s
-
-    ########################################################################
-    # GRAFANA (Dashboards)
-    ########################################################################
-
-    camply-grafana:
-        image: grafana/grafana:latest
-        container_name: camply-grafana
-        user: "0"
-        depends_on:
-            camply-prometheus:
-                condition: service_started
-        environment:
-            GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
-            GF_AUTH_ANONYMOUS_ENABLED: "true"
-        volumes:
-            - ${DOCKER_DIRECTORY}/apps/camply/monitoring/grafana/datasources/:/etc/grafana/provisioning/datasources/:ro
-            - ${DOCKER_DIRECTORY}/apps/camply/monitoring/grafana/dashboards/:/etc/grafana/provisioning/dashboards/:ro
-            - ${DOCKER_DIRECTORY}/appdata/camply/grafana/:/var/lib/grafana/
-        security_opt:
-            - no-new-privileges:true
-        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
-        networks:
-            traefik:
-            internal:
-        healthcheck:
-            test:
-                [
-                    "CMD",
-                    "wget",
-                    "-q",
-                    "-O",
-                    "/dev/null",
-                    "http://localhost:3000/api/health",
-                ]
-            interval: 10s
-            timeout: 5s
-            retries: 3
-            start_period: 10s
-        labels:
-            traefik.enable: true
-            traefik.http.routers.camply-grafana-rtr.rule: Host(`grafana-${CAMPLY_SUBDOMAIN:-camply}.${DOMAIN_NAME}`)
-            traefik.http.routers.camply-grafana-rtr.entrypoints: websecure
-            traefik.http.routers.camply-grafana-rtr.service: camply-grafana-svc
-            traefik.http.services.camply-grafana-svc.loadbalancer.server.port: 3000
-            traefik.http.routers.camply-grafana-rtr.middlewares: chain-oauth-google@file
