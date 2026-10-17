@@ -6,8 +6,7 @@
 services:
     open-webui-pgvector:
         container_name: open-webui-pgvector
-        image: pgvector/pgvector:pg18-trixie
-        profiles: ["llm", "all", "chat"]
+        image: pgvector/pgvector:pg18-trixie@sha256:9d9c930220cb9bf2f956d10a8f909cf9973d9672ca0278aef2c1e6facccad2e0
         environment:
             POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
             POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
@@ -28,8 +27,7 @@ services:
 
     open-webui-db:
         container_name: open-webui-db
-        image: postgres:18
-        profiles: ["llm", "all", "chat"]
+        image: postgres:18.1@sha256:1090bc3a8ccfb0b55f78a494d76f8d603434f7e4553543d6e807bc7bd6bbd17f
         environment:
             POSTGRES_USER: ${OPENWEBUI_POSTGRES_USER:-openwebui}
             POSTGRES_PASSWORD: ${OPENWEBU_POSTGRES_PASSWORD:-openwebui}
@@ -50,8 +48,7 @@ services:
 
     open-webui:
         container_name: open-webui
-        image: ghcr.io/open-webui/open-webui:main
-        profiles: ["llm", "all", "chat"]
+        image: ghcr.io/open-webui/open-webui:latest@sha256:4860ba005ae8f19f08d1e12b0868855b7b339ea0dad9927f196820fc0de04575
         networks:
             traefik:
             internal:
@@ -88,8 +85,7 @@ services:
 
     ollama:
         container_name: ollama
-        image: ollama/ollama:latest
-        profiles: ["llm", "all", "chat"]
+        image: ollama/ollama:latest@sha256:5d3a2f25f9825628daba94dc0b1d421c7d57d6c03ae5faa9ba050e058bab8241
         environment:
             OLLAMA_HOST: "0.0.0.0"
             OLLAMA_KEEP_ALIVE: "1m"
