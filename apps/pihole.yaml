@@ -6,8 +6,7 @@
 services:
     pihole:
         container_name: pihole
-        image: pihole/pihole:latest
-        profiles: ["utilities", "all"]
+        image: pihole/pihole:2026.10.0@sha256:d34134716fc32038b052a8674c7c6879e0ff21f0e6d8af345166fffa2c27c113
         environment:
             TZ: ${TZ}
             DNS1: 8.8.8.8
