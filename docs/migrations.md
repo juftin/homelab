@@ -1,8 +1,111 @@
 # Migrations
 
-When larger changes are made this project there are occasionally migrations that
+When larger changes are made to this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
+
+!!! info "For Forks of This Repository"
+
+    These migration instructions are for users who have forked this repository and are upgrading
+    to newer versions. Make sure you have the upstream repository configured:
+
+    ```bash
+    git remote add upstream https://github.com/juftin/homelab.git
+    ```
+
+## 2.0.0
+
+The 2.0.0 release represents a **major architectural overhaul** with the introduction of GitOps automation and automated dependency management. Not interested in these new features? See [Manual Deployment](manual-deployment.md) for an alternative approach. After upgrading to 2.0.0, make sure to read through the [Configuration](config.md) and [GitOps & Automated Updates](gitops.md) documentation to understand the new setup.
+
+**🔄 Architecture Changes:**
+
+- **Two-Stack Architecture**: Split from single `docker-compose.yaml` with profiles to two separate stacks:
+    - `homelab-core` ([docker-compose.core.yaml](https://github.com/juftin/homelab/blob/main/docker-compose.core.yaml)): Infrastructure services
+    - `homelab` ([docker-compose.apps.yaml](https://github.com/juftin/homelab/blob/main/docker-compose.apps.yaml)): Application services
+
+- **GitOps Deployment**: Komodo platform for automated deployments (optional)
+- **Automated Updates**: Renovate for SHA256-pinned image updates (optional)
+- **Secrets Management**: SOPS + Age encryption for `.env` and secrets files
+
+**🆕 New Services:**
+
+- **Komodo**: GitOps deployment platform
+- **Cloudflare DDNS**: Replaces DuckDNS for dynamic DNS updates
+
+!!! success "Safe Migration - No `appdata` Changes"
+
+    The `appdata` directory structure remains **unchanged** in 2.0.0. All service configurations
+    are fully compatible, making this a safe upgrade. You can keep your existing `appdata` without
+    any modifications.
+
+<details><summary>1.x.x to 2.0.0 Migration Steps</summary>
+<p>
+
+1. Backup Current Setup:
+
+    ```bash
+    # Backup appdata directory (optional, for safety)
+    make backup BACKUP_DIR=/path/to/backup
+
+    # Export current .env
+    cp .env .env.backup
+    ```
+
+2. Stop Existing Services:
+
+    ```bash
+    # Using old docker-compose.yaml
+    docker compose --profile all down
+    ```
+
+3. Pull New Version:
+
+    ```bash
+    # Fetch latest changes from upstream
+    git fetch upstream
+
+    # Merge upstream changes into your fork
+    git checkout main
+    git merge upstream/main
+
+    # Or rebase your changes
+    # git rebase upstream/main
+    ```
+
+4. Configure Secrets (see [Configuration](config.md)):
+
+    ```bash
+    # Install mise for secrets management
+    curl https://mise.run | sh
+
+    # Generate Age encryption key
+    make keygen
+
+    # Encrypt secrets
+    make encrypt
+
+    # Validate Setup with Secrets
+    make validate
+    ```
+
+5. Deploy New Stack:
+
+    ```bash
+    # Deploy core infrastructure
+    make core-up
+
+    # Verify core services
+    make core-logs
+
+    # Deploy applications
+    make up
+
+    # Verify all services
+    make ps
+    ```
+
+</p>
+</details>
 
 ## 1.11.0
 

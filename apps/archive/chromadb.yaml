@@ -7,7 +7,6 @@ services:
     chromadb:
         container_name: chromadb
         image: chromadb/chroma:1.0.12
-        profiles: ["llm", "all"]
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/chromadb:/data
         networks:
