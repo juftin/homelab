@@ -6,7 +6,7 @@
 services:
     duckdns:
         container_name: duckdns
-        image: lscr.io/linuxserver/duckdns:latest@sha256:1877f905e289ea8c7253294957623f97565f8d6b4153c77640e1dacc98e31636
+        image: lscr.io/linuxserver/duckdns:latest@sha256:b7ee0121f2e1915c5813953da6611d031d7cc3bdaa182a47fcb6b01a66e81f46
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
