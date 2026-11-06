@@ -18,6 +18,11 @@ It provides a consistent, secure development environment that can be accessed fr
 
 <img src="https://raw.githubusercontent.com/juftin/camply/main/docs/static/camply.svg" width="250" alt="Camply Logo">
 
+> [!NOTE]
+> Camply is disabled by default. Uncomment its include in `docker-compose.apps.yaml`
+> to enable the stack. Komodo's next deployment removes the disabled containers using
+> `--remove-orphans`; persistent data remains in `appdata/camply`.
+
 Camply is a camping search and notification tool that helps you find available campsites
 at popular recreation areas. It monitors availability and sends notifications when
 campsites become available.
@@ -41,8 +46,15 @@ connects to `camply-valkey` for worker inspection and recent task attempts, and 
 30-day retention. Komodo removes the retired Grafana container with `--remove-orphans`;
 its old data directory is left on disk.
 
-After merging into `gitops`, Komodo deploys the application stack on its next scheduled run.
-To update Camply immediately on the homelab server:
+After merging into `gitops`, Komodo deploys the application stack on its next scheduled run,
+automatically removing torn-down containers with `--remove-orphans`.
+To stop and tear down Camply immediately on the homelab server:
+
+```shell
+make down APP="camply camply-worker camply-beat camply-prometheus camply-valkey camply-db"
+```
+
+To update Camply immediately when enabled:
 
 ```shell
 make update APP="camply camply-worker camply-beat"
