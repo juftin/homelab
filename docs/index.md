@@ -13,74 +13,93 @@
 
 ## What is homelab?
 
-**`homelab`** is a collection of services that can be deployed from your home server and accessed
-securely from anywhere in the world. Ultimately everything is deployed into a single
-docker compose application. Each service belongs to a [docker compose profile] - and the
-`Makefile` contains everything you need to get started and manage your homelab.
+**`homelab`** is a collection of 20+ self-hosted services that can be deployed from your home server and accessed
+securely from anywhere in the world. The deployment uses a **GitOps workflow** with automated deployments via [Komodo]
+and dependency updates via [Renovate].
 
-- **`core`**: The `core` profile is the base of this project, it includes a [traefik] reverse proxy
-  and [OAuth] service that allows you to access all of your services via a single domain name
-  securely behind HTTPS and protected with Google OAuth.
-- **`media`**: The `media` profile includes services like [Plex], [Sonarr], [Radarr], and
-  [Ombi] that allow you to request, download, organize, and stream media to your devices. This profile
-  is perfect for those who want to have a media server in their homelab.
-- **`utilities`**: The `utilities` profile includes services like [Watchtower] and [Portainer] that
-  are designed to help you manage your homelab, monitor your services,
-  and keep your containers up-to-date.
-- **`miscellaneous`**: The `miscellaneous` profile is disabled by default.
-  It includes services like [ChatGPT Next Web] and [LibreOffice Online]
-  that don't fit into the other profiles. These services are great for improving your
-  productivity and adding some fun to your homelab.
+The architecture consists of two separate Docker Compose stacks:
+
+- **`homelab-core`**: Infrastructure layer with [Traefik] reverse proxy, [OAuth] authentication,
+  Cloudflare DDNS, Docker socket proxy, and [Komodo] management platform. This is the foundation
+  that all application services depend on.
+- **`homelab`**: Application services organized into categories:
+    - **Media**: [Plex], [Sonarr], [Radarr], [Overseerr], [Jellyfin], and more for media management and streaming
+    - **Utilities**: [Portainer], [SFTPGo], [Pi-hole] for system management and utilities
+    - **Miscellaneous**: [Home Assistant], [Coder], [Camply] and other specialized services
+    - **LLM**: [Open WebUI], [LiteLLM], [ChatGPT Next Web] for AI/language model interactions
+
+All web services share a unified Traefik ingress with automatic HTTPS (Let's Encrypt via Cloudflare DNS challenge)
+and Google OAuth protection.
+
+## Automated Updates with Renovate
+
+All Docker images in this homelab are **pinned to specific SHA256 digests** for reproducibility and security.
+[Renovate] automatically updates these digests every 15 minutes, auto-merging minor/patch updates while requiring
+manual review for major versions.
+
+See [GitOps & Automated Updates](gitops.md) for complete details on the deployment workflow and update automation.
 
 ## How does it work?
 
 This repository is a large [docker compose](https://docs.docker.com/compose/)
 project that allows you to deploy a variety of services to your homelab.
 
-At the root of this repository is a `docker-compose.yaml` file that defines
-the entire homelab project - it uses the `include` directive to pull in
-individual service docker compose files from the `apps` directory.
+At the root of this repository are two main Docker Compose files that define
+the entire homelab project - they use the `include` directive to pull in
+individual service files from the `apps/` and `core/` directories.
 
 ```text
 .
-├── docker-compose.yaml                     # Main Docker Compose File
-├── .env                                    # Environment Variables and Configuration
-├── Makefile                                # Makefile for common tasks and docker compose wrappers
-├── secrets                                 # Secret Files
-│   ├── cloudflare_api_key.secret           # Cloudflare API Key
-│   └── google_oauth.secret                 # Google OAuth Credentials and Whitelist
-├── apps                                    # Individual Service Docker Compose Files
+├── docker-compose.core.yaml                # Core Infrastructure Stack
+├── docker-compose.apps.yaml                # Application Services Stack
+├── .env.yaml                               # Encrypted Environment Variables (SOPS)
+├── .env                                    # Decrypted Environment Variables (git-ignored)
+├── Makefile                                # Docker Compose wrappers and management commands
+├── secrets/                                # Encrypted Secret Files (SOPS)
+│   ├── cloudflare_api_key.secret.yaml      # Cloudflare API Key (encrypted)
+│   └── google_oauth.secret.yaml            # Google OAuth Credentials (encrypted)
+├── core/                                   # Core Infrastructure Services
+│   ├── traefik/                            # Traefik Reverse Proxy
+│   │   ├── docker-compose.yaml
+│   │   └── rules/                          # Traefik Middlewares and Rules
+│   ├── oauth.yaml                          # Google OAuth Forward Auth
+│   ├── cloudflare-ddns.yaml                # Dynamic DNS Updates
+│   ├── socket-proxy.yaml                   # Docker Socket Proxy
+│   └── komodo/                             # GitOps Deployment Platform
+│       ├── docker-compose.yaml
+│       └── komodo.toml                     # Deployment Configuration
+├── apps/                                   # Application Service Files
 │   ├── plex.yaml
-│   ├── radarr.yaml
-│   ├── ombi.yaml
 │   ├── sonarr.yaml
-│   ├── oauth.yaml
-│   ├── chat-gpt-next-web.yaml
-│   ├── watchtower.yaml
-│   └── traefik                             # Traefik Reverse Proxy
-│       ├── docker-compose.yaml             # Traefik Docker Compose File
-│       └── rules                           # Traefik Middlewares and Rules
-│           ├── middlewares-chains.yml
-│           ├── middlewares.yml
-│           └── tls-opts.yml
-└── appdata                                 # Application Data Persistent Volumes
-    ├── plex                                # Each individual service has its own subdirectory
-    ├── sonarr
-    ├── oauth
-    ├── traefik
-    ├── chat-gpt-next-web
-    ├── utilities
-    └── watchtower
+│   ├── radarr.yaml
+│   ├── overseerr.yaml
+│   ├── jellyfin.yaml
+│   ├── open-webui.yaml
+│   ├── litellm/
+│   └── ... (20+ services)
+└── appdata/                                # Application Persistent Data (git-ignored)
+    ├── plex/
+    ├── sonarr/
+    ├── traefik/
+    └── ... (per-service subdirectories)
 ```
 
-[traefik]: https://github.com/traefik/traefik
+[Traefik]: https://github.com/traefik/traefik
 [OAuth]: https://github.com/thomseddon/traefik-forward-auth
+[Komodo]: https://github.com/mbecker20/komodo
+[Renovate]: https://github.com/renovatebot/renovate
+[Renovate]: https://github.com/renovatebot/renovate
 [Plex]: https://www.plex.tv/
+[Jellyfin]: https://jellyfin.org/
 [Sonarr]: https://github.com/sonarr/sonarr
 [Radarr]: https://github.com/Radarr/Radarr
-[Ombi]: https://github.com/Ombi-app/Ombi
+[Overseerr]: https://overseerr.dev/
+[Open WebUI]: https://github.com/open-webui/open-webui
+[LiteLLM]: https://github.com/BerriAI/litellm
 [ChatGPT Next Web]: https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
-[Watchtower]: https://github.com/containrrr/watchtower
-[LibreOffice Online]: https://www.libreoffice.org/
 [Portainer]: https://github.com/portainer/portainer
-[docker compose profile]: https://docs.docker.com/compose/profiles/
+[SFTPGo]: https://github.com/drakkan/sftpgo
+[Pi-hole]: https://pi-hole.net/
+[Home Assistant]: https://www.home-assistant.io/
+[Coder]: https://github.com/coder/coder
+[Camply]: https://github.com/juftin/camply

@@ -4,12 +4,15 @@ site_name: homelab
 nav:
     - HomeLab 🤖: index.md
     - Configuration ⚙️: config.md
+    - GitOps & Updates 🔄: gitops.md
+    - Manual Deployment 🛠️: manual-deployment.md
     - Traefik 🚦: traefik.md
     - Applications 📦:
-          - Core Profile 🧱: applications/core.md
-          - Media Profile 🎬: applications/media.md
-          - Utilities Profile 🔧: applications/utilities.md
-          - Miscellaneous Profile 🥞: applications/miscellaneous.md
+          - Core Infrastructure 🧱: applications/core.md
+          - Media Services 🎬: applications/media.md
+          - Utilities 🔧: applications/utilities.md
+          - Miscellaneous 🥞: applications/miscellaneous.md
+          - LLM Services 🤖: applications/llm.md
           - Archived Apps 🗄️: applications/archived.md
     - Command Line Usage 🖥️: cli.md
     - Scripts 📜: scripts.md
