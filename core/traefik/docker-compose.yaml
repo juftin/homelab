@@ -9,7 +9,7 @@ secrets:
 services:
     traefik:
         container_name: traefik
-        image: library/traefik:v3.7.17@sha256:68ae5fe5b64ca166704b746a9e8afcd385e36b3f569a5691401bf652d57b3748
+        image: library/traefik:v3.7.19@sha256:aa942a00bce033c909bf1f7e861d93761be4b31a035f10d2410d33e38a8f41cf
         ports:
             - published: 80
               target: 80
