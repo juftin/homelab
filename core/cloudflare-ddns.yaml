@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+##########################################
+# CLOUDFLARE-DDNS (Cloudflare Dynamic DNS)
+##########################################
+
+secrets:
+    cloudflare_api_key:
+        file: ${DOCKER_DIRECTORY}/secrets/cloudflare_api_key.secret
+
+services:
+    cloudflare-ddns:
+        container_name: cloudflare-ddns
+        image: favonia/cloudflare-ddns:1.15.1@sha256:a4e2089b3531eec8c9328c7a9a586f80e8d67dcd94856e0b596b7896e1de3f62
+        networks:
+            internal:
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        secrets:
+            - source: cloudflare_api_key
+              target: /run/secrets/cloudflare_api_key
+        environment:
+            CLOUDFLARE_API_TOKEN_FILE: /run/secrets/cloudflare_api_key
+            DOMAINS: ${DOMAIN_NAME:?}
+            PROXIED: "true"
+            IP6_PROVIDER: "none"

@@ -27,6 +27,12 @@
     },
     packageRules: [
         {
+            description: "Keep Camply on the unpinned latest image",
+            matchDatasources: ["docker"],
+            matchPackageNames: ["juftin/camply-backend"],
+            pinDigests: false,
+        },
+        {
             description: "Auto-merge Minor and Patch",
             matchUpdateTypes: ["minor", "patch"],
             matchCurrentVersion: "!/^0/",
