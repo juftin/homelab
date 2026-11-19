@@ -9,10 +9,10 @@ services:
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
-            - ${TV_DIR}:/tv
-            - ${MOVIE_DIR}:/movies
+            - ${TV_DIR:-${MEDIA_ROOT}/media/tv}:/tv
+            - ${MOVIE_DIR:-${MEDIA_ROOT}/media/movies}:/movies
             - ${TRANSCODE_DIR:-/dev/shm}:/transcode
-            - ${BOOKS_DIR}:/books
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
         devices:
             - /dev/dri:/dev/dri
             - /dev/dvb:/dev/dvb

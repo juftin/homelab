@@ -37,6 +37,11 @@ design and bulk actions mean getting things done faster.
 Plex setup is fairly intuitive and straightforward. When setting up libraries you will
 use the root directories, `/tv/` and `/movies/`
 
+Following [TRaSH Guides Plex recommendations](https://trash-guides.info/Plex/Plex-recommended-settings/):
+
+- **Enable** _Run a partial scan when changes are detected_ under **Settings → Library** so new imports appear immediately.
+- **Disable** _Empty trash automatically after every scan_ when media lives on a NAS mount so a temporary mount drop does not wipe library metadata.
+
 ## jellyfin
 
 [![](https://img.shields.io/static/v1?message=linuxserver/jellyfin&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/jellyfin)
@@ -52,7 +57,7 @@ to proprietary media servers like Plex and Emby.
 ### Configuration
 
 Jellyfin setup is similar to Plex. When setting up libraries you will use the
-root directories, `/tv/` and `/movies/`
+root directories, `/data/tvshows/` and `/data/movies/`
 
 ## sonarr
 
@@ -104,37 +109,34 @@ variables.
 
 ### Hardlinks and atomic imports
 
-Set `MEDIA_ROOT` to an existing host directory that contains
-`COMPLETED_DOWNLOADS`, `TV_DIR`, and `MOVIE_DIR` on one filesystem.
-Sonarr and Radarr mount this parent at `/storage`. For example, with
-`MEDIA_ROOT=/media/storage` and the paths from the example environment file,
-the download directory is visible to both apps at `/storage/downloads`,
-with the TV and movie libraries at `/storage/tv` and `/storage/movies`.
-Use this option only with a parent directory whose contents Sonarr and Radarr
-can access. With `MEDIA_ROOT` unset, existing app paths still work and
-`/storage` is an alias for the completed-download directory.
+Set `MEDIA_ROOT` to the single HDD parent directory (for example,
+`/media/storage/data`) that holds `torrents/`, `usenet/complete/`, and `media/`
+on one filesystem. `sonarr`, `radarr`, `bazarr`, `sabnzbd`, and `transmission`
+all mount `MEDIA_ROOT` at `/data` with `UMASK=002` (`TRANSMISSION_UMASK=2`), so
+hardlinks and atomic moves work natively without Remote Path Mappings:
 
-1. Recreate Sonarr and Radarr with
-   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr`.
-2. In each app, open **Settings → Download Clients → Remote Path Mappings**.
-   Add a mapping for each downloader using its configured host name (normally
-   `sabnzbd` and `transmission`), with remote path `/downloads/` and local path
-   `/storage/downloads/`. Use the actual path under `/storage` if your
-   completed-download directory has a different name. The downloaders can keep
-   their current paths and existing torrent locations.
-3. Add the new library roots under `/storage`. Update the existing series and
-   movies to their equivalent paths and decline the prompt to move files. The
-   two paths to each library point to the same files on the host. After all
-   items have been updated, remove the old root entries from the apps.
-4. Update Seerr's Sonarr and Radarr request roots to the new paths if you
-   use Seerr. Plex and Jellyfin can keep their current library paths,
-   since their bind mounts still point to the same host directories.
-5. Check a completed import through each downloader. For a torrent that still
-   has its source file, compare its inode and the library file's inode on the
-   host with `stat`. A matching device and inode confirms a hardlink.
+```text
+/data
+├── torrents/{books,movies,music,tv}
+├── usenet/complete/{books,movies,music,tv}
+└── media/{books,movies,music,tv}
+```
 
-See the [Servarr Docker guide](https://wiki.servarr.com/docker-guide) for
-filesystem and permissions requirements.
+1. Recreate the media and download services so `/data` and `UMASK` are applied:
+   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr bazarr sabnzbd prowlarr transmission`.
+2. In Sonarr and Radarr under **Settings → Media Management**, ensure **Use Hardlinks instead of Copy** is enabled, and remove any legacy Remote Path Mappings once downloads use `/data`.
+3. Set root folders to `/data/media/tv` (Sonarr) and `/data/media/movies` (Radarr). If migrating existing items, update their root folder and decline the prompt to move files if you already moved them on the host, then remove old root entries.
+4. Update Seerr's Sonarr and Radarr request roots to `/data/media/tv` and `/data/media/movies`. Plex and Jellyfin keep `/tv`, `/movies` and `/data/tvshows`, `/data/movies`.
+5. Check a completed import through each downloader. For a torrent that still has its source file, compare its inode and the library file's inode on the host with `stat`. A matching device and inode confirms a hardlink.
+
+> [!NOTE]
+> Keep `INCOMPLETE_USENET` and `INCOMPLETE_TORRENTS` on fast NVMe/SSD storage when `MEDIA_ROOT` is on an HDD array.
+> High-IOPS Usenet verification/unpacking (`/incomplete-downloads`) and active torrent piece writes (`/incomplete`) stay off the HDD, the download
+> client performs one sequential move to `/data/usenet/complete` or `/data/torrents` upon completion, and Sonarr/Radarr still
+> hardlink or atomically move from `/data/torrents` and `/data/usenet/complete` into `/data/media/tv` and `/data/media/movies`.
+
+See the [TRaSH Guides hardlink guide](https://trash-guides.info/File-and-Folder-Structure/Hardlinks-and-Instant-Moves/)
+and [Migrations](../migrations.md#media-data-layout-trash-guides) for step-by-step migration instructions.
 
 ## prowlarr
 
@@ -160,7 +162,7 @@ Bazarr is a companion application to Sonarr and Radarr that manages and download
 ### Configuration
 
 In the Bazarr UI, connect to Sonarr (`http://sonarr:8989`) and Radarr (`http://radarr:7878`) using their API keys.
-Bazarr mounts `/tv`, `/movies`, and `/storage` (when `MEDIA_ROOT` is configured) identically to Sonarr and Radarr so library paths align without extra path mappings.
+Bazarr mounts `/data` identically to Sonarr and Radarr so `/data/media/tv` and `/data/media/movies` align without extra path mappings.
 
 ## recyclarr
 
@@ -172,7 +174,7 @@ Recyclarr automatically synchronizes [TRaSH Guides](https://trash-guides.info/) 
 
 ### Configuration
 
-Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`.
+Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`. It also manages TRaSH-recommended `media_naming` (`plex-tvdb` / `plex-tmdb`) and `media_management` (`propers_and_repacks: do_not_prefer`) so Proper/Repack upgrades are driven by Custom Format scores.
 
 Because Recyclarr runs rootless (`PUID:PGID`, default `1000:1000`), create and chown its state directory before starting if it does not already exist:
 
@@ -233,6 +235,14 @@ SABnzbd is an Open Source Binary Newsreader written in Python, it downloads file
 based on information given in nzb-files.
 
 <img src="https://i.imgur.com/rt7Pbj9.png" width="220" alt="SABnzbd Logo">
+
+### Configuration
+
+Following [TRaSH Guides SABnzbd recommendations](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/):
+
+- Set **Temporary Download Folder** to `/incomplete-downloads` (NVMe/SSD) and **Completed Download Folder** to `/data/usenet/complete` (HDD).
+- Configure `movies`, `tv`, `books`, and `music` categories with relative paths (`movies`, `tv`, `books`, `music`) so completed downloads land in `/data/usenet/complete/<category>`.
+- Enable **Direct Unpack** and **Abort jobs that cannot be completed** under **Settings → Switches**.
 
 ## nzbhydra
 

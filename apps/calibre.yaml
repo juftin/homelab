@@ -9,8 +9,8 @@ services:
         image: lscr.io/linuxserver/calibre:latest@sha256:fa5ae5f55859544ec026f82165b01bff913e812c7d67078744fcd119c1531ea3
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre:/config
-            - ${BOOKS_DIR}:/books
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
+            - ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

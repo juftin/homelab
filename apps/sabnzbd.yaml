@@ -8,12 +8,17 @@ services:
         image: lscr.io/linuxserver/sabnzbd:latest@sha256:b356d0a9b22db584e9005364ec4e752dfc081ce501b7145e9a5c0bb38e4d1ba4
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads
+            - type: bind
+              source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
+              target: /data
+              bind:
+                  create_host_path: false
+            - ${INCOMPLETE_USENET:-${INCOMPLETE_DOWNLOADS}}:/incomplete-downloads
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
+            UMASK: ${UMASK:-002}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
