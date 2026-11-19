@@ -26,19 +26,15 @@ jobs:
                   ref: gitops
             - name: Generate GitHub App Token
               id: app-token
-              env:
-                  APP_ID: ${{ secrets.RENOVATE_APP_ID || secrets.APP_ID }}
-                  APP_KEY: ${{ secrets.RENOVATE_APP_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
-              if: ${{ env.APP_ID != '' && env.APP_KEY != '' }}
               uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
               with:
-                  app-id: ${{ env.APP_ID }}
-                  private-key: ${{ env.APP_KEY }}
+                  app-id: ${{ secrets.RENOVATE_APP_ID }}
+                  private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
                   owner: ${{ github.repository_owner }}
             - name: renovate
               uses: renovatebot/github-action@1c0cf989c02653fba0efe7ca5772338860ca71dc # v46.3.12
               with:
-                  token: ${{ steps.app-token.outputs.token || secrets.APP_TOKEN || secrets.RENOVATE_TOKEN }}
+                  token: ${{ steps.app-token.outputs.token }}
                   configurationFile: .github/renovate-config.js
                   renovate-version: 42.39.1
               env:
