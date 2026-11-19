@@ -62,7 +62,7 @@ individual service files from the `apps/` and `core/` directories.
 │   ├── traefik/                            # Traefik Reverse Proxy
 │   │   ├── docker-compose.yaml
 │   │   └── rules/                          # Traefik Middlewares and Rules
-│   ├── oauth.yaml                          # Google OAuth Forward Auth
+│   ├── oauth.yaml                          # OAuth2 Proxy (Google OAuth)
 │   ├── cloudflare-ddns.yaml                # Dynamic DNS Updates
 │   ├── socket-proxy.yaml                   # Docker Socket Proxy
 │   └── komodo/                             # GitOps Deployment Platform
@@ -87,7 +87,7 @@ individual service files from the `apps/` and `core/` directories.
 ```
 
 [Traefik]: https://github.com/traefik/traefik
-[OAuth]: https://github.com/thomseddon/traefik-forward-auth
+[OAuth]: https://github.com/oauth2-proxy/oauth2-proxy
 [Komodo]: https://github.com/mbecker20/komodo
 [Renovate]: https://github.com/renovatebot/renovate
 [Renovate]: https://github.com/renovatebot/renovate

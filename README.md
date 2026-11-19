@@ -67,7 +67,7 @@ individual service files from the `apps/` and `core/` directories.
 │   ├── traefik/                            # Traefik Reverse Proxy
 │   │   ├── docker-compose.yaml
 │   │   └── rules/                          # Traefik Middlewares and Rules
-│   ├── oauth.yaml                          # Google OAuth Forward Auth
+│   ├── oauth.yaml                          # OAuth2 Proxy (Google OAuth)
 │   ├── cloudflare-ddns.yaml                # Dynamic DNS Updates
 │   ├── socket-proxy.yaml                   # Docker Socket Proxy
 │   └── komodo/                             # GitOps Deployment Platform
@@ -117,7 +117,7 @@ make encrypt  # Encrypt secrets for git
 See the [docs](https://juftin.com/homelab/) for detailed configuration and getting started guides.
 
 [Traefik]: https://github.com/traefik/traefik
-[OAuth]: https://github.com/thomseddon/traefik-forward-auth
+[OAuth]: https://github.com/oauth2-proxy/oauth2-proxy
 [Komodo]: https://github.com/mbecker20/komodo
 [Renovate]: https://github.com/renovatebot/renovate
 [Plex]: https://www.plex.tv/

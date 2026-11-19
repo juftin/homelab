@@ -15,6 +15,8 @@ ENCRYPTED_CLOUDFLARE_SECRET = "{{config_root}}/secrets/cloudflare_api_key.secret
 DECRYPTED_CLOUDFLARE_SECRET = "{{config_root}}/secrets/cloudflare_api_key.secret"
 ENCRYPTED_GOOGLE_SECRET = "{{config_root}}/secrets/google_oauth.secret.yaml"
 DECRYPTED_GOOGLE_SECRET = "{{config_root}}/secrets/google_oauth.secret"
+ENCRYPTED_GOOGLE_EMAILS = "{{config_root}}/secrets/google_oauth_emails.secret.yaml"
+DECRYPTED_GOOGLE_EMAILS = "{{config_root}}/secrets/google_oauth_emails.secret"
 
 [tasks.keygen]
 description = "Generate age keypair for secrets encryption"
@@ -29,7 +31,8 @@ description = "Decrypt secrets file(s)"
 run = [
   "sops decrypt '{{vars.ENCRYPTED_ENV_FILE}}' --output '{{vars.DECRYPTED_ENV_FILE}}' --input-type yaml --output-type dotenv",
   "sops decrypt '{{vars.ENCRYPTED_CLOUDFLARE_SECRET}}' --output '{{vars.DECRYPTED_CLOUDFLARE_SECRET}}' --input-type yaml --output-type binary",
-  "sops decrypt '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --output '{{vars.DECRYPTED_GOOGLE_SECRET}}' --input-type yaml --output-type binary"
+  "sops decrypt '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --output '{{vars.DECRYPTED_GOOGLE_SECRET}}' --input-type yaml --output-type binary",
+  "if [ -f '{{vars.ENCRYPTED_GOOGLE_EMAILS}}' ]; then sops decrypt '{{vars.ENCRYPTED_GOOGLE_EMAILS}}' --output '{{vars.DECRYPTED_GOOGLE_EMAILS}}' --input-type yaml --output-type binary; fi"
 ]
 
 [tasks.encrypt]
@@ -37,5 +40,6 @@ description = "Encrypt secrets file(s)"
 run = [
   "sops encrypt '{{vars.DECRYPTED_ENV_FILE}}' --output '{{vars.ENCRYPTED_ENV_FILE}}' --input-type dotenv --output-type yaml",
   "sops encrypt '{{vars.DECRYPTED_CLOUDFLARE_SECRET}}' --output '{{vars.ENCRYPTED_CLOUDFLARE_SECRET}}' --input-type binary --output-type yaml",
-  "sops encrypt '{{vars.DECRYPTED_GOOGLE_SECRET}}' --output '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --input-type binary --output-type yaml"
+  "sops encrypt '{{vars.DECRYPTED_GOOGLE_SECRET}}' --output '{{vars.ENCRYPTED_GOOGLE_SECRET}}' --input-type binary --output-type yaml",
+  "sops encrypt '{{vars.DECRYPTED_GOOGLE_EMAILS}}' --output '{{vars.ENCRYPTED_GOOGLE_EMAILS}}' --input-type binary --output-type yaml"
 ]

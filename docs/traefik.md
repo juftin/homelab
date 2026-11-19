@@ -71,11 +71,15 @@ The A record for `example.com` will be automatically updated by the `cloudflare-
 
 ### Google OAuth 2.0
 
-A helpful blog post on the Google Oauth 2.0 configuration can be
-found [here](https://www.smarthomebeginner.com/traefik-forward-auth-google-oauth-2022/).
-Essentially you must create a project in the Google Developer Console to enable
-the Google OAuth 2.0 service. You will share credentials with the `oauth` service
-in the `.env` file and manually whitelist users per email address.
+Create a Google OAuth client of type **Web application** and register
+`https://oauth.example.com/_oauth` as an authorized redirect URI. Replace `example.com`
+with your `DOMAIN_NAME` and `oauth` with your `OAUTH_SUBDOMAIN` if you override it.
+The OAuth2 Proxy `oauth` service reads the Google client credentials and cookie secret
+from `secrets/google_oauth.secret`. Put one allowed Google account email per line in
+`secrets/google_oauth_emails.secret`. [Google OAuth setup](https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/google/)
+
+Traefik passes the authenticated email to protected apps in `X-Auth-Request-Email`.
+For existing installations, see [the OAuth2 Proxy migration](migrations.md#traefik-forward-auth-to-oauth2-proxy).
 
 ### File Configuration
 
@@ -85,7 +89,8 @@ for all services that are deployed. You can copy the example files to get starte
 
 ```shell
 cp docs/example.env .env
-cp -r docs/example-secrets/ secrets/
+cp docs/example-secrets/google_oauth.secret docs/example-secrets/cloudflare_api_key.secret secrets/
+cp docs/example-secrets/google_oauth_emails.txt secrets/google_oauth_emails.secret
 ```
 
 #### .env
@@ -115,8 +120,14 @@ And you should also update the secrets files:
 
 === "secrets/google_oauth.secret"
 
-    ```text
+    ```toml
     --8<-- "docs/example-secrets/google_oauth.secret"
+    ```
+
+=== "secrets/google_oauth_emails.secret"
+
+    ```text
+    --8<-- "docs/example-secrets/google_oauth_emails.txt"
     ```
 
 === "secrets/cloudflare_api_key.secret"
