@@ -37,6 +37,11 @@ design and bulk actions mean getting things done faster.
 Plex setup is fairly intuitive and straightforward. When setting up libraries you will
 use the root directories, `/tv/` and `/movies/`
 
+Following [TRaSH Guides Plex recommendations](https://trash-guides.info/Plex/Plex-recommended-settings/):
+
+- **Enable** _Run a partial scan when changes are detected_ under **Settings → Library** so new imports appear immediately.
+- **Disable** _Empty trash automatically after every scan_ when media lives on a NAS mount so a temporary mount drop does not wipe library metadata.
+
 ## jellyfin
 
 [![](https://img.shields.io/static/v1?message=linuxserver/jellyfin&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/jellyfin)
@@ -52,7 +57,7 @@ to proprietary media servers like Plex and Emby.
 ### Configuration
 
 Jellyfin setup is similar to Plex. When setting up libraries you will use the
-root directories, `/tv/` and `/movies/`
+root directories, `/data/tvshows/` and `/data/movies/`
 
 ## sonarr
 
@@ -114,24 +119,31 @@ Use this option only with a parent directory whose contents Sonarr and Radarr
 can access. With `MEDIA_ROOT` unset, existing app paths still work and
 `/storage` is an alias for the completed-download directory.
 
-1. Recreate Sonarr and Radarr with
-   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr`.
-2. In each app, open **Settings → Download Clients → Remote Path Mappings**.
+1. Recreate Sonarr, Radarr, Bazarr, SABnzbd, Prowlarr, and Transmission so `/storage` and `UMASK` (`002` by default) are applied:
+   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr bazarr sabnzbd prowlarr transmission`.
+2. In Sonarr and Radarr under **Settings → Media Management**, ensure **Use Hardlinks instead of Copy** is enabled.
+3. In each app, open **Settings → Download Clients → Remote Path Mappings**.
    Add a mapping for each downloader using its configured host name (normally
    `sabnzbd` and `transmission`), with remote path `/downloads/` and local path
    `/storage/downloads/`. Use the actual path under `/storage` if your
    completed-download directory has a different name. The downloaders can keep
    their current paths and existing torrent locations.
-3. Add the new library roots under `/storage`. Update the existing series and
+4. Add the new library roots under `/storage`. Update the existing series and
    movies to their equivalent paths and decline the prompt to move files. The
    two paths to each library point to the same files on the host. After all
    items have been updated, remove the old root entries from the apps.
-4. Update Seerr's Sonarr and Radarr request roots to the new paths if you
+5. Update Seerr's Sonarr and Radarr request roots to the new paths if you
    use Seerr. Plex and Jellyfin can keep their current library paths,
    since their bind mounts still point to the same host directories.
-5. Check a completed import through each downloader. For a torrent that still
+6. Check a completed import through each downloader. For a torrent that still
    has its source file, compare its inode and the library file's inode on the
    host with `stat`. A matching device and inode confirms a hardlink.
+
+> [!NOTE]
+> Keep `INCOMPLETE_DOWNLOADS` on fast NVMe/SSD storage when `COMPLETED_DOWNLOADS` is on an HDD array.
+> High-IOPS Usenet verification/unpacking and active torrent piece writes stay off the HDD, the download
+> client performs one sequential move to `COMPLETED_DOWNLOADS` upon completion, and Sonarr/Radarr still
+> hardlink or atomically move from `/storage/downloads` into `/storage/tv` and `/storage/movies`.
 
 See the [Servarr Docker guide](https://wiki.servarr.com/docker-guide) for
 filesystem and permissions requirements.
@@ -172,7 +184,7 @@ Recyclarr automatically synchronizes [TRaSH Guides](https://trash-guides.info/) 
 
 ### Configuration
 
-Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`.
+Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`. It also manages TRaSH-recommended `media_naming` (`plex-tvdb` / `plex-tmdb`) and `media_management` (`propers_and_repacks: do_not_prefer`) so Proper/Repack upgrades are driven by Custom Format scores.
 
 Because Recyclarr runs rootless (`PUID:PGID`, default `1000:1000`), create and chown its state directory before starting if it does not already exist:
 
@@ -233,6 +245,14 @@ SABnzbd is an Open Source Binary Newsreader written in Python, it downloads file
 based on information given in nzb-files.
 
 <img src="https://i.imgur.com/rt7Pbj9.png" width="220" alt="SABnzbd Logo">
+
+### Configuration
+
+Following [TRaSH Guides SABnzbd recommendations](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/):
+
+- Set **Temporary Download Folder** to `/incomplete-downloads` (NVMe/SSD) and **Completed Download Folder** to `/downloads` (HDD).
+- Configure `movies` and `tv` categories pointing to `/downloads/movies` and `/downloads/tv` (or relative `movies` / `tv` under `/downloads`).
+- Enable **Direct Unpack** and **Abort jobs that cannot be completed** under **Settings → Switches**.
 
 ## nzbhydra
 
