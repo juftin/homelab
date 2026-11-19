@@ -23,7 +23,7 @@ The architecture consists of two separate Docker Compose stacks:
   Cloudflare DDNS, Docker socket proxy, and [Komodo] management platform. This is the foundation
   that all application services depend on.
 - **`homelab`**: Application services organized into categories:
-    - **Media**: [Plex], [Sonarr], [Radarr], [Overseerr], [Jellyfin], and more for media management and streaming
+    - **Media**: [Plex], [Sonarr], [Radarr], [Seerr], [Bazarr], [Recyclarr], [Jellyfin], and more for media management and streaming
     - **Utilities**: [Portainer], [SFTPGo], [Pi-hole] for system management and utilities
     - **Miscellaneous**: [Home Assistant], [Coder], [Camply] and other specialized services
     - **LLM**: [Open WebUI], [LiteLLM], [ChatGPT Next Web] for AI/language model interactions
@@ -72,7 +72,9 @@ individual service files from the `apps/` and `core/` directories.
 │   ├── plex.yaml
 │   ├── sonarr.yaml
 │   ├── radarr.yaml
-│   ├── overseerr.yaml
+│   ├── seerr.yaml
+│   ├── bazarr.yaml
+│   ├── recyclarr.yaml
 │   ├── jellyfin.yaml
 │   ├── open-webui.yaml
 │   ├── litellm/
@@ -93,7 +95,9 @@ individual service files from the `apps/` and `core/` directories.
 [Jellyfin]: https://jellyfin.org/
 [Sonarr]: https://github.com/sonarr/sonarr
 [Radarr]: https://github.com/Radarr/Radarr
-[Overseerr]: https://overseerr.dev/
+[Seerr]: https://seerr.dev/
+[Bazarr]: https://www.bazarr.media/
+[Recyclarr]: https://recyclarr.dev/
 [Open WebUI]: https://github.com/open-webui/open-webui
 [LiteLLM]: https://github.com/BerriAI/litellm
 [ChatGPT Next Web]: https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
