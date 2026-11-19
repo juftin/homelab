@@ -198,7 +198,7 @@ make core-restart APP=traefik
 View logs:
 
 ```shell
-make logs APP=overseerr ARGS="-f --tail=100"
+make logs APP=seerr ARGS="-f --tail=100"
 make core-logs APP=traefik ARGS="-f"
 ```
 
@@ -271,7 +271,7 @@ Without automation, establish a manual update schedule:
 
 ```shell
 make core-update APP=traefik
-make update APP=sonarr APP=radarr APP=overseerr
+make update APP=sonarr APP=radarr APP=seerr
 ```
 
 **Monthly**: Update all services

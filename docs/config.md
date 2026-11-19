@@ -255,8 +255,8 @@ for more information about a specific app.
 All services in both stacks share common Docker networks. When connecting services together,
 use the container name as the hostname. For example:
 
-- To connect to Sonarr from Overseerr: `http://sonarr:8989`
-- To connect to Radarr from Overseerr: `http://radarr:7878`
+- To connect to Sonarr from Seerr, Bazarr, or Recyclarr: `http://sonarr:8989`
+- To connect to Radarr from Seerr, Bazarr, or Recyclarr: `http://radarr:7878`
 - To connect to Transmission from Sonarr: `http://transmission:9091`
 
 The `homelab` stack references networks from `homelab-core` as external networks,

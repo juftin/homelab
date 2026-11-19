@@ -6,7 +6,7 @@
 [![](https://img.shields.io/static/v1?message=Ombi-app/Ombi&logo=github&label=github)](https://github.com/Ombi-app/Ombi)
 [![](https://img.shields.io/static/v1?message=ombi.io&logo=google+chrome&label=website&color=teal)](https://ombi.io)
 
-> [!NOTE] Ombi was archived in favor of [Overseerr](media.md#overseerr)
+> [!NOTE] Ombi was archived in favor of [Overseerr](#overseerr) (now [Seerr](media.md#seerr))
 
 <img src="https://i.imgur.com/AD78HMw.png" width="300" alt="ombi_logo">
 
@@ -31,3 +31,17 @@ Please refer to the documentation link for further details.
 #### Movies (Radarr) Config
 
 <img src="https://i.imgur.com/fdr3HK4.png" width="600" alt="ombi_radarr_config">
+
+## overseerr
+
+[![](https://img.shields.io/static/v1?message=linuxserver/overseerr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/overseerr)
+[![](https://img.shields.io/static/v1?message=sct/overseerr&logo=github&label=github)](https://github.com/sct/overseerr)
+[![](https://img.shields.io/static/v1?message=overseerr.dev&logo=google+chrome&label=website&color=teal)](https://overseerr.dev)
+
+> [!NOTE] Overseerr was archived in favor of [Seerr](media.md#seerr)
+
+<img src="https://i.imgur.com/kCFWqUO.png" width="280" alt="overseerr_logo">
+
+Overseerr is a free and open source software application for managing
+requests for your media library. It integrates with your existing services,
+such as Sonarr, Radarr, and Plex.

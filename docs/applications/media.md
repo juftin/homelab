@@ -7,7 +7,9 @@
 - [sonarr](#sonarr)
 - [radarr](#radarr)
 - [prowlarr](#prowlarr)
-- [overseerr](#overseerr)
+- [bazarr](#bazarr)
+- [recyclarr](#recyclarr)
+- [seerr](#seerr)
 - [tautulli](#tautulli)
 - [transmission](#transmission)
 - [sabnzbd](#sabnzbd)
@@ -124,8 +126,8 @@ can access. With `MEDIA_ROOT` unset, existing app paths still work and
    movies to their equivalent paths and decline the prompt to move files. The
    two paths to each library point to the same files on the host. After all
    items have been updated, remove the old root entries from the apps.
-4. Update Overseerr's Sonarr and Radarr request roots to the new paths if you
-   use Overseerr. Plex and Jellyfin can keep their current library paths,
+4. Update Seerr's Sonarr and Radarr request roots to the new paths if you
+   use Seerr. Plex and Jellyfin can keep their current library paths,
    since their bind mounts still point to the same host directories.
 5. Check a completed import through each downloader. For a torrent that still
    has its source file, compare its inode and the library file's inode on the
@@ -147,17 +149,46 @@ to integrate with your various PVR apps. Prowlarr supports management of both To
 Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr,
 and Sonarr offering complete management of your indexers with no per app Indexer setup required
 
-## overseerr
+## bazarr
 
-[![](https://img.shields.io/static/v1?message=linuxserver/overseerr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/overseerr)
-[![](https://img.shields.io/static/v1?message=sct/overseerr&logo=github&label=github)](https://github.com/sct/overseerr)
-[![](https://img.shields.io/static/v1?message=overseerr.dev&logo=google+chrome&label=website&color=teal)](https://overseerr.dev)
+[![](https://img.shields.io/static/v1?message=linuxserver/bazarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/bazarr)
+[![](https://img.shields.io/static/v1?message=morpheus65535/bazarr&logo=github&label=github)](https://github.com/morpheus65535/bazarr)
+[![](https://img.shields.io/static/v1?message=bazarr.media&logo=google+chrome&label=website&color=teal)](https://www.bazarr.media)
 
-<img src="https://i.imgur.com/kCFWqUO.png" width="280" alt="ombi_logo">
+Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.
 
-Overseerr is a free and open source software application for managing
-requests for your media library. It integrates with your existing services,
-such as Sonarr, Radarr, and Plex!
+### Configuration
+
+In the Bazarr UI, connect to Sonarr (`http://sonarr:8989`) and Radarr (`http://radarr:7878`) using their API keys.
+Bazarr mounts `/tv`, `/movies`, and `/storage` (when `MEDIA_ROOT` is configured) identically to Sonarr and Radarr so library paths align without extra path mappings.
+
+## recyclarr
+
+[![](https://img.shields.io/static/v1?message=ghcr.io/recyclarr/recyclarr&logo=docker&label=docker&color=blue)](https://github.com/recyclarr/recyclarr/pkgs/container/recyclarr)
+[![](https://img.shields.io/static/v1?message=recyclarr/recyclarr&logo=github&label=github)](https://github.com/recyclarr/recyclarr)
+[![](https://img.shields.io/static/v1?message=recyclarr.dev&logo=google+chrome&label=website&color=teal)](https://recyclarr.dev)
+
+Recyclarr automatically synchronizes [TRaSH Guides](https://trash-guides.info/) custom formats, quality profiles, quality definitions, and naming schemes to Sonarr and Radarr on a schedule.
+
+### Configuration
+
+On first start, `RECYCLARR_CREATE_CONFIG=true` creates a starter `appdata/recyclarr/recyclarr.yml` file if one does not already exist. Update it with your `http://sonarr:8989` and `http://radarr:7878` URLs and API keys, then test or trigger a manual sync:
+
+```shell
+docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview
+docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync
+```
+
+## seerr
+
+[![](https://img.shields.io/static/v1?message=ghcr.io/seerr-team/seerr&logo=docker&label=docker&color=blue)](https://github.com/seerr-team/seerr/pkgs/container/seerr)
+[![](https://img.shields.io/static/v1?message=seerr-team/seerr&logo=github&label=github)](https://github.com/seerr-team/seerr)
+[![](https://img.shields.io/static/v1?message=seerr.dev&logo=google+chrome&label=website&color=teal)](https://seerr.dev)
+
+Seerr is the unified successor to Overseerr and Jellyseerr for managing requests for your media library. It integrates with Sonarr, Radarr, Plex, and Jellyfin.
+
+> [!NOTE]
+> Upgrading from Overseerr? See the [Overseerr to Seerr migration guide](../migrations.md#overseerr-to-seerr) before starting Seerr so your existing `appdata/overseerr` data and permissions carry over automatically.
 
 ## tautulli
 

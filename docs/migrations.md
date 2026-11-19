@@ -13,6 +13,23 @@ will be minimized as much as possible.
     git remote add upstream https://github.com/juftin/homelab.git
     ```
 
+## Overseerr to Seerr
+
+Seerr (`ghcr.io/seerr-team/seerr`) replaces Overseerr (`lscr.io/linuxserver/overseerr`) and automatically migrates your existing Overseerr database and settings on first boot. Because the official Seerr image runs as UID/GID `1000` (`node`) by default and mounts its config at `/app/config`, move your existing `appdata/overseerr` directory and ensure permissions match `PUID:PGID`:
+
+```shell
+# Stop and remove the old Overseerr container
+docker compose --file docker-compose.apps.yaml stop overseerr
+docker compose --file docker-compose.apps.yaml rm -f overseerr
+
+# Back up and migrate appdata
+cp -r appdata/overseerr appdata/overseerr.bak
+mv appdata/overseerr appdata/seerr
+sudo chown -R "${PUID:-1000}:${PGID:-1000}" appdata/seerr
+```
+
+If you previously customized `OVERSEERR_SUBDOMAIN`, `apps/seerr.yaml` falls back to `OVERSEERR_SUBDOMAIN` automatically, or you can rename it to `SEERR_SUBDOMAIN`.
+
 ## 2.0.0
 
 The 2.0.0 release represents a **major architectural overhaul** with the introduction of GitOps automation and automated dependency management. Not interested in these new features? See [Manual Deployment](manual-deployment.md) for an alternative approach. After upgrading to 2.0.0, make sure to read through the [Configuration](config.md) and [GitOps & Automated Updates](gitops.md) documentation to understand the new setup.
