@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/latest/config-schema.json
+
+# Recyclarr Configuration
+# Docs: https://recyclarr.dev/guide/getting-started/
+# List TRaSH templates: docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr config list templates
+# Preview sync:        docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview
+
+sonarr:
+    sonarr_main:
+        base_url: http://sonarr:8989
+        api_key: !env_var SONARR_API_KEY
+        # Uncomment and customize to sync TRaSH Guides settings:
+        # quality_definition:
+        #     type: series
+        # quality_profiles:
+        #     - trash_id: <sonarr-profile-trash-id> # Use `recyclarr list custom-formats` or templates
+        #       reset_unmatched_scores:
+        #           enabled: true
+
+radarr:
+    radarr_main:
+        base_url: http://radarr:7878
+        api_key: !env_var RADARR_API_KEY
+        # Uncomment and customize to sync TRaSH Guides settings:
+        # quality_definition:
+        #     type: movie
+        # quality_profiles:
+        #     - trash_id: <radarr-profile-trash-id> # Use `recyclarr list custom-formats` or templates
+        #       reset_unmatched_scores:
+        #           enabled: true

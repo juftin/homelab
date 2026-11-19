@@ -79,7 +79,7 @@ individual service files from the `apps/` and `core/` directories.
 │   ├── radarr.yaml
 │   ├── seerr.yaml
 │   ├── bazarr.yaml
-│   ├── recyclarr.yaml
+│   ├── recyclarr/
 │   ├── jellyfin.yaml
 │   ├── open-webui.yaml
 │   ├── litellm/

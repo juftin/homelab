@@ -7,7 +7,7 @@ repos:
           - id: trailing-whitespace
           - id: end-of-file-fixer
           - id: check-yaml
-            exclude: mkdocs.yaml
+            exclude: ^(mkdocs\.yaml|apps/recyclarr/recyclarr\.yml)$
           - id: check-ast
           - id: check-docstring-first
           - id: check-merge-conflict
