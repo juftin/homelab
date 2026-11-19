@@ -38,7 +38,7 @@ services:
     ########################################################################
 
     camply-valkey:
-        image: valkey/valkey:8-alpine@sha256:2602ace2be6569bc2bbb06f873776516ab9089821525be34f4305c67eb9db02a
+        image: valkey/valkey:9-alpine@sha256:c8e2d17498838af5d91e12eb7c11220b3434a7b7131a333e3af52ad5e0b80882
         container_name: camply-valkey
         command: valkey-server --save 60 1 --loglevel warning
         volumes:
