@@ -1,7 +1,6 @@
 {
     $schema: "https://docs.renovatebot.com/renovate-schema.json",
     baseBranchPatterns: ["gitops"],
-    gitAuthor: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
     extends: [
         "mergeConfidence:all-badges",
         "config:recommended",
