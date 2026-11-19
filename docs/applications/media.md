@@ -100,6 +100,40 @@ up a basic authorization form on the `General Settings` to exclude non-admin
 users from accessing the application using the `ADMIN_USER` and `ADMIN_PASSWORD`
 variables.
 
+### Hardlinks and atomic imports
+
+Set `MEDIA_ROOT` to an existing host directory that contains
+`COMPLETED_DOWNLOADS`, `TV_DIR`, and `MOVIE_DIR` on one filesystem.
+Sonarr and Radarr mount this parent at `/storage`. For example, with
+`MEDIA_ROOT=/media/storage` and the paths from the example environment file,
+the download directory is visible to both apps at `/storage/downloads`,
+with the TV and movie libraries at `/storage/tv` and `/storage/movies`.
+Use this option only with a parent directory whose contents Sonarr and Radarr
+can access. With `MEDIA_ROOT` unset, existing app paths still work and
+`/storage` is an alias for the completed-download directory.
+
+1. Recreate Sonarr and Radarr with
+   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr`.
+2. In each app, open **Settings → Download Clients → Remote Path Mappings**.
+   Add a mapping for each downloader using its configured host name (normally
+   `sabnzbd` and `transmission`), with remote path `/downloads/` and local path
+   `/storage/downloads/`. Use the actual path under `/storage` if your
+   completed-download directory has a different name. The downloaders can keep
+   their current paths and existing torrent locations.
+3. Add the new library roots under `/storage`. Update the existing series and
+   movies to their equivalent paths and decline the prompt to move files. The
+   two paths to each library point to the same files on the host. After all
+   items have been updated, remove the old root entries from the apps.
+4. Update Overseerr's Sonarr and Radarr request roots to the new paths if you
+   use Overseerr. Plex and Jellyfin can keep their current library paths,
+   since their bind mounts still point to the same host directories.
+5. Check a completed import through each downloader. For a torrent that still
+   has its source file, compare its inode and the library file's inode on the
+   host with `stat`. A matching device and inode confirms a hardlink.
+
+See the [Servarr Docker guide](https://wiki.servarr.com/docker-guide) for
+filesystem and permissions requirements.
+
 ## prowlarr
 
 [![](https://img.shields.io/static/v1?message=linuxserver/prowlarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/prowlarr)
