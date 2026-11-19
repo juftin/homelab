@@ -8,11 +8,9 @@ services:
         image: lscr.io/linuxserver/radarr:latest@sha256:044788f5508b7f67a3e0368cdd142c77c4d4cd5aec2efaba53e1a68b6b6231e7
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/radarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${MOVIE_DIR}:/movies
             - type: bind
               source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
-              target: /storage
+              target: /data
               bind:
                   create_host_path: false
         environment:

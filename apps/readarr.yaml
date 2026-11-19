@@ -9,13 +9,14 @@ services:
         image: lscr.io/linuxserver/readarr:develop@sha256:eb37f58646a901dc7727cf448cae36daaefaba79de33b5058dab79aa4c04aefb
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/readarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${BOOKS_DIR}:/books
+            - ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}:/data
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
             - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
+            UMASK: ${UMASK:-002}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

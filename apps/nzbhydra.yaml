@@ -8,7 +8,7 @@ services:
         image: lscr.io/linuxserver/nzbhydra2:latest@sha256:14f1b9bf2ae3d1a46fbd9ac8e394413fa3da922ad534abe75ee0cb3c5a1ab0ed
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/nzbhydra:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
