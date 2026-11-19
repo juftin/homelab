@@ -316,7 +316,7 @@ All application data lives in `appdata/SERVICE/` (NOT committed to git). Critica
 
 - **Rate limiting**: 100 average requests, 50 burst
 - **Security headers**: STS (2 years), frame options, CSP, XSS protection
-- **OAuth forward auth**: Points to `http://oauth:4181` with trusted headers
+- **OAuth forward auth**: Points to `http://oauth:4180/` and forwards the authenticated email as `X-Auth-Request-Email`
 
 ## Troubleshooting
 

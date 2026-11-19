@@ -13,6 +13,20 @@ will be minimized as much as possible.
     git remote add upstream https://github.com/juftin/homelab.git
     ```
 
+## Traefik Forward Auth to OAuth2 Proxy
+
+The `oauth` service uses OAuth2 Proxy with the existing Google client and `/_oauth` redirect URI.
+Prepare the updated secrets before deploying the new core stack.
+
+1. On the deployment host, back up `secrets/google_oauth.secret` securely. If you only have the encrypted copy, run `make decrypt` first.
+2. Use `docs/example-secrets/google_oauth.secret` as the new TOML format. Copy the existing `providers.google.client-id` and `providers.google.client-secret` values into `client_id` and `client_secret`. Generate a new `cookie_secret` with `openssl rand -base64 32 | tr '+/' '-_'`.
+3. Save the existing `whitelist` addresses in `secrets/google_oauth_emails.secret`, one address per line. Both files must be readable by the `oauth` container's configured `PUID` and `PGID`.
+4. Run `make encrypt` if you use SOPS. Include both encrypted Google OAuth files in your deployment repo so `make decrypt` and the GitOps pre-deploy hook can restore them. The `oauth` service requires both plaintext files at startup.
+5. Run `make core-up APP=oauth`. Open a protected app in a private window and confirm that an allowed account returns to the app after sign-in and that an unlisted account is denied. Existing sessions require a new sign-in.
+
+Traefik now supplies `X-Auth-Request-Email` to protected apps. Update any custom integration that reads `X-Forwarded-User`.
+To roll back, restore the previous revision and the backed-up OAuth secret, then run `make core-up APP=oauth` again.
+
 ## Overseerr to Seerr
 
 Seerr (`ghcr.io/seerr-team/seerr`) replaces Overseerr (`lscr.io/linuxserver/overseerr`) and automatically migrates your existing Overseerr database and settings on first boot. Because the official Seerr image runs as UID/GID `1000` (`node`) by default and mounts its config at `/app/config`, move your existing `appdata/overseerr` directory and ensure permissions match `PUID:PGID`:

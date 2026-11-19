@@ -6,37 +6,50 @@
 secrets:
     google-oauth:
         file: ${DOCKER_DIRECTORY}/secrets/google_oauth.secret
+    google-oauth-emails:
+        file: ${DOCKER_DIRECTORY}/secrets/google_oauth_emails.secret
 
 services:
     oauth:
         container_name: oauth
-        # TODO(@juftin): migrate off of unmaintained image
-        image: thomseddon/traefik-forward-auth:latest@sha256:b364aa6a4117569163eff793999901f9f5a0c4f7f2da18b4ecbcd140d7b6107b
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.6@sha256:c3415e8660af553f5e18f5d90db050614c02493c0ac6260ac59442f6d9b12048
+        user: ${PUID:-1000}:${PGID:-1000}
+        command:
+            - --config=/run/secrets/google-oauth
+            - --authenticated-emails-file=/run/secrets/google-oauth-emails
+            - --http-address=0.0.0.0:4180
+            - --provider=google
+            - --reverse-proxy=true
+            - --trusted-proxy-ip=192.168.90.0/24 # homelab-core_traefik
+            - --upstream=static://202
+            - --skip-provider-button=true
+            - --set-xauthrequest=true
+            - --code-challenge-method=S256
+            - --cookie-name=__Secure-homelab-oauth
+            - --cookie-secure=true
+            - --cookie-samesite=lax
+            - --cookie-expire=720h
+            - --cookie-refresh=45m
+            - --request-logging=false
         environment:
-            CONFIG: /config
-            COOKIE_DOMAIN: ${DOMAIN_NAME}
-            INSECURE_COOKIE: "false"
-            AUTH_HOST: ${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}
-            URL_PATH: /_oauth
-            LOG_LEVEL: DEBUG
-            LIFETIME: 2592000
-            DEFAULT_ACTION: auth
-            DEFAULT_PROVIDER: google
+            OAUTH2_PROXY_COOKIE_DOMAINS: .${DOMAIN_NAME}
+            OAUTH2_PROXY_WHITELIST_DOMAINS: ${DOMAIN_NAME},.${DOMAIN_NAME}
+            OAUTH2_PROXY_REDIRECT_URL: https://${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}/_oauth
         secrets:
-            - source: google-oauth
-              target: /config
+            - google-oauth
+            - google-oauth-emails
         networks:
             traefik:
         security_opt:
             - no-new-privileges:true
         restart: always
-        platform: linux/amd64
         depends_on:
             - cloudflare-ddns
         labels:
             traefik.enable: true
-            traefik.http.routers.oauth-rtr.rule: Host(`${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}`)
+            traefik.http.routers.oauth-rtr.rule: Host(`${OAUTH_SUBDOMAIN:-oauth}.${DOMAIN_NAME}`) && Path(`/_oauth`)
             traefik.http.routers.oauth-rtr.entrypoints: websecure
             traefik.http.routers.oauth-rtr.service: oauth-svc
-            traefik.http.services.oauth-svc.loadbalancer.server.port: 4181
-            traefik.http.routers.oauth-rtr.middlewares: chain-oauth-google@file
+            traefik.http.services.oauth-svc.loadbalancer.server.port: 4180
+            traefik.http.routers.oauth-rtr.middlewares: chain-no-auth@file,oauth-callback
+            traefik.http.middlewares.oauth-callback.replacepath.path: /oauth2/callback

@@ -16,13 +16,9 @@ at your orchestrator should be the only configuration step you need.
 
 ## oauth
 
-[![](https://img.shields.io/static/v1?message=thomseddon/traefik-forward-auth&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/thomseddon/traefik-forward-auth)
-[![](https://img.shields.io/static/v1?message=thomseddon/traefik-forward-auth&logo=github&label=github)](https://github.com/thomseddon/traefik-forward-auth)
+[![](https://img.shields.io/static/v1?message=oauth2-proxy&logo=github&label=github)](https://github.com/oauth2-proxy/oauth2-proxy)
 
-<img src="https://i.imgur.com/dEo52mz.png" width="250" alt="oauth">
-
-A minimal forward authentication service that provides Google oauth based
-login and authentication for the traefik reverse proxy/load balancer.
+OAuth2 Proxy provides Google sign-in and checks the email allowlist for Traefik's protected routes.
 
 ## cloudflare-ddns
 

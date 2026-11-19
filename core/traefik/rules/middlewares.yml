@@ -33,7 +33,13 @@ http:
 
         middlewares-oauth:
             forwardAuth:
-                address: http://oauth:4181
-                trustForwardHeader: true
+                address: http://oauth:4180/
+                trustForwardHeader: false
+                authRequestHeaders:
+                    - Cookie
                 authResponseHeaders:
+                    # Clear the legacy header before forwarding to the app.
                     - X-Forwarded-User
+                    - X-Auth-Request-Email
+                addAuthCookiesToResponse:
+                    - __Secure-homelab-oauth

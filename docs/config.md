@@ -79,14 +79,19 @@ Copy and configure the example files:
 ```shell
 cp docs/example.env .env
 cp docs/example-secrets/google_oauth.secret secrets/
+cp docs/example-secrets/google_oauth_emails.txt secrets/google_oauth_emails.secret
 cp docs/example-secrets/cloudflare_api_key.secret secrets/
 ```
 
 Edit the files with your configuration:
 
 - `.env` - Domain name, directories, API keys, etc.
-- `secrets/google_oauth.secret` - Google OAuth credentials and whitelisted users
+- `secrets/google_oauth.secret` - Google OAuth2 Proxy credentials and cookie secret
+- `secrets/google_oauth_emails.secret` - Allowed Google account emails, one per line
 - `secrets/cloudflare_api_key.secret` - Cloudflare API key for DNS challenges
+
+Generate a random cookie secret with `openssl rand -base64 32 | tr '+/' '-_'`.
+Both Google OAuth files must be readable by the `oauth` container's configured `PUID` and `PGID`.
 
 #### Encrypt Secrets
 
@@ -103,6 +108,7 @@ This creates encrypted versions (`.env.yaml`, `secrets/*.secret.yaml`) that are 
 - `.env.yaml` - Encrypted environment variables (committed to git)
 - `.env` - Decrypted environment variables (git-ignored, used by docker compose)
 - `secrets/google_oauth.secret.yaml` - Encrypted Google OAuth credentials
+- `secrets/google_oauth_emails.secret.yaml` - Encrypted Google account allowlist
 - `secrets/cloudflare_api_key.secret.yaml` - Encrypted Cloudflare API key
 
 **Secrets Workflow**:
@@ -126,7 +132,7 @@ make keygen   # Generate new Age keypair (first-time only)
 <details><summary>📄 secrets/google_oauth.secret Example</summary>
 <p>
 
-```shell
+```toml
 --8<-- "docs/example-secrets/google_oauth.secret"
 ```
 
