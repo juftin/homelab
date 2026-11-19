@@ -10,6 +10,11 @@ services:
             - ${DOCKER_DIRECTORY}/appdata/radarr:/config
             - ${COMPLETED_DOWNLOADS}:/downloads
             - ${MOVIE_DIR}:/movies
+            - type: bind
+              source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
+              target: /storage
+              bind:
+                  create_host_path: false
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
