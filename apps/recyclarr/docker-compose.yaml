@@ -10,10 +10,12 @@ services:
         user: ${PUID:-1000}:${PGID:-1000}
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/recyclarr:/config
+            - ${DOCKER_DIRECTORY}/apps/recyclarr/recyclarr.yml:/config/recyclarr.yml:ro
         environment:
             TZ: ${TZ}
             CRON_SCHEDULE: ${RECYCLARR_CRON_SCHEDULE:-@daily}
-            RECYCLARR_CREATE_CONFIG: ${RECYCLARR_CREATE_CONFIG:-true}
+            SONARR_API_KEY: ${SONARR_API_KEY:-}
+            RADARR_API_KEY: ${RADARR_API_KEY:-}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

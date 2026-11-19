@@ -172,7 +172,16 @@ Recyclarr automatically synchronizes [TRaSH Guides](https://trash-guides.info/) 
 
 ### Configuration
 
-On first start, `RECYCLARR_CREATE_CONFIG=true` creates a starter `appdata/recyclarr/recyclarr.yml` file if one does not already exist. Update it with your `http://sonarr:8989` and `http://radarr:7878` URLs and API keys, then test or trigger a manual sync:
+Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`.
+
+Because Recyclarr runs rootless (`PUID:PGID`, default `1000:1000`), create and chown its state directory before starting if it does not already exist:
+
+```shell
+mkdir -p appdata/recyclarr
+sudo chown -R "${PUID:-1000}:${PGID:-1000}" appdata/recyclarr
+```
+
+Add `SONARR_API_KEY` and `RADARR_API_KEY` to `.env` (and re-encrypt with `make encrypt`), customize `apps/recyclarr/recyclarr.yml`, and preview or run a sync:
 
 ```shell
 docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview

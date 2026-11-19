@@ -17,7 +17,7 @@ include:
     - apps/radarr.yaml # Radarr (Movie Downloads)
     - apps/prowlarr.yaml # Prowlarr (Indexer)
     - apps/bazarr.yaml # Bazarr (Subtitle Management)
-    - apps/recyclarr.yaml # Recyclarr (TRaSH Guides Sync)
+    - apps/recyclarr/docker-compose.yaml # Recyclarr (TRaSH Guides Sync)
     - apps/seerr.yaml # Seerr (Media Requests)
     - apps/tautulli.yaml # Tautulli (Plex Analytics)
     - apps/transmission.yaml # Transmission (Torrents Behind VPN)
