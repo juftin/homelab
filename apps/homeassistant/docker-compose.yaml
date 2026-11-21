@@ -1,7 +1,7 @@
 services:
     homeassistant:
         container_name: homeassistant
-        image: homeassistant/home-assistant:2026.10.4@sha256:23f4dfbb69ce76315dbc4de7915504f1c2dcecd7ca2648113a493a385972e133
+        image: homeassistant/home-assistant:2026.11.2@sha256:493a07e8f6530fc640223f4a0a5248f20a61ca2f718bb1d31efbf08a2c5ea28f
         volumes:
             - ${DOCKER_DIRECTORY}/apps/homeassistant/configuration.yaml:/config/configuration.yaml
             - ${DOCKER_DIRECTORY}/appdata/homeassistant:/config
