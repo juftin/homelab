@@ -1,8 +1,175 @@
 # Migrations
 
-When larger changes are made this project there are occasionally migrations that
+When larger changes are made to this project there are occasionally migrations that
 need to be run. These are mostly for updating the directory structure and
 will be minimized as much as possible.
+
+!!! info "For Forks of This Repository"
+
+    These migration instructions are for users who have forked this repository and are upgrading
+    to newer versions. Make sure you have the upstream repository configured:
+
+    ```bash
+    git remote add upstream https://github.com/juftin/homelab.git
+    ```
+
+## Media `/data` Layout (TRaSH Guides)
+
+If you are migrating from separate `/downloads`, `/movies`, `/tv`, and `/books` mounts (or `/storage`) to the unified `/data` layout on `MEDIA_ROOT` with NVMe incomplete downloads:
+
+1. **Verify single HDD filesystem** (same device/mount so `mv` and hardlinks are instant):
+
+    ```shell
+    df -T /media/nas
+    ```
+
+2. **Stop media containers** so nothing scans or writes mid-move:
+
+    ```shell
+    docker compose --file docker-compose.apps.yaml stop plex jellyfin sonarr radarr bazarr sabnzbd transmission seerr calibre calibre-web
+    ```
+
+3. **Create the `/data` and NVMe incomplete directories and move existing data** (instant metadata `mv` on the same HDD filesystem):
+
+    ```shell
+    mkdir -p /media/nas/data/{torrents,usenet/complete,media}/{books,movies,music,tv}
+    mkdir -p /home/juftin/media/incomplete/{torrents,usenet}
+
+    mv /media/nas/plex/movies/* /media/nas/data/media/movies/
+    mv /media/nas/plex/tv_shows/* /media/nas/data/media/tv/
+    mv /media/nas/books/* /media/nas/data/media/books/
+    # Move existing seeding torrents into /media/nas/data/torrents/<category>/
+    # Move existing usenet downloads into /media/nas/data/usenet/complete/<category>/
+    ```
+
+4. **Update `.env` / `.env.yaml`** (`make decrypt` → edit → `make encrypt`):
+
+    ```bash
+    MEDIA_ROOT="/media/nas/data"
+    INCOMPLETE_USENET="/home/juftin/media/incomplete/usenet"
+    INCOMPLETE_TORRENTS="/home/juftin/media/incomplete/torrents"
+    ```
+
+    Remove or comment out legacy `COMPLETED_DOWNLOADS`, `INCOMPLETE_DOWNLOADS`, `MOVIE_DIR`, `TV_DIR`, and `BOOKS_DIR` overrides unless you intentionally keep a custom path.
+
+5. **Deploy and update in-app paths:**
+    - **SABnzbd:** Set **Temporary Download Folder** to `/incomplete-downloads` and **Completed Download Folder** to `/data/usenet/complete` with categories `movies`, `tv`, `books`, `music`.
+    - **Transmission:** `TRANSMISSION_DOWNLOAD_DIR` (`/data/torrents`), `TRANSMISSION_INCOMPLETE_DIR` (`/incomplete`), and `TRANSMISSION_UMASK` (`2`) are set via environment variables; relocate any existing seeding torrents in the UI to `/data/torrents/<category>`.
+    - **Sonarr & Radarr:** Add `/data/media/tv` and `/data/media/movies` root folders, mass-update existing items (decline moving files since they are already moved on the host), remove old `/tv`, `/movies`, or `/storage/...` roots, and delete any legacy Remote Path Mappings.
+    - **Seerr:** Update default Sonarr/Radarr root folders to `/data/media/tv` and `/data/media/movies`.
+    - **Plex & Jellyfin:** Container mounts still target `/tv`, `/movies`, `/books` and `/data/tvshows`, `/data/movies`, preserving existing library metadata without a full rescan.
+    - **Recyclarr:** Preview and apply updated `media_naming` and `media_management` settings with `docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview` followed by `recyclarr sync`.
+
+## Overseerr to Seerr
+
+Seerr (`ghcr.io/seerr-team/seerr`) replaces Overseerr (`lscr.io/linuxserver/overseerr`) and automatically migrates your existing Overseerr database and settings on first boot. Because the official Seerr image runs as UID/GID `1000` (`node`) by default and mounts its config at `/app/config`, move your existing `appdata/overseerr` directory and ensure permissions match `PUID:PGID`:
+
+```shell
+# Stop and remove the old Overseerr container
+docker compose --file docker-compose.apps.yaml stop overseerr
+docker compose --file docker-compose.apps.yaml rm -f overseerr
+
+# Back up and migrate appdata
+cp -r appdata/overseerr appdata/overseerr.bak
+mv appdata/overseerr appdata/seerr
+sudo chown -R "${PUID:-1000}:${PGID:-1000}" appdata/seerr
+```
+
+If you previously customized `OVERSEERR_SUBDOMAIN`, `apps/seerr.yaml` falls back to `OVERSEERR_SUBDOMAIN` automatically, or you can rename it to `SEERR_SUBDOMAIN`.
+
+## 2.0.0
+
+The 2.0.0 release represents a **major architectural overhaul** with the introduction of GitOps automation and automated dependency management. Not interested in these new features? See [Manual Deployment](manual-deployment.md) for an alternative approach. After upgrading to 2.0.0, make sure to read through the [Configuration](config.md) and [GitOps & Automated Updates](gitops.md) documentation to understand the new setup.
+
+**🔄 Architecture Changes:**
+
+- **Two-Stack Architecture**: Split from single `docker-compose.yaml` with profiles to two separate stacks:
+    - `homelab-core` ([docker-compose.core.yaml](https://github.com/juftin/homelab/blob/main/docker-compose.core.yaml)): Infrastructure services
+    - `homelab` ([docker-compose.apps.yaml](https://github.com/juftin/homelab/blob/main/docker-compose.apps.yaml)): Application services
+
+- **GitOps Deployment**: Komodo platform for automated deployments (optional)
+- **Automated Updates**: Renovate for SHA256-pinned image updates (optional)
+- **Secrets Management**: SOPS + Age encryption for `.env` and secrets files
+
+**🆕 New Services:**
+
+- **Komodo**: GitOps deployment platform
+- **Cloudflare DDNS**: Replaces DuckDNS for dynamic DNS updates
+
+!!! success "Safe Migration - No `appdata` Changes"
+
+    The `appdata` directory structure remains **unchanged** in 2.0.0. All service configurations
+    are fully compatible, making this a safe upgrade. You can keep your existing `appdata` without
+    any modifications.
+
+<details><summary>1.x.x to 2.0.0 Migration Steps</summary>
+<p>
+
+1. Backup Current Setup:
+
+    ```bash
+    # Backup appdata directory (optional, for safety)
+    make backup BACKUP_DIR=/path/to/backup
+
+    # Export current .env
+    cp .env .env.backup
+    ```
+
+2. Stop Existing Services:
+
+    ```bash
+    # Using old docker-compose.yaml
+    docker compose --profile all down
+    ```
+
+3. Pull New Version:
+
+    ```bash
+    # Fetch latest changes from upstream
+    git fetch upstream
+
+    # Merge upstream changes into your fork
+    git checkout main
+    git merge upstream/main
+
+    # Or rebase your changes
+    # git rebase upstream/main
+    ```
+
+4. Configure Secrets (see [Configuration](config.md)):
+
+    ```bash
+    # Install mise for secrets management
+    curl https://mise.run | sh
+
+    # Generate Age encryption key
+    make keygen
+
+    # Encrypt secrets
+    make encrypt
+
+    # Validate Setup with Secrets
+    make validate
+    ```
+
+5. Deploy New Stack:
+
+    ```bash
+    # Deploy core infrastructure
+    make core-up
+
+    # Verify core services
+    make core-logs
+
+    # Deploy applications
+    make up
+
+    # Verify all services
+    make ps
+    ```
+
+</p>
+</details>
 
 ## 1.11.0
 

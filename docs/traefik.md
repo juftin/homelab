@@ -10,7 +10,7 @@ anywhere in the world.
 > [!WARNING]
 >
 > You must set up your router, custom domain, Google OAuth, CloudFlare,
-> DuckDNS, and Traefik before you can start any other services. Setting
+> Cloudflare DDNS, and Traefik before you can start any other services. Setting
 > up Traefik with everything requires a bit of time. Please follow the
 > instructions in this section carefully to get started.
 >
@@ -38,25 +38,19 @@ This guide assumes you have a personal domain name that you can use to
 access your services. You can purchase a domain name from a registrar
 like [Cloudflare](https://www.cloudflare.com/products/registrar/).
 
-### DuckDNS
+### Cloudflare DDNS
 
-A free DuckDNS dynamic DNS subdomain can be set up [here](https://www.duckdns.org).
-DuckDNS will provide you with a token that you will use in the `.env` file.
-Behind the scenes, the `duckdns` service will update your IP address with DuckDNS
-every 5 minutes which makes it possible to reach your server from anywhere. You will
-provide CloudFlare with the DuckDNS subdomain to point to your server.
+Cloudflare's Dynamic DNS service automatically updates your DNS records when your IP address changes.
+You'll need a Cloudflare API token with DNS edit permissions. Behind the scenes, the `cloudflare-ddns`
+service will update your DNS A records every 5 minutes, making it possible to reach your server from
+anywhere even if your home IP address changes.
 
 ### Port Forwarding
 
 In order to reach the outside world, you must forward ports `80` and `443`
 from your server IP address through your router. See your router's manual
 for Instructions. See this [blog post](https://nordvpn.com/blog/open-ports-on-router/)
-for more information on port forwarding
-
-> [!NOTE]
-> If you're comfortable with SSH configuration I also port forward the SSH
-> service - this alongside your DuckDNS setup will allow you to access your
-> server from anywhere via your dynamic DNS URL instead of your IP address.
+for more information on port forwarding.
 
 ### CloudFlare
 
@@ -64,15 +58,16 @@ This guide leverages [CloudFlare](https://cloudflare.com/) for free
 DNS services. SmartHomeBeginner has a great guide on setting up CloudFlare
 [here](https://www.smarthomebeginner.com/cloudflare-settings-for-traefik-docker/).
 
-Once you get CloudFlare and DuckDNS set up, you will need to add some basic DNS
-configuration. CloudFlare lets you use a dynamic DNS address as a CNAME record
-which makes it easy to point your domain to your server.
+Once you get CloudFlare set up, you will need to add some basic DNS
+configuration. The `cloudflare-ddns` service will automatically manage your A records,
+but you should configure wildcard CNAME records:
 
-| Type  | Name          | Content               | TTL  |
-| ----- | ------------- | --------------------- | ---- |
-| CNAME | `example.com` | `example.duckdns.org` | Auto |
-| CNAME | `www`         | `example.com`         | Auto |
-| CNAME | `*`           | `example.com`         | Auto |
+| Type  | Name  | Content       | TTL  |
+| ----- | ----- | ------------- | ---- |
+| CNAME | `www` | `example.com` | Auto |
+| CNAME | `*`   | `example.com` | Auto |
+
+The A record for `example.com` will be automatically updated by the `cloudflare-ddns` service.
 
 ### Google OAuth 2.0
 
@@ -113,8 +108,6 @@ Once you're done with all of the steps in this process you should have the follo
 fields filled out in the `.env` file:
 
 ```text
-DUCKDNS_TOKEN=XXXXXX-XXX-XXXXX-XXXXX
-DUCKDNS_SUBDOMAIN=example
 CLOUDFLARE_EMAIL=example@gmail.com
 ```
 
@@ -157,12 +150,13 @@ mkdir -p appdata/traefik/acme/ && \
 >
 > See the [Command Line](cli.md) documentation for more information.
 
-## Containers in Core Profile
+## Containers in Core Stack
 
 - [traefik](applications/core.md#traefik)
 - [oauth](applications/core.md#oauth)
-- [duckdns](applications/core.md#duckdns)
+- [cloudflare-ddns](applications/core.md#cloudflare-ddns)
 - [docker-socket-proxy](applications/core.md#docker-socket-proxy)
+- [komodo](applications/core.md#komodo)
 
 ## Creating New Services
 

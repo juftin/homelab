@@ -5,11 +5,10 @@
 services:
     nzbhydra:
         container_name: nzbhydra
-        image: lscr.io/linuxserver/nzbhydra2:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/nzbhydra2:latest@sha256:924939b98fe18398f306e69f0a123f4fb92dd3651a8aef1a1d7b5d78d7b6c197
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/nzbhydra:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

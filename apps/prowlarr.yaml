@@ -5,14 +5,14 @@
 services:
     prowlarr:
         container_name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:develop
-        profiles: ["media", "arrs", "all"]
+        image: lscr.io/linuxserver/prowlarr:develop@sha256:5ec14c4970719d112664557a824b468512adc3b07e9f394a4f0b856dc2a777c0
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/prowlarr:/config
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
+            UMASK: ${UMASK:-002}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

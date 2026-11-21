@@ -2,8 +2,6 @@
 
 module.exports = {
     repositories: [process.env.RENOVATE_REPOSITORY],
-    gitAuthor:
-        "github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
     onboarding: true,
     platform: "github",
     hostRules: [

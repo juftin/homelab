@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# SEERR (MEDIA REQUESTS)
+#######################################
+
+services:
+    seerr:
+        container_name: seerr
+        image: ghcr.io/seerr-team/seerr:v3.5.2@sha256:aadee014b40e28cf9aa4928bc9d1183a6eb08f8c44d543cddc9efdcb16549be2
+        init: true
+        user: ${PUID:-1000}:${PGID:-1000}
+        environment:
+            TZ: ${TZ}
+            LOG_LEVEL: ${SEERR_LOG_LEVEL:-info}
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/seerr:/app/config
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1",
+                ]
+            start_period: 20s
+            timeout: 3s
+            interval: 15s
+            retries: 3
+        labels:
+            traefik.enable: true
+            traefik.http.routers.seerr-rtr.rule: Host(`${SEERR_SUBDOMAIN:-${OVERSEERR_SUBDOMAIN:-seerr}}.${DOMAIN_NAME}`)
+            traefik.http.routers.seerr-rtr.entrypoints: websecure
+            traefik.http.routers.seerr-rtr.service: seerr-svc
+            traefik.http.services.seerr-svc.loadbalancer.server.port: 5055
+            traefik.http.routers.seerr-rtr.middlewares: chain-oauth-google@file

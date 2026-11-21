@@ -1,7 +1,6 @@
 {
     $schema: "https://docs.renovatebot.com/renovate-schema.json",
     baseBranchPatterns: ["gitops"],
-    gitAuthor: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
     extends: [
         "mergeConfidence:all-badges",
         "config:recommended",
@@ -26,6 +25,12 @@
         ],
     },
     packageRules: [
+        {
+            description: "Keep Camply on the unpinned latest image",
+            matchDatasources: ["docker"],
+            matchPackageNames: ["juftin/camply-backend"],
+            pinDigests: false,
+        },
         {
             description: "Auto-merge Minor and Patch",
             matchUpdateTypes: ["minor", "patch"],

@@ -6,11 +6,10 @@
 services:
     calibre-web:
         container_name: calibre-web
-        image: lscr.io/linuxserver/calibre-web:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/calibre-web:latest@sha256:adb69d75b9c252e580fc691096f858833b901b5d106ae4080fb476bab104d946
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre-web:/config
-            - ${BOOKS_DIR}:/books
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
             - ${DOCKER_DIRECTORY}/appdata/calibre:/calibre-config
         environment:
             PUID: ${PUID}

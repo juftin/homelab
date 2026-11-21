@@ -3,13 +3,17 @@
 ## Table of Contents
 
 - [plex](#plex)
+- [jellyfin](#jellyfin)
 - [sonarr](#sonarr)
 - [radarr](#radarr)
 - [prowlarr](#prowlarr)
-- [overseerr](#overseerr)
+- [bazarr](#bazarr)
+- [recyclarr](#recyclarr)
+- [seerr](#seerr)
 - [tautulli](#tautulli)
 - [transmission](#transmission)
 - [sabnzbd](#sabnzbd)
+- [nzbhydra](#nzbhydra)
 - [heimdall](#heimdall)
 - [readarr](#readarr)
 - [calibre](#calibre)
@@ -32,6 +36,28 @@ design and bulk actions mean getting things done faster.
 
 Plex setup is fairly intuitive and straightforward. When setting up libraries you will
 use the root directories, `/tv/` and `/movies/`
+
+Following [TRaSH Guides Plex recommendations](https://trash-guides.info/Plex/Plex-recommended-settings/):
+
+- **Enable** _Run a partial scan when changes are detected_ under **Settings → Library** so new imports appear immediately.
+- **Disable** _Empty trash automatically after every scan_ when media lives on a NAS mount so a temporary mount drop does not wipe library metadata.
+
+## jellyfin
+
+[![](https://img.shields.io/static/v1?message=linuxserver/jellyfin&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/jellyfin)
+[![](https://img.shields.io/static/v1?message=jellyfin/jellyfin&logo=github&label=github)](https://github.com/jellyfin/jellyfin)
+[![](https://img.shields.io/static/v1?message=jellyfin.org&logo=google+chrome&label=website&color=teal)](https://jellyfin.org)
+
+<img src="https://i.imgur.com/BjIOz1v.png" width="250" alt="Jellyfin Logo">
+
+Jellyfin is a free and open-source media server and suite of multimedia applications designed
+to organize, manage, and share digital media files to networked devices. It's an alternative
+to proprietary media servers like Plex and Emby.
+
+### Configuration
+
+Jellyfin setup is similar to Plex. When setting up libraries you will use the
+root directories, `/data/tvshows/` and `/data/movies/`
 
 ## sonarr
 
@@ -81,6 +107,37 @@ up a basic authorization form on the `General Settings` to exclude non-admin
 users from accessing the application using the `ADMIN_USER` and `ADMIN_PASSWORD`
 variables.
 
+### Hardlinks and atomic imports
+
+Set `MEDIA_ROOT` to the single HDD parent directory (for example,
+`/media/storage/data`) that holds `torrents/`, `usenet/complete/`, and `media/`
+on one filesystem. `sonarr`, `radarr`, `bazarr`, `sabnzbd`, and `transmission`
+all mount `MEDIA_ROOT` at `/data` with `UMASK=002` (`TRANSMISSION_UMASK=2`), so
+hardlinks and atomic moves work natively without Remote Path Mappings:
+
+```text
+/data
+├── torrents/{books,movies,music,tv}
+├── usenet/complete/{books,movies,music,tv}
+└── media/{books,movies,music,tv}
+```
+
+1. Recreate the media and download services so `/data` and `UMASK` are applied:
+   `docker compose --file docker-compose.apps.yaml up -d --no-deps sonarr radarr bazarr sabnzbd prowlarr transmission`.
+2. In Sonarr and Radarr under **Settings → Media Management**, ensure **Use Hardlinks instead of Copy** is enabled, and remove any legacy Remote Path Mappings once downloads use `/data`.
+3. Set root folders to `/data/media/tv` (Sonarr) and `/data/media/movies` (Radarr). If migrating existing items, update their root folder and decline the prompt to move files if you already moved them on the host, then remove old root entries.
+4. Update Seerr's Sonarr and Radarr request roots to `/data/media/tv` and `/data/media/movies`. Plex and Jellyfin keep `/tv`, `/movies` and `/data/tvshows`, `/data/movies`.
+5. Check a completed import through each downloader. For a torrent that still has its source file, compare its inode and the library file's inode on the host with `stat`. A matching device and inode confirms a hardlink.
+
+> [!NOTE]
+> Keep `INCOMPLETE_USENET` and `INCOMPLETE_TORRENTS` on fast NVMe/SSD storage when `MEDIA_ROOT` is on an HDD array.
+> High-IOPS Usenet verification/unpacking (`/incomplete-downloads`) and active torrent piece writes (`/incomplete`) stay off the HDD, the download
+> client performs one sequential move to `/data/usenet/complete` or `/data/torrents` upon completion, and Sonarr/Radarr still
+> hardlink or atomically move from `/data/torrents` and `/data/usenet/complete` into `/data/media/tv` and `/data/media/movies`.
+
+See the [TRaSH Guides hardlink guide](https://trash-guides.info/File-and-Folder-Structure/Hardlinks-and-Instant-Moves/)
+and [Migrations](../migrations.md#media-data-layout-trash-guides) for step-by-step migration instructions.
+
 ## prowlarr
 
 [![](https://img.shields.io/static/v1?message=linuxserver/prowlarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/prowlarr)
@@ -94,17 +151,55 @@ to integrate with your various PVR apps. Prowlarr supports management of both To
 Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr,
 and Sonarr offering complete management of your indexers with no per app Indexer setup required
 
-## overseerr
+## bazarr
 
-[![](https://img.shields.io/static/v1?message=linuxserver/overseerr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/overseerr)
-[![](https://img.shields.io/static/v1?message=sct/overseerr&logo=github&label=github)](https://github.com/sct/overseerr)
-[![](https://img.shields.io/static/v1?message=overseerr.dev&logo=google+chrome&label=website&color=teal)](https://overseerr.dev)
+[![](https://img.shields.io/static/v1?message=linuxserver/bazarr&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/bazarr)
+[![](https://img.shields.io/static/v1?message=morpheus65535/bazarr&logo=github&label=github)](https://github.com/morpheus65535/bazarr)
+[![](https://img.shields.io/static/v1?message=bazarr.media&logo=google+chrome&label=website&color=teal)](https://www.bazarr.media)
 
-<img src="https://i.imgur.com/kCFWqUO.png" width="280" alt="ombi_logo">
+Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.
 
-Overseerr is a free and open source software application for managing
-requests for your media library. It integrates with your existing services,
-such as Sonarr, Radarr, and Plex!
+### Configuration
+
+In the Bazarr UI, connect to Sonarr (`http://sonarr:8989`) and Radarr (`http://radarr:7878`) using their API keys.
+Bazarr mounts `/data` identically to Sonarr and Radarr so `/data/media/tv` and `/data/media/movies` align without extra path mappings.
+
+## recyclarr
+
+[![](https://img.shields.io/static/v1?message=ghcr.io/recyclarr/recyclarr&logo=docker&label=docker&color=blue)](https://github.com/recyclarr/recyclarr/pkgs/container/recyclarr)
+[![](https://img.shields.io/static/v1?message=recyclarr/recyclarr&logo=github&label=github)](https://github.com/recyclarr/recyclarr)
+[![](https://img.shields.io/static/v1?message=recyclarr.dev&logo=google+chrome&label=website&color=teal)](https://recyclarr.dev)
+
+Recyclarr automatically synchronizes [TRaSH Guides](https://trash-guides.info/) custom formats, quality profiles, quality definitions, and naming schemes to Sonarr and Radarr on a schedule.
+
+### Configuration
+
+Recyclarr's configuration lives in `apps/recyclarr/recyclarr.yml` (mounted read-only into `/config/recyclarr.yml`) and uses `!env_var` references for `SONARR_API_KEY` and `RADARR_API_KEY` so API keys can stay encrypted in `.env.yaml`. It also manages TRaSH-recommended `media_naming` (`plex-tvdb` / `plex-tmdb`) and `media_management` (`propers_and_repacks: do_not_prefer`) so Proper/Repack upgrades are driven by Custom Format scores.
+
+Because Recyclarr runs rootless (`PUID:PGID`, default `1000:1000`), create and chown its state directory before starting if it does not already exist:
+
+```shell
+mkdir -p appdata/recyclarr
+sudo chown -R "${PUID:-1000}:${PGID:-1000}" appdata/recyclarr
+```
+
+Add `SONARR_API_KEY` and `RADARR_API_KEY` to `.env` (and re-encrypt with `make encrypt`), customize `apps/recyclarr/recyclarr.yml`, and preview or run a sync:
+
+```shell
+docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview
+docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync
+```
+
+## seerr
+
+[![](https://img.shields.io/static/v1?message=ghcr.io/seerr-team/seerr&logo=docker&label=docker&color=blue)](https://github.com/seerr-team/seerr/pkgs/container/seerr)
+[![](https://img.shields.io/static/v1?message=seerr-team/seerr&logo=github&label=github)](https://github.com/seerr-team/seerr)
+[![](https://img.shields.io/static/v1?message=seerr.dev&logo=google+chrome&label=website&color=teal)](https://seerr.dev)
+
+Seerr is the unified successor to Overseerr and Jellyseerr for managing requests for your media library. It integrates with Sonarr, Radarr, Plex, and Jellyfin.
+
+> [!NOTE]
+> Upgrading from Overseerr? See the [Overseerr to Seerr migration guide](../migrations.md#overseerr-to-seerr) before starting Seerr so your existing `appdata/overseerr` data and permissions carry over automatically.
 
 ## tautulli
 
@@ -140,6 +235,14 @@ SABnzbd is an Open Source Binary Newsreader written in Python, it downloads file
 based on information given in nzb-files.
 
 <img src="https://i.imgur.com/rt7Pbj9.png" width="220" alt="SABnzbd Logo">
+
+### Configuration
+
+Following [TRaSH Guides SABnzbd recommendations](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/):
+
+- Set **Temporary Download Folder** to `/incomplete-downloads` (NVMe/SSD) and **Completed Download Folder** to `/data/usenet/complete` (HDD).
+- Configure `movies`, `tv`, `books`, and `music` categories with relative paths (`movies`, `tv`, `books`, `music`) so completed downloads land in `/data/usenet/complete/<category>`.
+- Enable **Direct Unpack** and **Abort jobs that cannot be completed** under **Settings → Switches**.
 
 ## nzbhydra
 

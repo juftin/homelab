@@ -24,17 +24,17 @@ at your orchestrator should be the only configuration step you need.
 A minimal forward authentication service that provides Google oauth based
 login and authentication for the traefik reverse proxy/load balancer.
 
-## duckdns
+## cloudflare-ddns
 
-[![](https://img.shields.io/static/v1?message=linuxserver/duckdns&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/linuxserver/duckdns)
-[![](https://img.shields.io/static/v1?message=linuxserver/docker-duckdns&logo=github&label=github)](https://github.com/linuxserver/docker-duckdns)
-[![](https://img.shields.io/static/v1?message=duckdns.org&logo=google+chrome&label=website&color=teal)](https://www.duckdns.org)
+[![](https://img.shields.io/static/v1?message=oznu/cloudflare-ddns&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/oznu/cloudflare-ddns)
+[![](https://img.shields.io/static/v1?message=oznu/docker-cloudflare-ddns&logo=github&label=github)](https://github.com/oznu/docker-cloudflare-ddns)
+[![](https://img.shields.io/static/v1?message=cloudflare.com&logo=google+chrome&label=website&color=teal)](https://www.cloudflare.com)
 
-<img src="https://i.imgur.com/eCBIhm2.jpg" width="250" alt="duckdns">
+<img src="https://i.imgur.com/eCBIhm2.jpg" width="250" alt="cloudflare">
 
-Duckdns is a free service which will point a DNS (subdomains of duckdns.org)
-to an IP of your choice. The service is completely free, and doesn't
-require reactivation or forum posts to maintain its existence.
+Cloudflare DDNS is a service that automatically updates Cloudflare DNS records
+with your current IP address. This is essential for accessing your homelab
+from anywhere in the world with a dynamic IP address.
 
 ## docker-socket-proxy
 
@@ -45,3 +45,16 @@ require reactivation or forum posts to maintain its existence.
 It blocks access to the Docker socket API according to the environment
 variables you set. It returns a HTTP 403 Forbidden status for those
 dangerous requests that should never happen.
+
+## komodo
+
+[![](https://img.shields.io/static/v1?message=mbecker20/komodo&logo=docker&label=docker&color=blue)](https://hub.docker.com/r/mbecker20/komodo)
+[![](https://img.shields.io/static/v1?message=mbecker20/komodo&logo=github&label=github)](https://github.com/mbecker20/komodo)
+[![](https://img.shields.io/static/v1?message=komo.do&logo=google+chrome&label=website&color=teal)](https://komo.do)
+
+<img src="https://i.imgur.com/IcZiS4N.png" width="300" alt="komodo">
+
+Komodo is a Docker management platform that enables GitOps-style deployments.
+It monitors the repository, automatically pulls updates,
+and deploys changes to the homelab stack. This enables a fully automated
+deployment workflow with scheduled syncs and deployments.
