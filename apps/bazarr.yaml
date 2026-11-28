@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+#######################################
+# BAZARR (SUBTITLE MANAGEMENT)
+#######################################
+
+services:
+    bazarr:
+        container_name: bazarr
+        image: lscr.io/linuxserver/bazarr:latest@sha256:e0c5d45965242830c5eeddaafe9ae2b5e8ca3f6c01ecda9ee9364f550921dc50
+        volumes:
+            - ${DOCKER_DIRECTORY}/appdata/bazarr:/config
+            - type: bind
+              source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
+              target: /data
+              bind:
+                  create_host_path: false
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            UMASK: ${UMASK:-002}
+        security_opt:
+            - no-new-privileges:true
+        restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}
+        networks:
+            traefik:
+        labels:
+            traefik.enable: true
+            traefik.http.routers.bazarr-rtr.rule: Host(`${BAZARR_SUBDOMAIN:-bazarr}.${DOMAIN_NAME}`)
+            traefik.http.routers.bazarr-rtr.entrypoints: websecure
+            traefik.http.routers.bazarr-rtr.service: bazarr-svc
+            traefik.http.services.bazarr-svc.loadbalancer.server.port: 6767
+            traefik.http.routers.bazarr-rtr.middlewares: chain-oauth-google@file

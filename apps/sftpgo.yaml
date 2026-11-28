@@ -6,13 +6,12 @@
 services:
     sftpgo:
         container_name: sftpgo
-        image: drakkan/sftpgo:latest
-        profiles: ["utilities", "all"]
+        image: drakkan/sftpgo:v2.7.6@sha256:1edd28d80de2a008863fbfc58c8ff7db47b1b410bae48d4e6076192337809b11
         volumes:
-            - ${COMPLETED_DOWNLOADS}:/srv/sftpgo/data/juftin/downloads
-            - ${MOVIE_DIR}:/srv/sftpgo/data/juftin/movies
-            - ${TV_DIR}:/srv/sftpgo/data/juftin/tv
-            - ${BOOKS_DIR}:/srv/sftpgo/data/juftin/books
+            - ${COMPLETED_DOWNLOADS:-${MEDIA_ROOT}/usenet/complete}:/srv/sftpgo/data/juftin/downloads
+            - ${MOVIE_DIR:-${MEDIA_ROOT}/media/movies}:/srv/sftpgo/data/juftin/movies
+            - ${TV_DIR:-${MEDIA_ROOT}/media/tv}:/srv/sftpgo/data/juftin/tv
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/srv/sftpgo/data/juftin/books
             - ${DOCKER_DIRECTORY}/appdata/sftpgo/data/:/srv/sftpgo/data/juftin/upload
             - ${DOCKER_DIRECTORY}/appdata/sftpgo/config/:/var/lib/sftpgo/
         environment:

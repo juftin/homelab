@@ -5,16 +5,19 @@
 services:
     sonarr:
         container_name: sonarr
-        image: lscr.io/linuxserver/sonarr:latest
-        profiles: ["media", "arrs", "all"]
+        image: lscr.io/linuxserver/sonarr:latest@sha256:339814bbf50599ac3b59077c252f29833d0138b59a062d0e82ce37bdc7f04f86
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sonarr:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${TV_DIR}:/tv
+            - type: bind
+              source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
+              target: /data
+              bind:
+                  create_host_path: false
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
+            UMASK: ${UMASK:-002}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

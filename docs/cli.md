@@ -1,9 +1,11 @@
 # Command Line Usage
 
-This project includes a `Makefile` that provides a variety of
-commands to manage your deployment.
+This project includes a `Makefile` that provides commands to manage the two Docker Compose stacks:
 
-!!! info "**`homelab`** and **`homelab-compose`**"
+- **`homelab-core`** stack: Infrastructure services (Traefik, OAuth, Komodo, etc.)
+- **`homelab`** stack: Application services (Plex, Sonarr, Radarr, etc.)
+
+!!! info "**`homelab`** alias"
 
     You will see the **`make`** command and **`homelab`** used interchangeably
     in this documentation. The **`homelab`** command is a convenience wrapper
@@ -13,13 +15,6 @@ commands to manage your deployment.
 
     ```shell
     alias homelab="make --no-print-directory --directory /path/to/this/repo"
-    ```
-
-    If you'd like to use the **`docker compose`** command from anywhere, you can
-    do so with the following alias:
-
-    ```shell
-    alias homelab-compose="docker compose --project-directory /path/to/this/repo"
     ```
 
 !!! quote "`homelab help`"
@@ -63,219 +58,176 @@ commands to manage your deployment.
 
 #### update
 
-Update the homelab service(s) to the latest versions.
+Update the application service(s) to the latest versions.
 
-\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
-    homelab update
+    homelab update APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make update
+    make update APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all pull
-    docker compose --profile all up -d
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all pull
-    homelab-compose --profile all up -d
+    docker compose -f docker-compose.apps.yaml pull sonarr
+    docker compose -f docker-compose.apps.yaml up -d sonarr
     ```
 
 #### pull
 
-Pull the latest images for the homelab service(s).
+Pull the latest images for the application service(s).
 
-\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
-    homelab pull
+    homelab pull APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make pull
+    make pull APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all pull
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all pull
+    docker compose -f docker-compose.apps.yaml pull sonarr
     ```
 
 #### up
 
-Start the homelab service(s).
+Start the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab up
+    homelab up APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make up
+    make up APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all up -d
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all up -d
+    docker compose -f docker-compose.apps.yaml up -d sonarr
     ```
 
 #### down
 
-Stop the homelab service(s).
+Stop the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab down
+    homelab down APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make down
+    make down APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all down
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all down
+    docker compose -f docker-compose.apps.yaml down sonarr
     ```
 
 #### stop
 
-Stop the homelab service(s).
+Stop the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab stop
+    homelab stop APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make stop
+    make stop APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all stop
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all stop
+    docker compose -f docker-compose.apps.yaml stop sonarr
     ```
 
 #### logs
 
-Show the logs for the homelab service(s).
+Show the logs for the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab logs
+    homelab logs APP=sonarr ARGS="-f --tail=100"
     ```
 
 === "make"
 
     ```shell
-    make logs
+    make logs APP=sonarr ARGS="-f --tail=100"
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all logs -ft
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all logs -ft
+    docker compose -f docker-compose.apps.yaml logs -ft sonarr
     ```
 
 #### restart
 
-Restart the homelab service(s).
+Restart the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab restart
+    homelab restart APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make restart
+    make restart APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all restart
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all restart
+    docker compose -f docker-compose.apps.yaml restart sonarr
     ```
 
 #### ps
 
-Show the status of the homelab service(s).
+Show the status of the application service(s).
 
 === "homelab"
 
@@ -292,215 +244,316 @@ Show the status of the homelab service(s).
 === "docker"
 
     ```shell
-    docker compose --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
+    docker compose -f docker-compose.apps.yaml ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
     ```
 
 #### config
 
-Show the configuration of the homelab service(s).
+Show the configuration of the application service(s).
 
 \* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab config
+    homelab config APP=sonarr
     ```
 
 === "make"
 
     ```shell
-    make config
+    make config APP=sonarr
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile all config
-    ```
-
-=== "homelab-compose"
-
-    ```shell
-    homelab-compose --profile all config
+    docker compose -f docker-compose.apps.yaml config sonarr
     ```
 
 ### Core Services 🧠
 
-#### core-up
+#### core-update
 
-Start just the core services (traefik, oauth2, etc).
+Update the core infrastructure service(s) to the latest versions.
+
+\* _Defaults to all, accepts the `APP` flag_
 
 === "homelab"
 
     ```shell
-    homelab core-up
+    homelab core-update APP=traefik
     ```
 
 === "make"
 
     ```shell
-    make core-up
+    make core-update APP=traefik
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile core up -d
+    docker compose -f docker-compose.core.yaml pull traefik
+    docker compose -f docker-compose.core.yaml up -d traefik
     ```
 
-=== "homelab-compose"
+#### core-pull
+
+Pull the latest images for the core infrastructure service(s).
+
+\* _Defaults to all, accepts the `APP` flag_
+
+=== "homelab"
 
     ```shell
-    homelab-compose --profile core up -d
+    homelab core-pull APP=traefik
+    ```
+
+=== "make"
+
+    ```shell
+    make core-pull APP=traefik
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose -f docker-compose.core.yaml pull traefik
+    ```
+
+#### core-up
+
+Start the core infrastructure service(s).
+
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
+
+=== "homelab"
+
+    ```shell
+    homelab core-up APP=traefik
+    ```
+
+=== "make"
+
+    ```shell
+    make core-up APP=traefik
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose -f docker-compose.core.yaml up -d traefik
     ```
 
 #### core-down
 
-Stop just the core services (traefik, oauth2, etc).
+Stop the core infrastructure service(s).
+
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab core-down
+    homelab core-down APP=traefik
     ```
 
 === "make"
 
     ```shell
-    make core-down
+    make core-down APP=traefik
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile core down
+    docker compose -f docker-compose.core.yaml down traefik
     ```
 
-=== "homelab-compose"
+#### core-stop
+
+Stop the core infrastructure service(s).
+
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
+
+=== "homelab"
 
     ```shell
-    homelab-compose --profile core down
+    homelab core-stop APP=traefik
+    ```
+
+=== "make"
+
+    ```shell
+    make core-stop APP=traefik
+    ```
+
+=== "docker"
+
+    ```shell
+    docker compose -f docker-compose.core.yaml stop traefik
     ```
 
 #### core-logs
 
-Show the logs for the core services (traefik, oauth2, etc).
+Show the logs for the core infrastructure service(s).
+
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab core-logs
+    homelab core-logs APP=traefik ARGS="-f --tail=100"
     ```
 
 === "make"
 
     ```shell
-    make core-logs
+    make core-logs APP=traefik ARGS="-f --tail=100"
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile core logs -ft
+    docker compose -f docker-compose.core.yaml logs -ft traefik
     ```
 
-=== "homelab-compose"
+#### core-restart
 
-    ```shell
-    homelab-compose --profile core logs -ft
-    ```
+Restart the core infrastructure service(s).
 
-### Media Services 📺
-
-#### media-up
-
-Start just the media services (plex, sonarr, radarr, etc).
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab media-up
+    homelab core-restart APP=traefik
     ```
 
 === "make"
 
     ```shell
-    make media-up
+    make core-restart APP=traefik
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile media up -d
+    docker compose -f docker-compose.core.yaml restart traefik
     ```
 
-=== "homelab-compose"
+#### core-ps
 
-    ```shell
-    homelab-compose --profile media up -d
-    ```
-
-#### media-down
-
-Stop just the media services (plex, sonarr, radarr, etc).
+Show the status of the core infrastructure service(s).
 
 === "homelab"
 
     ```shell
-    homelab media-down
+    homelab core-ps
     ```
 
 === "make"
 
     ```shell
-    make media-down
+    make core-ps
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile media down
+    docker compose -f docker-compose.core.yaml ps --format "table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Name}}"
     ```
 
-=== "homelab-compose"
+#### core-config
 
-    ```shell
-    homelab-compose --profile media down
-    ```
+Show the configuration of the core infrastructure service(s).
 
-#### media-logs
-
-Show the logs for the media services (plex, sonarr, radarr, etc).
+\* _Defaults to all, accepts the `APP` flag_ \* _Accepts the `ARGS` flag_
 
 === "homelab"
 
     ```shell
-    homelab media-logs
+    homelab core-config APP=traefik
     ```
 
 === "make"
 
     ```shell
-    make media-logs
+    make core-config APP=traefik
     ```
 
 === "docker"
 
     ```shell
-    docker compose --profile media logs -ft
+    docker compose -f docker-compose.core.yaml config traefik
     ```
 
-=== "homelab-compose"
+### Secrets Management 🔐
+
+#### keygen
+
+Generate an Age keypair for secrets encryption.
+
+=== "homelab"
 
     ```shell
-    homelab-compose --profile media logs -ft
+    homelab keygen
+    ```
+
+=== "make"
+
+    ```shell
+    make keygen
+    ```
+
+=== "bash"
+
+    ```shell
+    mise run keygen
+    ```
+
+#### decrypt
+
+Decrypt the secrets files for local development.
+
+=== "homelab"
+
+    ```shell
+    homelab decrypt
+    ```
+
+=== "make"
+
+    ```shell
+    make decrypt
+    ```
+
+=== "bash"
+
+    ```shell
+    mise run decrypt
+    ```
+
+#### encrypt
+
+Encrypt the secrets files after making changes.
+
+=== "homelab"
+
+    ```shell
+    homelab encrypt
+    ```
+
+=== "make"
+
+    ```shell
+    make encrypt
+    ```
+
+=== "bash"
+
+    ```shell
+    mise run encrypt
     ```
 
 ### Configuration 🪛
@@ -606,7 +659,7 @@ Build the documentation.
 === "bash"
 
     ```shell
-    hatch run docs:serve --livereload --dev-addr localhost:8000
+    uv run mkdocs serve --livereload --dev-addr localhost:8000
     ```
 
 #### lint
@@ -629,6 +682,29 @@ Lint the code with pre-commit.
 
     ```shell
     pre-commit run --all-files
+    ```
+
+#### validate
+
+Validate the docker-compose files.
+
+=== "homelab"
+
+    ```shell
+    homelab validate
+    ```
+
+=== "make"
+
+    ```shell
+    make validate
+    ```
+
+=== "bash"
+
+    ```shell
+    docker compose -f docker-compose.core.yaml config
+    docker compose -f docker-compose.apps.yaml config
     ```
 
 ### General 🌐

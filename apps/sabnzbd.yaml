@@ -5,16 +5,20 @@
 services:
     sabnzbd:
         container_name: sabnzbd
-        image: lscr.io/linuxserver/sabnzbd:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/sabnzbd:latest@sha256:d225bbab93f54784c115a3b1d89711e469b1969c9f32aa6ebb11fb03b5804431
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/sabnzbd:/config
-            - ${COMPLETED_DOWNLOADS}:/downloads
-            - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads
+            - type: bind
+              source: ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}
+              target: /data
+              bind:
+                  create_host_path: false
+            - ${INCOMPLETE_USENET:-${INCOMPLETE_DOWNLOADS}}:/incomplete-downloads
         environment:
             PUID: ${PUID}
             PGID: ${PGID}
             TZ: ${TZ}
+            UMASK: ${UMASK:-002}
         security_opt:
             - no-new-privileges:true
         restart: ${UNIVERSAL_RESTART_POLICY:-unless-stopped}

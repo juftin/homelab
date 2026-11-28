@@ -6,12 +6,11 @@
 services:
     calibre:
         container_name: calibre
-        image: lscr.io/linuxserver/calibre:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/calibre:latest@sha256:b7b1d5d64d510d8b7b890ff5ed1692bdceb13bd6290d371859c9eeb973395d6f
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/calibre:/config
-            - ${BOOKS_DIR}:/books
-            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
+            - ${MEDIA_ROOT:-${COMPLETED_DOWNLOADS}}:/data
         environment:
             PUID: ${PUID}
             PGID: ${PGID}

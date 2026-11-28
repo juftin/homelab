@@ -7,12 +7,11 @@
 services:
     jellyfin:
         container_name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/jellyfin:latest@sha256:b10044530553b2506f06279bf0b5223f9534f434f87a277da4b8fa8ac386cb58
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/jellyfin:/config
-            - ${TV_DIR}:/data/tvshows
-            - ${MOVIE_DIR}:/data/movies
+            - ${TV_DIR:-${MEDIA_ROOT}/media/tv}:/data/tvshows
+            - ${MOVIE_DIR:-${MEDIA_ROOT}/media/movies}:/data/movies
             - /dev/shm:/data/transcode
         networks:
             traefik:

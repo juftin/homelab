@@ -5,15 +5,14 @@
 services:
     plex:
         container_name: plex
-        image: lscr.io/linuxserver/plex:latest
-        profiles: ["media", "all"]
+        image: lscr.io/linuxserver/plex:latest@sha256:31e4c2de666cd130bc389133b6c63af08912559d992370e52822f8f229185aef
         network_mode: host
         volumes:
             - ${DOCKER_DIRECTORY}/appdata/plex:/config
-            - ${TV_DIR}:/tv
-            - ${MOVIE_DIR}:/movies
+            - ${TV_DIR:-${MEDIA_ROOT}/media/tv}:/tv
+            - ${MOVIE_DIR:-${MEDIA_ROOT}/media/movies}:/movies
             - ${TRANSCODE_DIR:-/dev/shm}:/transcode
-            - ${BOOKS_DIR}:/books
+            - ${BOOKS_DIR:-${MEDIA_ROOT}/media/books}:/books
         devices:
             - /dev/dri:/dev/dri
             - /dev/dvb:/dev/dvb

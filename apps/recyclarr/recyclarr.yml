@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
+
+# Recyclarr Configuration
+# Docs: https://recyclarr.dev/guide/getting-started/
+# List TRaSH templates: docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr config list templates
+# Preview sync:        docker compose --file docker-compose.apps.yaml exec recyclarr recyclarr sync --preview
+
+sonarr:
+    sonarr_main:
+        base_url: http://sonarr:8989
+        api_key: !env_var SONARR_API_KEY
+        delete_old_custom_formats: true
+
+        media_management:
+            propers_and_repacks: do_not_prefer
+
+        media_naming:
+            series: plex-tvdb
+            season: default
+            episodes:
+                rename: true
+                standard: default
+                daily: default
+                anime: default
+
+        quality_definition:
+            type: series
+
+        quality_profiles:
+            - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+              reset_unmatched_scores:
+                  enabled: true
+            - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+              reset_unmatched_scores:
+                  enabled: true
+
+radarr:
+    radarr_main:
+        base_url: http://radarr:7878
+        api_key: !env_var RADARR_API_KEY
+        delete_old_custom_formats: true
+
+        media_management:
+            propers_and_repacks: do_not_prefer
+
+        media_naming:
+            folder: plex-tmdb
+            movie:
+                rename: true
+                standard: plex-tmdb
+
+        quality_definition:
+            type: movie
+
+        quality_profiles:
+            - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+              reset_unmatched_scores:
+                  enabled: true
+            - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
+              reset_unmatched_scores:
+                  enabled: true
